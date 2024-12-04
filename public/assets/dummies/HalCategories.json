@@ -1,0 +1,158 @@
+[
+    {
+        "name": "Automazione e Assemblaggio",
+        "info": "Questi job comprendono tecnologie e processi progettati per automatizzare e ottimizzare le operazioni di assemblaggio industriale, migliorando efficienza e precisione.",
+        "configs": [
+            {
+                "name": "HAL Config Tightening Toolbox",
+                "icon": "PiScrewdriverFill"
+            },
+            {
+                "name": "HAL Config Tightening Unit",
+                "icon": "PiScrewdriverFill"
+            },
+            {
+                "name": "HAL Config Torque Wrench",
+                "icon": "PiScrewdriverFill"
+            },
+            {
+                "name": "HAL Config Fuse",
+                "icon": "TbBolt"
+            },
+            {
+                "name": "HAL Config Arm With Encoder",
+                "icon": "PiPersonArmsSpreadFill"
+            },
+            {
+                "name": "HAL Config Seeger",
+                "icon": "TbWheel"
+            },
+            {
+                "name": "HAL Config Pick To Light",
+                "icon": "PiHandArrowDownBold"
+            },
+            {
+                "name": "HAL Config Rivet",
+                "icon": "PiScrewdriverThin"
+            },
+            {
+                "name": "HAL Config Robot",
+                "icon": "TbRobot"
+            }
+        ]
+    },
+    {
+        "name": "Collaudo Componenti Automotive",
+        "info": "Questi job verificano il corretto funzionamento di cinture di sicurezza, airbag, sensori di presenza passeggero DPD o SBR, garantendo la conformità agli standard di sicurezza.",
+        "configs": [
+            {
+                "name": "HAL Config TPS",
+                "icon": "PiMapPinLineFill"
+            },
+            {
+                "name": "HAL Config Heater",
+                "icon": "PiThermometerHotFill"
+            },
+            {
+                "name": "HAL Config Belt",
+                "icon": "PiBeltFill"
+            },
+            {
+                "name": "HAL Config Airbag",
+                "icon": "FaCarCrash"
+            },
+            {
+                "name": "HAL Config Killer-Switch",
+                "icon": "TbSwitch3 "
+            },
+            {
+                "name": "HAL Config DPD-SBR",
+                "icon": "PiSeatFill"
+            }
+        ]
+    },
+    {
+        "name": "Unità di Controllo Elettronico",
+        "info": "Questi job gestiscono le centraline elettroniche con bus CAN/LIN montate nelle autovetture, effettuandone la configurazione e la verifica del corretto funzionamento.",
+        "configs": [
+            {
+                "name": "HAL Config SCU",
+                "icon": "PiGameControllerFill"
+            },
+            {
+                "name": "HAL Config OCS",
+                "icon": "TbWeight"
+            },
+            {
+                "name": "HAL Config Masseur",
+                "icon": "TbMassage"
+            }
+        ]
+    },
+    {
+        "name": "Controllo di Qualità e Verifica",
+        "info": "Questi job assicurano la qualità dei componenti con misurazioni, controllo del carico, verifica della coppia e ispezione visiva, rilevando difetti con tecnologie avanzate.",
+        "configs": [
+            {
+                "name": "HAL Config Load",
+                "icon": "TbTruckLoading"
+            },
+            {
+                "name": "HAL Config Couple",
+                "icon": "PiDeviceRotateBold"
+            },
+            {
+                "name": "HAL Config Motor",
+                "icon": "TbEngine"
+            },
+            {
+                "name": "HAL Config Object",
+                "icon": "TbDimensions"
+            },
+            {
+                "name": "HAL Config Quality",
+                "icon": "TbCertificate"
+            }
+        ]
+    },
+    {
+        "name": "Gestione Produzione e Logistica",
+        "info": "Questi job ottimizzano flussi e operazioni attraverso il monitoraggio logistico, la gestione della manutenzione, la reportistica e la stampa di etichette personalizzate.",
+        "configs": [
+            {
+                "name": "HAL Config Printer",
+                "icon": "PiPrinterFill"
+            },
+            {
+                "name": "HAL Config Printer Driver",
+                "icon": "PiPrinterFill"
+            },
+            {
+                "name": "HAL Config Logistic",
+                "icon": "TbTruck"
+            }
+        ]
+    },
+    {
+        "name": "Gestione Postazioni e Procedure",
+        "info": "Questi job coordinano e automatizzano le procedure svolte dalle postazioni di lavoro, ottimizzando l'efficienza e aumentando la produttività complessiva delle operazioni.",
+        "configs": [
+            {
+                "name": "HAL Config Bench",
+                "icon": "TbBrandAirtable"
+            },
+            {
+                "name": "HAL Config Lift",
+                "icon": "TbArrowRampRight"
+            },
+            {
+                "name": "HAL Config Support",
+                "icon": "PiSlideshowFill"
+            },
+            {
+                "name": "HAL Config OPC-UA",
+                "icon": "TbProtocol"
+            }
+        ]
+    }
+]

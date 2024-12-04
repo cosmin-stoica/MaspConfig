@@ -1,0 +1,231 @@
+.dashboard_DEF_MAIN{
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    color:white;
+    padding-top: 65px;
+}
+
+.dashboard_firstpart{
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+
+.dashboard_secondpart{
+    width: 35%;
+}
+
+.dashboard_upper {
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.dashboard_lower{
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.Dashboard_Upper_Left_MainDiv {
+    width: 100%;
+    height: 45vh;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    background-image:
+        radial-gradient(rgba(255, 255, 255, 0.1) 10%, transparent 10%);
+    background-size: 30px 30px, 100%;
+    background-blend-mode: overlay, normal;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+}
+
+
+
+.Dashboard_Upper_Left_MainDiv_Title {
+    font-size: 40px;
+    font-weight: 750;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 5px;
+    text-align: center;
+    z-index: 2;
+
+}
+
+.Dashboard_Upper_Left_MainDiv_Desc {
+    font-size: 13px;
+    padding-top: 4PX;
+    color: var(--second_color);
+    text-align: center;
+    z-index: 2;
+}
+
+.Dashboard_Upper_Left_MainDiv_Desc2 {
+    font-size: 30px;
+    letter-spacing: 5px;
+    font-weight: 750;
+    opacity: 0.8;
+    text-align: center;
+    z-index: 2;
+}
+
+.Dashboard_Upper_Left_MainDiv_AbstractImg{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: auto;
+}
+
+.Dashboard_Upper_Left_Img {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 20px;
+    z-index: 2;
+}
+
+.Dashboard_Upper_Left_Img img{
+    width: 80%;
+}
+
+
+.Dashboard_Upper_Right_MainDiv {
+    width: 96%;
+    height: 97%;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:rgb(221, 221, 221);
+    font-weight: 800;
+    letter-spacing: 3px;
+    font-size: 20px;
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    margin-top: 4px;
+    background-image: url('/assets/images/doc.jpg'); 
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+
+.Dashboard_Upper_Right_Icon{
+    font-size: 50px;
+    cursor: pointer;
+}
+
+.Dashboard_Lower_Left_MainDiv{
+    height: 90%;
+    width: 49%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(to top right, rgba(255, 255, 255, 0.05) 1%, transparent 100%);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.Dashboard_Lower_Left_MainDiv_Title{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.Dashboard_Lower_Left2_MainDiv{
+    height: 90%;
+    width: 49%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(to top right, rgba(255, 255, 255, 0.1) 1%, transparent 100%);
+    border-radius: 10px;
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.Dashboard_Lower_Left2_MainDiv_Report{
+    z-index: 2;
+}
+
+.Dashboard_Lower_Left2_MainDiv_Title{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    z-index: 2;
+}
+
+
+.Dashboard_Lower_Left_MainDiv_ElementsContainer{
+    width: 100%;
+    height: 90%;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 30px;
+}
+
+.Dashboard_Lower_Left_MainDiv_ElementsContainerLower{
+    width: 100%;
+}
+
+.bbbb{
+    border-left: 1px solid rgb(66, 66, 66);
+}
+
+.Dashboard_Lower_Left_MainDiv_Element{
+    width: 100%;
+    border-bottom: 1px solid rgb(66, 66, 66);
+    padding: 10px;
+}
+
+.Dashboard_Lower_Left_MainDiv_Element_Title{
+    color: rgb(172, 172, 172);
+    font-weight: 700;
+}
+
+.Dashboard_Lower_Left_MainDiv_Element_Desc{
+    height: 30px;
+}
+
+.Dashboard_Lower_Left2_MainDiv_Report{
+    font-size: 30px;
+    width: 100%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 1px;
+}
+
+.Dashboard_Lower_Left2_MainDiv_Report span{
+    font-size: 70px;
+    font-weight: 650;
+    letter-spacing: 2px;
+    padding-right: 5px;
+}
