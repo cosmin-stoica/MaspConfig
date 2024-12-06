@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 const PathContext = createContext();
-
 export const PathProvider = ({ children }) => {
   const [path, setPath] = useState(() => {
     //return localStorage.getItem("selectedPath") || "C:\\Sabelt\\Aston Martin\\Collaudo";
@@ -19,6 +18,7 @@ export const PathProvider = ({ children }) => {
   );
 };
 
+// Hook per accedere al contesto Path
 export const usePath = () => {
   return useContext(PathContext);
 };

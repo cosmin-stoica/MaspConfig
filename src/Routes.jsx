@@ -10,11 +10,12 @@ import Login from "./pages/login/login";
 import ConfigOpener from "./pages/config/config_opener";
 import HalParser from "./parsers/hal/hal_parser";
 import Startup from "./pages/startup/startup";
+import Settings from "./pages/settings/settings";
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/" element={<Navigate to="/dashboard" />} />
       <Route path="startup" element={<Startup/>} />
       <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
@@ -25,6 +26,7 @@ function AppRoutes() {
       <Route path="/job" element={<Job />} />
       <Route path="/img" element={<Img />} />
       <Route path="/doc" element={<Doc />} />
+      <Route path="/settings" element={<Settings />} />
     </Routes>
   );
 }

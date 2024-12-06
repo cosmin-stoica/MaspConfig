@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { usePath } from "../../PathContext";
 import ini from "ini";
 import HalParserViewer from "./hal_parser_viewer";
+import { TbArrowLeft } from "react-icons/tb";
+
 
 export default function HalParser() {
 
@@ -12,6 +14,8 @@ export default function HalParser() {
   const queryParams = new URLSearchParams(location.search);
   const configName = queryParams.get("config");
   const groupName = queryParams.get("group_name");
+  const ConfigIcon = queryParams.get("config_icon");
+
   const { path } = usePath();
   const [realFile, setRealFile] = useState([]);
   const [dummy, setDummy] = useState(null);
@@ -58,11 +62,11 @@ export default function HalParser() {
   return (
     <div className="HalParser_MainDiv bg_main width100 height100 min-height100vh c-white">
       <button className="Hal_Config_Back_Btn" onClick={handleBackClick}>
-        Indietro
+        <TbArrowLeft/> 
       </button>
       <div>
         {dummy ?
-          <HalParserViewer dummyFile={dummy} realFile={realFile} configName={configName} groupName={groupName} /> :
+          <HalParserViewer dummyFile={dummy} realFile={realFile} configName={configName} groupName={groupName} configIcon={ConfigIcon} /> :
           <div className="width100 flex-center-row height100vh">Configurazione non presente</div>}
       </div>
     </div>

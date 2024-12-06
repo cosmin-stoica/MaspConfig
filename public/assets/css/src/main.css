@@ -2,6 +2,7 @@
   --main_bg_color: rgb(38, 38, 38);
   --second_color: rgb(246, 224, 31);
   --main_bg_color_linear: linear-gradient(to top right, rgba(6, 29, 68, 0.95) 0%, var(--main_bg_color) 100%);
+  scrollbar-width: none;
 }
 
 .bg_main {
@@ -1344,4 +1345,7 @@
 
 .zindex1000{
   z-index: 1000;
+}
+.zindex1001{
+  z-index: 1001;
 }

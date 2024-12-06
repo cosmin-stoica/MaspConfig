@@ -23,7 +23,7 @@ const useLoginParser = () => {
       //const response = await fetch("/assets/dummies/LoginDummy.ini");
       //const dummyText = await response.text();
       //return ini.parse(dummyText);
-      const dummyPath = `${path}/Config/Dummies/LoginDummy.ini`;
+      const dummyPath = `${path}/Config/Dummies/Login.ini`;
       const dummyContent = await window.electron.parseIniFile(dummyPath);
       return dummyContent;
     } catch (error) {

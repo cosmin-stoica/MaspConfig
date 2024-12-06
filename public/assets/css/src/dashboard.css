@@ -229,3 +229,20 @@
     letter-spacing: 2px;
     padding-right: 5px;
 }
+
+.Dashboard_Upper_Right_Backup{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+}
+
+.Dashboard_Upper_Right_Backup div{
+    font-size: 40px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

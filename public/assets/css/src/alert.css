@@ -8,7 +8,7 @@
     text-align: center;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 101;
+    z-index: 1001;
 }
 
 .Alert_Error{
@@ -56,6 +56,10 @@
     justify-content: center;
     align-items: center;
     z-index: 500;
+}
+
+.confirm_modal_overlay input{
+    margin-bottom: 20px;
 }
 
 .startup_modal_overlay{
@@ -144,38 +148,4 @@
 .startup_maindiv_desc{
     font-size: 20px;
     padding-bottom: 30px;
-}
-
-.path_selector{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-.path_selector button{
-    background-color: #2f7919;
-    color:white;
-    border: none;
-    border-radius: 5px;
-    padding: 3px 10px 3px 10px;
-    margin-bottom: 10px;
-    transition: all 0.3s ease;
-}
-
-.path_selector button:hover{
-    background-color: black;
-    transition: all 0.3s ease;
-}
-
-.path_selector input{
-    width: 500px;
-    height: 30px;
-}
-
-.confirm_button_startup{
-    background-color: green;
-    padding: 0;
-    padding: 5px 40px 5px 40px;
-    margin-top: 10px;
 }

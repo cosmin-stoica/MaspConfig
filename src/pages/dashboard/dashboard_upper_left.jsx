@@ -5,6 +5,9 @@ function Dashboard_Upper_Left() {
 
     const { path } = usePath();
 
+    // Estrarre l'ultima parte del path, gestendo i casi in cui path non è valido
+    const safePath = path && typeof path === 'string' ? path.split('\\').pop() : "Percorso non valido";
+
     return (
         <>
             <div className="Dashboard_Upper_Left_MainDiv">
@@ -17,7 +20,7 @@ function Dashboard_Upper_Left() {
                         VERSIONE 1.0
                     </div>
                     <div className="Dashboard_Upper_Left_MainDiv_Desc2">
-                        {path.split('\\').pop()}
+                        {safePath}
                     </div>
                 </div>
                 <div className="Dashboard_Upper_Left_Img">

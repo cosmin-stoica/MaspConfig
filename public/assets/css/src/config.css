@@ -186,6 +186,7 @@
     height: 100vh;
     color: white;
     padding-top: 70px;
+    overflow: hidden;
 }
 
 
@@ -256,6 +257,10 @@
     gap: 10px;
 }
 
+.LoginParser_UserDiv_List > :first-child {
+    margin-top: 55px;
+}
+
 .user_card {
     background-color: rgb(55, 90, 206);
     width: 100%;
@@ -269,6 +274,21 @@
 
 .user_card_icon {
     font-size: 50px;
+    position: relative;
+}
+
+.user_card_icon_index{
+    position: absolute;
+    top: 0;
+    right:0;
+    background-color: rgb(19, 55, 155);
+    border-radius: 10px;
+    font-size: 15px;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .user_card_desc {
@@ -311,6 +331,8 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     color: rgb(22, 22, 22);
     width: 400px;
+    max-height: 80%;
+    overflow-y: scroll;
 }
 
 .user_modal_form_group {
@@ -368,12 +390,21 @@
     margin-bottom: 10px;
 }
 
+.Utenti_Bar {
+    position: fixed;
+    z-index: 100;
+    width: 49%;
+}
+
 .LoginParser_UserDiv_Bar_Lower {
     display: flex;
     gap: 6px;
     background-color: rgb(241, 241, 241);
     border-radius: 7px;
     padding: 3px 10px 3px 10px;
+    z-index: 100;
+    position: absolute;
+    right:10px;
 }
 
 .LoginParser_UserDiv_Bar_Icon {
@@ -456,4 +487,51 @@
     text-transform: uppercase;
     font-weight: 600;
     font-size: 12px;
+}
+
+.HardwareParserViewerMainDiv{
+    min-height: 100vh;
+    padding-top: 30px;
+    height: 100%;
+    width: 100%;
+    min-width: 100vw;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+ 
+
+.HardwareParserViewer_Secter {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 90%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    align-items:left;
+}
+
+.HardwareParserViewer_Secter > :first-child {
+    margin-top: 16px; 
+}
+
+
+.HardwareParserViewer_Section_Div{
+    border-bottom: 1px solid rgba(255, 255, 255, 0.137);
+    display: flex;
+    gap: 10px;
+    padding: 4px;
+    font-size: 16px;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.HardwareParserViewer_Section_Div_Icon{
+    font-size: 30px;
+}
+
+.HardwareParserViewer_Section_Div:hover{
+    background-color: rgba(255, 255, 255, 0.144);
+    border-radius: 5px;
+    transition: all 0.2s ease;
 }

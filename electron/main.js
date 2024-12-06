@@ -87,3 +87,11 @@ ipcMain.handle("select-path", async () => {
   });
   return result.filePaths[0]; 
 });
+
+ipcMain.handle("delete-file", (_, filePath) => {
+  return fileHandler.deleteFile(filePath);
+});
+
+ipcMain.handle("backup-folder", (event, sourceFolder, backupFolder) => {
+  return fileHandler.backupFolder(sourceFolder, backupFolder);
+});

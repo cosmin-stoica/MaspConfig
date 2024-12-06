@@ -9,4 +9,6 @@ contextBridge.exposeInMainWorld('electron', {
   parseIniFileWithSeparators: (filePath) => ipcRenderer.invoke('parse-ini-file-with-separators', filePath), // Nuova funzione
   readJsonFile: (filePath) => ipcRenderer.invoke("read-json-file", filePath),
   selectPath: () => ipcRenderer.invoke("select-path"), // Apre il file explorer
+  deleteFile: (filePath) => ipcRenderer.invoke("delete-file", filePath), // Apre il file explorer
+  backupFolder: (sourceFolder, backupFolder) => ipcRenderer.invoke("backup-folder", sourceFolder, backupFolder),
 });

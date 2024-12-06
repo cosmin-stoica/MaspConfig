@@ -109,7 +109,7 @@ function UserManagement({ parsedLogin, setParsedLogin, loadIniFile, onAddUser, o
 
   return (
     <div className="LoginParser_UserDiv">
-      <div className="LoginParser_UserDiv_Bar">
+      <div className="LoginParser_UserDiv_Bar Utenti_Bar">
         <h2>Utenti</h2>
         <div className="LoginParser_UserDiv_Bar_Lower">
           <PiUserPlusFill className="LoginParser_UserDiv_Bar_Icon" onClick={onAddUser} />
@@ -129,6 +129,7 @@ function UserManagement({ parsedLogin, setParsedLogin, loadIniFile, onAddUser, o
             return (
               <UserCard
                 key={userIndex}
+                ID={userIndex}
                 Username={username}
                 Password={password}
                 Role={role}

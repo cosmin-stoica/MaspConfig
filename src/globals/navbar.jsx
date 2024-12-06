@@ -46,13 +46,15 @@ function NavBar() {
             </div>
             <div className="Navbar_MainDiv_Account">
                 <div className="Navbar_MainDiv_Account_Container">
-                    <HiCog />
+                    <Link to="/settings" className="no-link-style">
+                        <HiCog />
+                    </Link>
                 </div>
-                <div className="Navbar_MainDiv_Account_Container">
+                {/*<div className="Navbar_MainDiv_Account_Container">
                     <Link to="/login" className="no-link-style">
                         <HiUser />
                     </Link>
-                </div>
+    </div>*/}
             </div>
         </div>
     );
