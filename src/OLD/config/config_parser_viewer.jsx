@@ -1,23 +1,30 @@
-import React, { useState } from "react";
-import { TbBraces, TbBracesOff } from "react-icons/tb";
-import { TbInfoCircleFilled, TbReload } from "react-icons/tb";
-import { PiFloppyDiskFill } from "react-icons/pi";
-import ConfirmModal from "../../globals/confirm_modal";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { useLocation } from 'react-router-dom';
 import { usePath } from "../../PathContext";
+import { TbInfoCircleFilled, TbReload } from "react-icons/tb";
+import { PiFloppyDiskFill, PiHeadCircuitFill } from "react-icons/pi";
 import { MdDelete } from "react-icons/md";
-import iconMap from "./iconMap";
+import ConfirmModal from "../../globals/confirm_modal";
 
-export default function HalParserViewer({ dummyFile, realFile, configName, groupName, configIcon }) {
+export default function ConfigParserViewer({ dummyFile, realFile, configName, configIcon }) {
     const [showConfirmReload, setShowConfirmReload] = useState(null);
     const [showConfirmDelete, setShowConfirmDelete] = useState(null);
     const [showConfirmSave, setShowConfirmSave] = useState(null);
-
-    const { path } = usePath();
-    const navigate = useNavigate();
-
+    
     const [expandedSections, setExpandedSections] = useState({});
+    const location = useLocation();
+    useEffect(() => {
+        return () => {
+          console.log('Sto lasciando il componente o cambiando percorso!');
+        };
+      }, [location]);
+
     const [inputValues, setInputValues] = useState(() => {
+        if (!dummyFile || typeof dummyFile !== "object") {
+            console.error("DummyFile error");
+            return {};
+        }
         const initialValues = {};
         Object.entries(dummyFile).forEach(([section, params]) => {
             initialValues[section] = {};
@@ -27,7 +34,8 @@ export default function HalParserViewer({ dummyFile, realFile, configName, group
         });
         return initialValues;
     });
-
+    const { path } = usePath();
+    const navigate = useNavigate();
 
     const toggleSection = (section) => {
         setExpandedSections((prev) => ({
@@ -53,16 +61,15 @@ export default function HalParserViewer({ dummyFile, realFile, configName, group
         }));
     };
 
-    const renderInput = (key, value, section) => {
+    const renderInput = (key, value, section, dummyValue) => {
         const uniqueId = `${section}_${key}`;
-        const firstChar = key[0];
         const inputValue = inputValues[section]?.[key] || "";
-
-        switch (firstChar) {
+        switch (dummyValue) {
             case "b":
                 return (
                     <select
                         id={uniqueId}
+                        type="text"
                         value={inputValue}
                         onChange={(e) => handleInputChange(section, key, e.target.value)}
                         className="HalParserViewer_Input"
@@ -73,6 +80,16 @@ export default function HalParserViewer({ dummyFile, realFile, configName, group
                     </select>
                 );
             case "n":
+                return (
+                    <input
+                        id={uniqueId}
+                        type="number"
+                        value={inputValue}
+                        onChange={(e) => handleInputChange(section, key, e.target.value)}
+                        className="HalParserViewer_Input"
+                    />
+                );
+            case "i":
                 return (
                     <input
                         id={uniqueId}
@@ -93,8 +110,17 @@ export default function HalParserViewer({ dummyFile, realFile, configName, group
                         className="HalParserViewer_Input"
                     />
                 );
-            case "cstr":
             case "str":
+                return (
+                    <input
+                        id={uniqueId}
+                        type="text"
+                        value={inputValue}
+                        onChange={(e) => handleInputChange(section, key, e.target.value)}
+                        className="HalParserViewer_Input"
+                    />
+                );
+            case "cstr":
                 return (
                     <input
                         id={uniqueId}
@@ -115,12 +141,15 @@ export default function HalParserViewer({ dummyFile, realFile, configName, group
                     />
                 );
         }
+
     };
 
+
     const handleReload = () => {
-        navigate(`/hal-parser?config=${encodeURIComponent(configName)}&group_name=${encodeURIComponent(groupName)}`);
+        navigate(`/configopener?config=${encodeURIComponent(configName)}`);
         window.location.reload();
     };
+
 
     const handleSave = () => {
         const updatedData = {};
@@ -141,12 +170,12 @@ export default function HalParserViewer({ dummyFile, realFile, configName, group
             }
         });
 
-        const HalFilePath = `${path}/Config/Hardware Config/${configName}.ini`;
-        console.log("Percorso file:", HalFilePath);
+        const FilePath = `${path}/Config/${configName}.ini`;
+        console.log("Percorso file:", FilePath);
         console.log("Dati aggiornati:", updatedData);
 
         window.electron
-            .saveIniFile(HalFilePath, updatedData)
+            .saveIniFile(FilePath, updatedData)
             .then(() => {
                 console.log("File salvato con successo!");
                 setShowConfirmSave(false);
@@ -156,21 +185,21 @@ export default function HalParserViewer({ dummyFile, realFile, configName, group
 
     const handleDelete = () => {
 
-        const HalFilePath = `${path}/Config/Hardware Config/${configName}.ini`;
-        console.log(HalFilePath);
+        const FilePath = `${path}/Config/${configName}.ini`;
+        console.log(FilePath);
         window.electron
-            .deleteFile(HalFilePath)
+            .deleteFile(FilePath)
             .then(() => {
                 console.log("File eliminato con successo!");
                 setShowConfirmDelete(false);
             })
             .catch(console.error);
-        navigate(`/hal?config=${encodeURIComponent(configName)}&group_name=${encodeURIComponent(groupName)}`);
+        navigate(`/config`);
     }
 
     return (
         <>
-            <div className="HalParserViewerMainDiv">
+            <div className="HardwareParserViewerMainDiv">
                 <div className="HalParserViewer">
                     <div className="HalParserViewer_Toolpanel">
                         <div>
@@ -184,45 +213,64 @@ export default function HalParserViewer({ dummyFile, realFile, configName, group
                         </div>
                     </div>
                     <div className="HardwareParserViewer_Secter">
-                        {Object.entries(dummyFile).map(([section, params]) => (
-                            <>
-                                <div key={section} className="HardwareParserViewer_Section_Div" onClick={() => toggleSection(section)}>
-                                    {/*<div className="HalParserViewer_Section_Div_Circle"></div>
-                                    <div className="HalParserViewer_Section_Div_Circle2"></div>*/}
-                                    <div className="HardwareParserViewer_Section_Div_Icon">
-                                        {iconMap[configIcon] || ""}
+                        {dummyFile && typeof dummyFile === "object" ? (
+                            Object.entries(dummyFile).map(([section, params]) => (
+                                <>
+                                    <div
+                                        key={section}
+                                        className="HardwareParserViewer_Section_Div"
+                                        onClick={() => toggleSection(section)}
+                                    >
+                                        <div className="HardwareParserViewer_Section_Div_Icon">{configIcon}</div>
+                                        {section}
                                     </div>
-                                    {section}
-                                </div>
-                                {expandedSections[section] && (
-                                    <div className='confirm_modal_overlay zindex1000'>
-                                        <div className="HalParserViewer_Params">
-                                            <div className="HalParserViewer_Params_Bar">
-                                                {section}
-                                                <button className="HalParserViewer_Params_CloseIcon" onClick={() => closeSection(section)}>X</button>
-                                            </div>
-                                            <div className="HalParserViewer_Params_Section">
-                                                {Object.entries(params).map(([key]) => {
-                                                    const value = realFile?.[section]?.[key];
-                                                    const labelClass = value
-                                                        ? "HalParserViewer_Label"
-                                                        : "HalParserViewer_Label--missing";
-                                                    return (<div key={key} className="HalParserViewer_Param">
-                                                        <label htmlFor={key} className={labelClass}>
-                                                            {key}
-                                                        </label>
-                                                        {renderInput(key, inputValues[section]?.[key] || "", section)}
-                                                        <div className="HalParserViewer_Info">
-                                                            <TbInfoCircleFilled />
-                                                        </div>
-                                                    </div>);
-                                                })}
+                                    {expandedSections[section] && (
+                                        <div className="confirm_modal_overlay zindex1000">
+                                            <div className="HalParserViewer_Params">
+                                                <div className="HalParserViewer_Params_Bar">
+                                                    {section}
+                                                    <button
+                                                        className="HalParserViewer_Params_CloseIcon"
+                                                        onClick={() => closeSection(section)}
+                                                    >
+                                                        X
+                                                    </button>
+                                                </div>
+                                                <div className="HalParserViewer_Params_Section">
+                                                    {Object.entries(params).map(([key]) => {
+                                                        const value = realFile?.[section]?.[key];
+                                                        const labelClass = value
+                                                            ? "HalParserViewer_Label"
+                                                            : "HalParserViewer_Label--missing";
+                                                        return (
+                                                            <div key={key} className="HalParserViewer_Param">
+                                                                <label
+                                                                    htmlFor={key}
+                                                                    className={labelClass}
+                                                                >
+                                                                    {key}
+                                                                </label>
+                                                                {renderInput(
+                                                                    key,
+                                                                    inputValues[section]?.[key] || "",
+                                                                    section,
+                                                                    dummyFile[section]?.[key] || "",
+                                                                )}
+                                                                <div className="HalParserViewer_Info">
+                                                                    <TbInfoCircleFilled />
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                )}
-                            </>
-                        ))}
+                                    )}
+                                </>
+                            ))
+                        ) : (
+                            <p>Nessuna configurazione disponibile.</p>
+                        )}
                     </div>
                 </div>
             </div>

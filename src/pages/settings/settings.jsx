@@ -5,10 +5,12 @@ import Directories from "./pages/directories";
 import { GoFileDirectoryFill } from "react-icons/go";
 import { FaArrowAltCircleLeft, FaUser } from "react-icons/fa";
 import ComingSoon from "../../globals/coming_soon"
+import Connection from "./pages/connection";
+import { GrConnect } from "react-icons/gr";
 
 export default function Settings() {
     const [isLoading, setIsLoading] = useState(true);
-    const [currentSettings, setCurrentSettings] = useState("");
+    const [currentSettings, setCurrentSettings] = useState("Connections");
 
     useEffect(() => {
         const loaderTimeout = setTimeout(() => setIsLoading(false), 1000);
@@ -24,6 +26,8 @@ export default function Settings() {
         switch (current) {
             case "Directories":
                 return <Directories onConfirm={() => handleSettingsClick(null)} />;
+            case "Connections":
+                return <Connection/>;
             default:
                 return <div className="height90 width100 flex-center-column c-white">Opzione non disponibile in questa versione<ComingSoon/></div>
         }
@@ -46,6 +50,11 @@ export default function Settings() {
                                 onClick={() => handleSettingsClick("Directories")}
                                 Icon={GoFileDirectoryFill}
                                 Title="Cartelle"
+                            />
+                              <SettingCard
+                                onClick={() => handleSettingsClick("Connections")}
+                                Icon={GrConnect}
+                                Title="Connesioni"
                             />
                             <SettingCard
                                 onClick={() => handleSettingsClick("Utenti")}

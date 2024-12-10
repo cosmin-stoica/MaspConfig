@@ -4,6 +4,7 @@ import { usePath } from "../../PathContext";
 import ini from "ini";
 import HalParserViewer from "./hal_parser_viewer";
 import { TbArrowLeft } from "react-icons/tb";
+import iconMap from "../config_hal/iconMap";
 
 
 export default function HalParser() {

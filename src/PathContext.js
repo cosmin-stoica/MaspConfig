@@ -11,6 +11,7 @@ export const PathProvider = ({ children }) => {
     localStorage.setItem("selectedPath", path);
   }, [path]);
 
+
   return (
     <PathContext.Provider value={{ path, setPath }}>
       {children}

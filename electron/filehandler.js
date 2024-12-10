@@ -5,7 +5,7 @@ const ini = require("ini");
 const fileHandler = {
   getFiles(folderPath) {
     try {
-      return fs.readdirSync(folderPath); 
+      return fs.readdirSync(folderPath);
     } catch (error) {
       console.error("Errore durante la lettura della directory:", error);
       return [];
@@ -194,6 +194,53 @@ const fileHandler = {
     } catch (error) {
       console.error("Errore durante il backup:", error);
       return false;
+    }
+  },
+  readJob(filePath) {
+    try {
+      const stats = fs.statSync(filePath); // Ottiene le informazioni sul file
+      const fileContent = this.parseIniFile(filePath); // Parsifica il file .ini
+
+      if (!fileContent || !fileContent["SEZIONE GENERALE"]) {
+        throw new Error(
+          "Sezione GENERALE mancante o contenuto del file non valido."
+        );
+      }
+
+      const numeroJob =
+        fileContent["SEZIONE GENERALE"]["Numero job"] ||
+        fileContent["SEZIONE GENERALE"]["Numero Job"] ||
+        0; // Ottiene il numero di job
+
+      return {
+        nomeFile: path.basename(filePath), // Nome del file
+        dataCreazione: stats.birthtime, // Data di creazione
+        dataUltimaModifica: stats.mtime, // Data ultima modifica
+        contenuto: fileContent, // Contenuto parsificato
+        numeroJob: parseInt(numeroJob, 10) || 0, // Numero di job come intero
+      };
+    } catch (error) {
+      console.error("Errore durante la lettura del job:", error);
+      return null; // Torna null in caso di errore
+    }
+  },
+  readJobsFromFolder(folderPath) {
+    try {
+      const files = fs.readdirSync(folderPath);
+      const jobFiles = files.filter((file) => file.startsWith("Job Config"));
+
+      return jobFiles
+        .map((file) => {
+          const filePath = path.join(folderPath, file);
+          return this.readJob(filePath);
+        })
+        .filter((job) => job !== null);
+    } catch (error) {
+      console.error(
+        "Errore durante la lettura dei file nella directory:",
+        error
+      );
+      return [];
     }
   },
 };

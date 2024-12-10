@@ -123,3 +123,44 @@
     color: white;
     font-size: 17px;
 }
+
+
+.Connections_MainDiv{
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+}
+
+.Connections_Paragraph{
+    background-color: rgba(255, 255, 255, 0.192);
+    border-radius: 10px;
+    padding: 10px;
+    color:rgb(231, 231, 231);
+    position: relative;
+}
+
+.Connections_Paragraph_Title{
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.815);
+}
+
+.Connections_Paragraph_InputDiv{
+    margin-top: 10px;
+}
+
+.Connections_Paragraph_InputDiv label{
+    width: 100px;
+}
+
+.Connections_Paragraph_InputDiv input{
+    border-radius: 5px;
+}
+
+.Connections_Paragraph_Btn_Aggiorna{
+    position: absolute;
+    bottom:5px;
+    right:5px;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+}

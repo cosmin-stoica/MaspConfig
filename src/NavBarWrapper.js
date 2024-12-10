@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import NavBar from "./globals/navbar";
 
-function NavBarWrapper() {
+function NavBarWrapper({activeNavbar}) {
   const location = useLocation();
   const [shouldShowNavBar, setShouldShowNavBar] = useState(false);
 
@@ -11,7 +11,7 @@ function NavBarWrapper() {
     setShouldShowNavBar(!NonNavbarPaths.includes(location.pathname));
   }, [location.pathname]);
 
-  return shouldShowNavBar ? <NavBar /> : null;
+  return shouldShowNavBar ? <NavBar activeNavbar={activeNavbar} /> : null;
 }
 
 export default NavBarWrapper;

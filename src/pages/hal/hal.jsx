@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Alert from "../../globals/alert";
 import { usePath } from "../../PathContext";
 import { useNavigate, useLocation } from "react-router";
-import iconMap from "../../parsers/hal/iconMap";
+import iconMap from "../../parsers/config_hal/iconMap";
 import { TbArrowLeft } from "react-icons/tb";
 import { FaSquarePlus } from "react-icons/fa6";
 
@@ -143,12 +143,12 @@ export default function Hal() {
 
     const handleFinalCardClick = (configName, groupName, configIcon) => {
         if (isFileActive(configName)) {
-            navigate(`/hal-parser?config=${encodeURIComponent(configName)}&group_name=${encodeURIComponent(groupName)}&config_icon=${encodeURIComponent(configIcon)}`);
+            navigate(`/config-hal-parser?config=${encodeURIComponent(configName)}&group_name=${encodeURIComponent(groupName)}&config_icon=${encodeURIComponent(configIcon)}&isHal=true`);
         }
     };
 
     const handleAddConfig = (configName, groupName, configIcon) => {
-        navigate(`/hal-parser?config=${encodeURIComponent(configName)}&group_name=${encodeURIComponent(groupName)}&config_icon=${encodeURIComponent(configIcon)}&create=true`);
+        navigate(`/config-hal-parser?config=${encodeURIComponent(configName)}&group_name=${encodeURIComponent(groupName)}&config_icon=${encodeURIComponent(configIcon)}&create=true&isHal=true`);
     }
 
 

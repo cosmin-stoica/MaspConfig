@@ -11,4 +11,9 @@ contextBridge.exposeInMainWorld('electron', {
   selectPath: () => ipcRenderer.invoke("select-path"), // Apre il file explorer
   deleteFile: (filePath) => ipcRenderer.invoke("delete-file", filePath), // Apre il file explorer
   backupFolder: (sourceFolder, backupFolder) => ipcRenderer.invoke("backup-folder", sourceFolder, backupFolder),
+  readJob : (filePath)  => ipcRenderer.invoke("read-job", filePath),
+  readJobsFromFolder : (folderPath)  => ipcRenderer.invoke("read-jobs-from-folder", folderPath),
+  onTcpData: (callback) => ipcRenderer.on('tcp-data', (event, data) => callback(data)),
+  sendTcpMessage: (host, port, message) =>
+    ipcRenderer.invoke('send-tcp-message', { host, port, message }),
 });

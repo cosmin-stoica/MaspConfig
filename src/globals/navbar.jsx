@@ -1,62 +1,152 @@
 import ItodoImage from "../elements/itodo-img";
 import { HiCog, HiUser } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
 
-function NavBar() {
+function NavBar({ activeNavbar }) {
     const location = useLocation();
 
+    const isActive = (paths, queryKey = null, queryValue = null) => {
+        const currentPath = location.pathname;
+        const currentQueryParams = new URLSearchParams(location.search);
+
+        const pathMatches = paths.includes(currentPath);
+        const queryMatches =
+            queryKey && queryValue ? currentQueryParams.get(queryKey) === queryValue : true;
+
+        return pathMatches && queryMatches;
+    };
+
+
+
     return (
-        <div className="Navbar_MainDiv">
-            <div className="Navbar_MainDiv_LogoPart">
-                <Link to="/dashboard">
-                    <ItodoImage className="Navbar_MainDiv_Logo" alt="logo" src="images/solohead.png" />
-                </Link>
-            </div>
-            <div className="Navbar_MainDiv_Buttons">
-                <Link to="/dashboard">
-                    <button className={`Navbar_Button ${location.pathname === '/dashboard' ? 'isActive' : ''}`}>
-                        DASHBOARD
-                    </button>
-                </Link>
-                <Link to="/config">
-                    <button className={`Navbar_Button ${location.pathname === '/config' ? 'isActive' : ''}`}>
-                        CONFIG
-                    </button>
-                </Link>
-                <Link to="/hal">
-                    <button className={`Navbar_Button ${location.pathname === '/hal' ? 'isActive' : ''}`}>
-                        HAL
-                    </button>
-                </Link>
-                <Link to="/job">
-                    <button className={`Navbar_Button ${location.pathname === '/job' ? 'isActive' : ''}`}>
-                        JOB
-                    </button>
-                </Link>
-                <Link to="/img">
-                    <button className={`Navbar_Button ${location.pathname === '/img' ? 'isActive' : ''}`}>
-                        IMG
-                    </button>
-                </Link>
-                <Link to="/doc">
-                    <button className={`Navbar_Button ${location.pathname === '/doc' ? 'isActive' : ''}`}>
-                        DOC
-                    </button>
-                </Link>
-            </div>
-            <div className="Navbar_MainDiv_Account">
-                <div className="Navbar_MainDiv_Account_Container">
-                    <Link to="/settings" className="no-link-style">
-                        <HiCog />
-                    </Link>
+        <>
+            <div className="Navbar_MainDiv">
+                <div className="Navbar_MainDiv_LogoPart">
+                    {!activeNavbar ?
+                        <div>
+                            <ItodoImage className="Navbar_MainDiv_Logo" alt="logo" src="images/solohead.png" />
+                        </div>
+                        : <Link to="/dashboard">
+                            <ItodoImage className="Navbar_MainDiv_Logo" alt="logo" src="images/solohead.png" />
+                        </Link>
+                    }
                 </div>
-                {/*<div className="Navbar_MainDiv_Account_Container">
+                <div className="Navbar_MainDiv_Buttons">
+                    {!activeNavbar ?
+                        <button className={`Navbar_Button ${isActive(['/dashboard', '/home', '']) ? 'isActive' : ''}`}>
+                            DASHBOARD
+                        </button>
+                        : <Link to={!activeNavbar ? "#" : "/dashboard"}>
+                            <button className={`Navbar_Button ${isActive(['/dashboard', '/home', '']) ? 'isActive' : ''}`}>
+                                DASHBOARD
+                            </button>
+                        </Link>
+                    }
+
+                    {!activeNavbar ?
+                        <button
+                            className={`Navbar_Button ${isActive(['/config', '/configopener']) ||
+                                (isActive(['/config-hal-parser']) && !isActive(['/config-hal-parser'], 'isHal', 'true'))
+                                ? 'isActive'
+                                : ''
+                                }`}
+                        >
+                            CONFIG
+                        </button>
+                        : <Link to={!activeNavbar ? "#" : "/config"}>
+                            <button
+                                className={`Navbar_Button ${isActive(['/config', '/configopener']) ||
+                                    (isActive(['/config-hal-parser']) && !isActive(['/config-hal-parser'], 'isHal', 'true'))
+                                    ? 'isActive'
+                                    : ''
+                                    }`}
+                            >
+                                CONFIG
+                            </button>
+                        </Link>
+                    }
+
+
+
+                    {!activeNavbar ?
+                        <button
+                            className={`Navbar_Button ${isActive(['/config-hal-parser'], 'isHal', 'true') || isActive(['/hal'])
+                                ? 'isActive'
+                                : ''
+                                }`}
+                        >
+                            HAL
+                        </button>
+                        :
+                        <Link to={!activeNavbar ? "#" : "/hal"}>
+                            <button
+                                className={`Navbar_Button ${isActive(['/config-hal-parser'], 'isHal', 'true') || isActive(['/hal'])
+                                    ? 'isActive'
+                                    : ''
+                                    }`}
+                            >
+                                HAL
+                            </button>
+                        </Link>
+                    }
+
+
+                    {!activeNavbar ?
+                        <button className={`Navbar_Button ${isActive(['/job', '/work']) ? 'isActive' : ''}`}>
+                            JOB
+                        </button>
+                        :
+                        <Link to={!activeNavbar ? "#" : "/job"}>
+                            <button className={`Navbar_Button ${isActive(['/job', '/work']) ? 'isActive' : ''}`}>
+                                JOB
+                            </button>
+                        </Link>
+                    }
+
+                    {!activeNavbar ?
+                        <button className={`Navbar_Button ${isActive(['/img', '/images']) ? 'isActive' : ''}`}>
+                            IMG
+                        </button>
+                        :
+                        <Link to={!activeNavbar ? "#" : "/img"}>
+                            <button className={`Navbar_Button ${isActive(['/img', '/images']) ? 'isActive' : ''}`}>
+                                IMG
+                            </button>
+                        </Link>
+                    }
+
+                    {!activeNavbar ?
+                        <button className={`Navbar_Button ${isActive(['/doc', '/documents']) ? 'isActive' : ''}`}>
+                            DOC
+                        </button>
+                        :
+                        <Link to={!activeNavbar ? "#" : "/doc"}>
+                            <button className={`Navbar_Button ${isActive(['/doc', '/documents']) ? 'isActive' : ''}`}>
+                                DOC
+                            </button>
+                        </Link>
+                    }
+
+                </div>
+                <div className="Navbar_MainDiv_Account">
+                    <div className="Navbar_MainDiv_Account_Container">
+                        {!activeNavbar ?
+                            <HiCog />
+                            :
+                            <Link to="/settings" className="no-link-style">
+                                <HiCog />
+                            </Link>
+                        }
+                    </div>
+                    {/*<div className="Navbar_MainDiv_Account_Container">
                     <Link to="/login" className="no-link-style">
                         <HiUser />
                     </Link>
-    </div>*/}
+                </div>*/}
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

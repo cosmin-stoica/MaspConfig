@@ -4,10 +4,19 @@ import useLoginParser from "./useLoginParser";
 import ConfirmModal from "../../globals/confirm_modal";
 import UserModal from "./ux/user_modal"
 import { usePath } from "../../PathContext";
+import { TbArrowLeft } from "react-icons/tb";
+import { useNavigate } from "react-router";
+import { useEffect } from "react";
 
-function LoginParser() {
+function LoginParser ({onSetActive}) {
 
   const { path } = usePath();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    return () => onSetActive(true);
+  },[]);
+
   const {
     parsedLogin,
     dummyFile,
@@ -27,8 +36,15 @@ function LoginParser() {
     setShowConfirmLogout(false)
   }
 
+  const handleBackClick = () => {
+    navigate("/config");
+  }
+
   return (
     <div>
+      <button className="Hal_Config_Back_Btn" onClick={handleBackClick}>
+        <TbArrowLeft />
+      </button>
       {openAddUser && (
         <UserModal
           onCancel={() => setOpenAddUser(false)}

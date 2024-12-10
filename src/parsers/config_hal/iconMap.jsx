@@ -30,6 +30,9 @@ import {
     PiSlideshowFill,
     PiPersonArmsSpreadFill,
     PiWind,
+    PiHeadCircuitFill,
+    PiDatabaseFill,
+    PiGavelFill,
 } from "react-icons/pi";
 
 import {
@@ -82,6 +85,9 @@ const iconMap = {
     BiSolidCameraHome : <BiSolidCameraHome/>,
     HiMiniWrenchScrewdriver : <HiMiniWrenchScrewdriver/>,
     HiDocumentReport : <HiDocumentReport/>,
+    PiHeadCircuitFill : <PiHeadCircuitFill/>,
+    PiDatabaseFill : <PiDatabaseFill/>,
+    PiGavelFill : <PiGavelFill/>,
 };
 
 export default iconMap;
