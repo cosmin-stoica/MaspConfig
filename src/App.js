@@ -20,6 +20,7 @@ const AppContent = () => {
     });
   }, [addMessage]);
 
+
   return (
     <div className="App">
       <NavBarWrapper activeNavbar={activeNavbar} />

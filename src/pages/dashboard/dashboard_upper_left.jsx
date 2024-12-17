@@ -3,7 +3,7 @@ import { usePath } from "../../PathContext";
 
 function Dashboard_Upper_Left() {
 
-    const { path } = usePath();
+    const { path, lightMode } = usePath();
 
     // Estrarre l'ultima parte del path, gestendo i casi in cui path non è valido
     const safePath = path && typeof path === 'string' ? path.split('\\').pop() : "Percorso non valido";
@@ -11,7 +11,7 @@ function Dashboard_Upper_Left() {
     return (
         <>
             <div className="Dashboard_Upper_Left_MainDiv">
-                <ItodoImage className="Dashboard_Upper_Left_MainDiv_AbstractImg" src="images/abstract_dashboard.png"/>
+                <ItodoImage className="Dashboard_Upper_Left_MainDiv_AbstractImg" src={`images/abstract_dashboard${lightMode ? "_light" : ""}.png`}/>
                 <div className="width50 flex-center-column">
                     <div className="Dashboard_Upper_Left_MainDiv_Title">
                         MASP CONFIG <br></br>
@@ -24,7 +24,7 @@ function Dashboard_Upper_Left() {
                     </div>
                 </div>
                 <div className="Dashboard_Upper_Left_Img">
-                    <ItodoImage alt="logo" src="images/masp_white.png" />
+                    <ItodoImage alt="logo" src={`images/masp_${lightMode? "black" : "white"}.png`} />
                 </div>
             </div>
         </>

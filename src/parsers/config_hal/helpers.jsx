@@ -15,19 +15,32 @@ export const initializeInputValues = (dummyFile, realFile) => {
 
 export const saveConfiguration = (isAvv, isHal, inputValues, dummyFile, realFile, configName, path, setShowConfirmSave) => {
     const updatedData = {};
+    console.log('input',inputValues)
     Object.entries(inputValues).forEach(([section, params]) => {
         const updatedSection = {};
+        let x = 0;
         Object.entries(params).forEach(([key, value]) => {
-            if (value) {
+            const actualValue = dummyFile?.[section]?.[key] || value;
+            if (key.startsWith("separator_") && !isNaN(key.split("_")[1])) {
+                const count = parseInt(actualValue.slice(1), 10);
+                const firstChar = actualValue?.charAt(0) || "";
+                updatedSection[`separator_${x}`] = firstChar.repeat(count);
+                x = x + 1;
+            } else if(key.startsWith("comment_") && !isNaN(key.split("_")[1])) {
+                updatedSection[`comment_${x}`] = actualValue;
+                x = x + 1;
+            } else if (value) {
                 updatedSection[key] = value;
-            } else if (realFile?.[section]?.[key]) {
-                updatedSection[key] = realFile[section][key];
             }
+            //else if (realFile?.[section]?.[key]) {
+            //    updatedSection[key] = realFile[section][key];
+            //}
         });
         if (Object.keys(updatedSection).length > 0) {
             updatedData[section] = updatedSection;
         }
     });
+    console.log('updated', updatedData)
 
     if (isAvv) {
         const numeroProgrammi = Object.entries(inputValues)
@@ -60,6 +73,7 @@ export const saveConfiguration = (isAvv, isHal, inputValues, dummyFile, realFile
     }
 };
 
+
 export const deleteConfiguration = (isHal, configName, path, setShowConfirmDelete, navigate) => {
     let FilePath = `${path}/Config/${configName}.ini`;
     if (isHal) {
@@ -69,7 +83,12 @@ export const deleteConfiguration = (isHal, configName, path, setShowConfirmDelet
         .deleteFile(FilePath)
         .then(() => {
             setShowConfirmDelete(false);
-            navigate(`/config`);
+            if (isHal) {
+                navigate(`/hal`);
+            }
+            else {
+                navigate(`/config`);
+            }
         })
         .catch(console.error);
 };

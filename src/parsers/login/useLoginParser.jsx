@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { usePath } from "../../PathContext";
 import ini from "ini";
 
-const useLoginParser = () => {
+const useLoginParser = (onSetActive) => {
   const { path } = usePath();
   const [parsedLogin, setParsedLogin] = useState(null);
   const [missingParams, setMissingParams] = useState(null);
@@ -87,6 +87,7 @@ const useLoginParser = () => {
     window.electron.saveIniFile(ODPfilePath, updatedData)
       .then(loadIniFile)
       .catch(console.error);
+      onSetActive(true); 
   };
 
 
@@ -94,6 +95,10 @@ const useLoginParser = () => {
     if (!parsedLogin || !missingParams) return;
 
     const type = dummyFile?.[section]?.[key] || "unknown";
+
+    //if (onSetActive) {
+      onSetActive(false); 
+    //}
 
     // Verifica tipo "b" (booleano)
     if (type === "b" && ["0", "1", ""].includes(value)) {
@@ -107,7 +112,7 @@ const useLoginParser = () => {
     }
 
     // Verifica tipo "i" (interi, non stringhe)
-    if (type === "i") {
+    if (type === "i" || type === "n") {
       const parsedValue = parseInt(value, 10);
       if (!isNaN(parsedValue) && parsedValue.toString() === value) {
         setParsedLogin((prevState) => ({

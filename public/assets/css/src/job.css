@@ -1,3 +1,13 @@
+:root {
+    --job_sticky_navbar_bg: rgb(255, 255, 255);
+    --job_sticky_navbar_color: rgb(27, 27, 27);
+}
+  
+[data-theme="light"] {
+    --job_sticky_navbar_bg: rgb(77, 77, 77);
+    --job_sticky_navbar_color: rgb(236, 236, 236);
+}
+
 .JobViewer_MainDiv{
     background: var(--main_bg_color_linear);
     width: 100%;
@@ -18,10 +28,10 @@
 }
 
 .Ticket_Table{
-    width: 95%;
+    width: 90%;
     height: auto;
     max-height: 80%;
-    color:white;
+    color:var(--text_color);
 }
 
 .Ticket_Table td{
@@ -52,8 +62,8 @@
 
 .Ticket_Table_TR.sticky th {
     transition: all 0.3s ease;
-    background-color: rgb(221, 221, 221);
-    color:white;
+    background-color: var(--job_sticky_navbar_bg);
+    color:var(--job_sticky_navbar_color);
 }
 
 .JobViewer_NomeFileTd{
@@ -73,5 +83,5 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
+    color: var(--text_color);
 }

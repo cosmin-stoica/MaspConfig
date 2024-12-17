@@ -1,3 +1,22 @@
+:root {
+   --config_input_border: rgba(255, 255, 255, 0.452);
+   --config_input_border_focus: rgba(255, 255, 255, 0.8);
+   --config_input_border_hover: rgba(255, 255, 255, 0.671);
+   --config_bg_param_bar: rgb(235, 235, 235);
+   --config_color_param_bar: black;
+   --config_button_bg_param_bar: rgb(61, 61, 61);
+}
+  
+[data-theme="light"] {
+    --config_input_border: rgba(0, 0, 0, 0.356);
+    --config_input_border_focus: rgba(0, 0, 0, 0.8);
+    --config_input_border_hover: rgba(63, 63, 63, 0.671);
+    --config_bg_param_bar: rgb(48, 48, 48);
+    --config_color_param_bar: white;
+    --config_button_bg_param_bar: rgb(221, 221, 221);
+}
+
+
 .ConfigIllustrator_Container.HalConfigContainer {
     padding-top: 100px;
     padding-bottom: 50px;
@@ -143,6 +162,12 @@
     background-color: rgb(197, 197, 197);
 }
 
+.HalParserViewer_Param_Comment{
+    margin-bottom: 10px;
+    color:rgb(226, 226, 226);
+    padding: 5px;
+    border-radius: 5px;
+}
 
 .HalParserViewer_Param{
     margin-bottom: 10px;
@@ -153,7 +178,7 @@
 }
 
 .HalParserViewer_Param:hover{
-    border-bottom: 1px solid rgba(255, 255, 255, 0.671);
+    border-bottom: 1px solid var(--config_input_border_hover);
     transition: all 0.2s ease;
 }
 
@@ -164,14 +189,18 @@
 .HalParserViewer_Input{
     width: 40%;
     background: none;
-    color:white;
-    border: 1px solid rgba(255, 255, 255, 0.452);
+    color:var(--text_color);
+    border: 1px solid var(--config_input_border);
     border-radius: 10px;
     padding: 3px;
 }
 
+.HalParserViewer_Input.Login{
+    width: 10%;
+}
+
 .HalParserViewer_Input:focus {
-    border-color: rgba(255, 255, 255, 0.8);
+    border-color: var(--config_input_border_focus);
     box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 
@@ -192,6 +221,16 @@
 
 .HalParserViewer_Input[type="number"] {
     -moz-appearance: textfield;
+}
+
+
+.HalParserViewer_Input:disabled{
+    background-color: rgba(255, 255, 255, 0.24);
+    color:rgba(255, 255, 255, 0.24);
+}
+
+.Label_Disabled{
+    color:rgba(255, 255, 255, 0.521);
 }
 
 .HalParserViewer_Label--missing{
@@ -295,8 +334,8 @@
     position: absolute;
     right:19px;
     top:17px;
-    background-color: rgb(61, 61, 61);
-    color:white;
+    background-color: var(--config_button_bg_param_bar);
+    color:var(--text_color);
     border-radius: 5px;
     border:none;
 }
@@ -326,14 +365,14 @@
 }
 
 .HalParserViewer_Params_Bar{
-    background-color: rgb(235, 235, 235);
+    background-color: var(--config_bg_param_bar);
     width: 100%;
     height: 30px;
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    color:black;
+    color:var(--config_color_param_bar);
 }
 
 .HalConfigContainer_MainDiv{

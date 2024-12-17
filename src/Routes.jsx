@@ -5,7 +5,7 @@ import Config from "./pages/config/config";
 import Hal from "./pages/hal/hal";
 import Job from "./pages/job/job";
 import Img from "./pages/img/img";
-import Doc from "./pages/doc/doc";
+import Report from "./pages/report/report";
 import Login from "./pages/login/login";
 import ConfigOpener from "./pages/config/config_opener";
 import Startup from "./pages/startup/startup";
@@ -27,7 +27,7 @@ function AppRoutes({ activeNavbar, onSetActive }) {
       <Route path="/job" element={<Job />} />
       <Route path="/job-list" element={<JobList />} />
       <Route path="/img" element={<Img />} />
-      <Route path="/doc" element={<Doc />} />
+      <Route path="/report" element={<Report />} />
       <Route path="/settings" element={<Settings />} />
     </Routes>
   );

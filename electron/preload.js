@@ -16,4 +16,6 @@ contextBridge.exposeInMainWorld('electron', {
   onTcpData: (callback) => ipcRenderer.on('tcp-data', (event, data) => callback(data)),
   sendTcpMessage: (host, port, message) =>
     ipcRenderer.invoke('send-tcp-message', { host, port, message }),
+  openKeyboard: () =>
+    ipcRenderer.invoke('open-keyboard'),
 });

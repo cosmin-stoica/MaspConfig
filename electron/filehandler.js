@@ -101,38 +101,43 @@ const fileHandler = {
   },
   saveIniFile(filePath, data) {
     try {
-      // Funzione per costruire la stringa .ini manualmente con commenti
-      const buildIniStringWithComments = (data) => {
-        let iniString = "";
+      let iniString = "";
 
-        Object.entries(data).forEach(([section, params]) => {
-          iniString += `[${section}]\n`;
-
-          Object.entries(params).forEach(([key, value]) => {
-            if (key.startsWith("__comment_")) {
-              // Tratta i commenti come linee prefissate con ";"
-              iniString += `; ${value}\n`;
-            } else {
-              // Tratta i normali parametri
-              iniString += `${key}=${value}\n`;
+      Object.entries(data).forEach(([section, params]) => {
+        let needToParse = false;
+        console.log(data[section]);
+        Object.entries(params).forEach(([key, value]) => {
+          if (!needToParse) {
+            if (!key.startsWith("separator") && !key.startsWith("comment")) {
+              if (value) needToParse = true;
             }
-          });
-
-          iniString += "\n"; // Linea vuota tra le sezioni
+          }
         });
 
-        return iniString.trim(); // Rimuove spazi o righe extra alla fine
-      };
+        console.log("Need To parse:", needToParse);
 
-      // Genera la stringa .ini con supporto ai commenti
-      const iniString = buildIniStringWithComments(data);
+        if (needToParse) {
+          iniString += `;===========================================================\n`;
+          iniString += `[${section}]\n;===========================================================\n`;
 
-      // Scrive il file sul disco
-      fs.writeFileSync(filePath, iniString, "utf-8");
-      return true; // Salvataggio riuscito
+          Object.entries(params).forEach(([key, value]) => {
+            if (key.startsWith("separator")) {
+              iniString += `;${value}\n`;
+            } else if (key.startsWith("comment")) {
+              iniString += `;${value}\n`;
+            } else {
+              iniString += `${key} = ${value}\n`;
+            }
+          });
+        }
+
+        iniString += "\n"; // Aggiunge una riga vuota tra le sezioni
+      });
+
+      fs.writeFileSync(filePath, iniString.trim(), "utf-8");
+      console.log("File .ini salvato con successo!");
     } catch (error) {
       console.error("Errore durante il salvataggio del file .ini:", error);
-      return false; // Salvataggio fallito
     }
   },
   readJsonFile(filePath) {

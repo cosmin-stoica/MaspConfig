@@ -31,7 +31,7 @@ export default function ConfigHalParserViewer({ activeNavbar, onSetActive, dummy
 
     const location = useLocation();
     const navigate = useNavigate();
-    const { path } = usePath();
+    const { path, modTablet } = usePath();
 
     const prevInputValuesRef = useRef(inputValues);
     useEffect(() => {
@@ -45,14 +45,10 @@ export default function ConfigHalParserViewer({ activeNavbar, onSetActive, dummy
         }
 
         prevInputValuesRef.current = inputValues;
-        console.log(isModified)
     }, [inputValues]);
 
 
     const handleReload = () => {
-        console.log(isModified)
-        console.log(inputValues);
-        console.log(realFile)
         if (!isModified) {
             reload();
         }
@@ -148,6 +144,7 @@ export default function ConfigHalParserViewer({ activeNavbar, onSetActive, dummy
                     inputValues={inputValues}
                     setInputValues={setInputValues}
                     isHal={isHal}
+                    modTablet={modTablet}
                 />
             </div>
             <ConfirmModals

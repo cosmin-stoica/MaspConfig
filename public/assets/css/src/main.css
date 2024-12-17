@@ -2,11 +2,23 @@
   --main_bg_color: rgb(38, 38, 38);
   --second_color: rgb(246, 224, 31);
   --main_bg_color_linear: linear-gradient(to top right, rgba(6, 29, 68, 0.95) 0%, var(--main_bg_color) 100%);
+  --c_mode: white;
   scrollbar-width: none;
 }
 
+[data-theme="light"] {
+  --main_bg_color: rgb(250,250,250);
+  --second_color: rgb(26, 26, 26);
+  --main_bg_color_linear: linear-gradient(to top right, rgb(194, 209, 235) 0%, var(--main_bg_color) 100%);
+  --c_mode: black;
+}
+
+.c-mode{
+  color: var(--c_mode);
+}
+
 .bg_main {
-  background: linear-gradient(to top right, rgba(6, 29, 68, 0.95) 0%, var(--main_bg_color) 100%);
+  background: var(--main_bg_color_linear);
 }
 
 .bg-black {

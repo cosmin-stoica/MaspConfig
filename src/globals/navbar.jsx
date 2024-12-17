@@ -2,9 +2,12 @@ import ItodoImage from "../elements/itodo-img";
 import { HiCog, HiUser } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { usePath } from "../PathContext";
 
 function NavBar({ activeNavbar }) {
     const location = useLocation();
+
+    const { lightMode } = usePath();
 
     const isActive = (paths, queryKey = null, queryValue = null) => {
         const currentPath = location.pathname;
@@ -25,10 +28,10 @@ function NavBar({ activeNavbar }) {
                 <div className="Navbar_MainDiv_LogoPart">
                     {!activeNavbar ?
                         <div>
-                            <ItodoImage className="Navbar_MainDiv_Logo" alt="logo" src="images/solohead.png" />
+                            <ItodoImage className="Navbar_MainDiv_Logo" alt="logo" src={`images/solohead${lightMode ? "_black" : ""}.png`} />
                         </div>
                         : <Link to="/dashboard">
-                            <ItodoImage className="Navbar_MainDiv_Logo" alt="logo" src="images/solohead.png" />
+                            <ItodoImage className="Navbar_MainDiv_Logo" alt="logo" src={`images/solohead${lightMode ? "_black" : ""}.png`} />
                         </Link>
                     }
                 </div>
@@ -93,12 +96,12 @@ function NavBar({ activeNavbar }) {
 
 
                     {!activeNavbar ?
-                        <button className={`Navbar_Button ${isActive(['/job', '/work']) ? 'isActive' : ''}`}>
+                        <button className={`Navbar_Button ${isActive(['/job', '/job-list']) ? 'isActive' : ''}`}>
                             JOB
                         </button>
                         :
                         <Link to={!activeNavbar ? "#" : "/job"}>
-                            <button className={`Navbar_Button ${isActive(['/job', '/work']) ? 'isActive' : ''}`}>
+                            <button className={`Navbar_Button ${isActive(['/job', '/job-list']) ? 'isActive' : ''}`}>
                                 JOB
                             </button>
                         </Link>
@@ -117,13 +120,13 @@ function NavBar({ activeNavbar }) {
                     }
 
                     {!activeNavbar ?
-                        <button className={`Navbar_Button ${isActive(['/doc', '/documents']) ? 'isActive' : ''}`}>
-                            DOC
+                        <button className={`Navbar_Button ${isActive(['/report', '/documents']) ? 'isActive' : ''}`}>
+                            REPORT
                         </button>
                         :
-                        <Link to={!activeNavbar ? "#" : "/doc"}>
-                            <button className={`Navbar_Button ${isActive(['/doc', '/documents']) ? 'isActive' : ''}`}>
-                                DOC
+                        <Link to={!activeNavbar ? "#" : "/report"}>
+                            <button className={`Navbar_Button ${isActive(['/report', '/documents']) ? 'isActive' : ''}`}>
+                                REPORT
                             </button>
                         </Link>
                     }

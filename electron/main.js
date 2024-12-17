@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const fileHandler = require("./filehandler"); // Importa il gestore dei file
-const { fork } = require("child_process");
+const { fork, exec } = require("child_process");
 const TCPClient = require('../server/client.js');
 
 let mainWindow;
@@ -129,5 +129,13 @@ ipcMain.handle('send-tcp-message', async (event, { host, port, message }) => {
         resolve(response);
       }
     });
+  });
+});
+
+ipcMain.handle("open-keyboard", () => {
+  exec("osk.exe", (err) => {
+    if (err) {
+      console.error("Errore nell'aprire la tastiera:", err);
+    }
   });
 });

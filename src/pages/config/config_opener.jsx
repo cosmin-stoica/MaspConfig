@@ -29,7 +29,7 @@ function ConfigOpener({ activeNavbar, onSetActive }) {
             return;
         }
         if (configName === "Login") {
-            onSetActive(false);
+            //onSetActive(false);
         }
     }, []);
 
@@ -41,7 +41,7 @@ function ConfigOpener({ activeNavbar, onSetActive }) {
                 {/*<button onClick={() => navigate(`/config`)} className="ConfigOpener_MainDiv_BtnIndietro">Indietro</button>*/}
                 {configName === "Login" ? (
                     <>
-                        <LoginParser onSetActive={onSetActive} />
+                        <LoginParser onSetActive={onSetActive} activeNavbar={activeNavbar} />
                     </>
                 ) : configName === "Main Config" ? (
                     <MainParser />

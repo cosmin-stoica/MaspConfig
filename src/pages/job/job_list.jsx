@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { usePath } from "../../PathContext";
 import Loader from "../../globals/loader";
 import JobVisualizer from "./job_visualizer";
+import JobNavbar from "../../globals/job_navbar";
 
 export default function JobList() {
     const { path } = usePath();
@@ -76,6 +77,7 @@ export default function JobList() {
     return (
         <>
             {isLoading && <Loader />}
+            <JobNavbar/>
             {!clickedData && <div className="JobViewer_MainDiv">
                 <div className="Ticket_Table_Container" ref={containerRef}>
                     <table className="Ticket_Table">

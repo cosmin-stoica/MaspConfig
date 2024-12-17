@@ -1,0 +1,97 @@
+.SchedaIO_MainDiv{
+    background: var(--main_bg_color_linear);
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.SchedaIO_MainDiv_Img{
+    width: 100%;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.SchedaIO_MainDiv_Img img{
+    height: 100%;
+    width: auto;
+    z-index: 2;
+}
+
+.Schedaio_IMG{
+    background-color: rgba(23, 204, 32, 0.596);
+    width: 50%;
+    height: 4px;
+    position: absolute;
+}
+
+.Schedaio_IMG_Out{
+  background-color: rgba(241, 120, 7, 0.651);
+  width: 50%;
+  height: 4px;
+  position: absolute;
+}
+
+
+.Schedaio_IMG_Out {
+  $top: 8%; // Valore iniziale di top
+  @for $i from 1 through 24 {
+    &.Out#{$i} {
+      top: $top;
+      right: 0;
+    }
+    // Aggiunge spazio extra tra 8 e 9 o 16 e 17
+    @if $i == 8 or $i == 16 {
+      $top: $top + 8%; // 3% + 10% di spazio extra
+    } @else {
+      $top: $top + 3%; // Spazio normale
+    }
+  }
+}
+
+
+.Schedaio_IMG {
+  $top: 8%; // Valore iniziale di top
+  @for $i from 1 through 24 {
+    &.In#{$i} {
+      top: $top;
+      left: 0;
+    }
+    // Aggiunge spazio extra tra 8 e 9 o 16 e 17
+    @if $i == 8 or $i == 16 {
+      $top: $top + 8%; // 3% + 10% di spazio extra
+    } @else {
+      $top: $top + 3%; // Spazio normale
+    }
+  }
+}
+
+.Schedaio_IMG_InNum{
+  background-color: white;
+  height: 10px;
+  width: 17px;
+  z-index: 5;
+  position: absolute;
+  font-size: 13px;
+}
+
+.Schedaio_IMG_InNum {
+  $top: 4%; // Valore iniziale di top
+  @for $i from 1 through 24 {
+    &.InNum#{$i} {
+      top: $top;
+      left: 10px;
+    }
+    // Aggiunge spazio extra tra 8 e 9 o 16 e 17
+    @if $i == 8 or $i == 16 {
+      $top: $top + 8%; // 3% + 10% di spazio extra
+    } @else {
+      $top: $top + 3%; // Spazio normale
+    }
+  }
+}

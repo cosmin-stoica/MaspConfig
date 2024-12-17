@@ -67,7 +67,7 @@
   },
   "build": {
     "appId": "com.masp.local",
-    "productName": "MaspLocal",
+    "productName": "Masp Config",
     "directories": {
       "output": "dist"
     },
@@ -75,7 +75,8 @@
       "build/**/*",
       "electron/main.js",
       "electron/filehandler.js",
-      "electron/preload.js"
+      "electron/preload.js",
+      "server/**/*"
     ],
     "extraMetadata": {
       "main": "electron/main.js"

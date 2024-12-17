@@ -1,10 +1,24 @@
-export default function InputRenderer({ keyName, section, dummyValue, inputValues, setInputValues, realFile, isHal }) {
+export default function InputRenderer({ keyName, section, dummyValue, inputValues, setInputValues, realFile, isHal, group, isGroupkey, disabled, isAnyGroupActivated, onErrorInput, modTablet }) {
     const handleInputChange = (section, key, value) => {
         setInputValues((prev) => ({
             ...prev,
             [section]: {
                 ...prev[section],
-                [key]: value,
+                [key]: value || "",
+            },
+        }));
+    };
+
+    const handleInputChangeGroup = (section, key, value) => {
+        if (isAnyGroupActivated && value === "1") {
+            onErrorInput()
+            return;
+        }
+        setInputValues((prev) => ({
+            ...prev,
+            [section]: {
+                ...prev[section],
+                [key]: value || "",
             },
         }));
     };
@@ -15,15 +29,44 @@ export default function InputRenderer({ keyName, section, dummyValue, inputValue
     if (isHal)
         dummyValue = keyName[0];
 
+    const handleFocus = () => {
+        if(modTablet)
+            window.electron.openKeyboard();
+    };
+
+
     switch (dummyValue) {
         case "b":
-            return (
+            if (isGroupkey) {
+                return (
+                    <select
+                        id={uniqueId}
+                        type="text"
+                        value={inputValue}
+                        onChange={(e) => {
+                            if (!group) {
+                                handleInputChange(section, keyName, e.target.value);
+                            }
+                            else{
+                                handleInputChangeGroup(section, keyName, e.target.value);
+                            }
+                        }}
+                        className="HalParserViewer_Input"
+                    >
+                        <option value=""></option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                    </select>
+                );
+            }
+            else return (
                 <select
                     id={uniqueId}
                     type="text"
                     value={inputValue}
                     onChange={(e) => handleInputChange(section, keyName, e.target.value)}
                     className="HalParserViewer_Input"
+                    disabled={!!disabled}
                 >
                     <option value=""></option>
                     <option value="0">0</option>
@@ -38,6 +81,8 @@ export default function InputRenderer({ keyName, section, dummyValue, inputValue
                     value={inputValue}
                     onChange={(e) => handleInputChange(section, keyName, e.target.value)}
                     className="HalParserViewer_Input"
+                    onClick={handleFocus}
+                    disabled={!!disabled}
                 />
             );
         case "i":
@@ -48,6 +93,8 @@ export default function InputRenderer({ keyName, section, dummyValue, inputValue
                     value={inputValue}
                     onChange={(e) => handleInputChange(section, keyName, e.target.value)}
                     className="HalParserViewer_Input"
+                    onClick={handleFocus}
+                    disabled={!!disabled}
                 />
             );
         case "d":
@@ -59,6 +106,8 @@ export default function InputRenderer({ keyName, section, dummyValue, inputValue
                     value={inputValue}
                     onChange={(e) => handleInputChange(section, keyName, e.target.value)}
                     className="HalParserViewer_Input"
+                    onClick={handleFocus}
+                    disabled={!!disabled}
                 />
             );
         case "str":
@@ -69,6 +118,8 @@ export default function InputRenderer({ keyName, section, dummyValue, inputValue
                     value={inputValue}
                     onChange={(e) => handleInputChange(section, keyName, e.target.value)}
                     className="HalParserViewer_Input"
+                    onClick={handleFocus}
+                    disabled={!!disabled}
                 />
             );
         case "cstr":
@@ -79,6 +130,8 @@ export default function InputRenderer({ keyName, section, dummyValue, inputValue
                     value={inputValue}
                     onChange={(e) => handleInputChange(section, keyName, e.target.value)}
                     className="HalParserViewer_Input"
+                    onClick={handleFocus}
+                    disabled={!!disabled}
                 />
             );
         default:
@@ -89,6 +142,8 @@ export default function InputRenderer({ keyName, section, dummyValue, inputValue
                     value={inputValue}
                     onChange={(e) => handleInputChange(section, keyName, e.target.value)}
                     className="HalParserViewer_Input"
+                    onClick={handleFocus}
+                    disabled={!!disabled}
                 />
             );
     }

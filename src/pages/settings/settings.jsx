@@ -3,14 +3,15 @@ import Loader from "../../globals/loader";
 import SettingCard from "./setting_card";
 import Directories from "./pages/directories";
 import { GoFileDirectoryFill } from "react-icons/go";
-import { FaArrowAltCircleLeft, FaUser } from "react-icons/fa";
+import { FaArrowAltCircleLeft, FaUser, FaSlidersH  } from "react-icons/fa";
 import ComingSoon from "../../globals/coming_soon"
 import Connection from "./pages/connection";
 import { GrConnect } from "react-icons/gr";
+import Preferences from "./pages/preferences";
 
 export default function Settings() {
     const [isLoading, setIsLoading] = useState(true);
-    const [currentSettings, setCurrentSettings] = useState("Connections");
+    const [currentSettings, setCurrentSettings] = useState("");
 
     useEffect(() => {
         const loaderTimeout = setTimeout(() => setIsLoading(false), 1000);
@@ -24,12 +25,14 @@ export default function Settings() {
 
     const renderSettings = (current) => {
         switch (current) {
-            case "Directories":
+            case "Cartelle":
                 return <Directories onConfirm={() => handleSettingsClick(null)} />;
-            case "Connections":
-                return <Connection/>;
+            case "Connesioni":
+                return <Connection />;
+            case "Preferenze":
+                return <Preferences />;
             default:
-                return <div className="height90 width100 flex-center-column c-white">Opzione non disponibile in questa versione<ComingSoon/></div>
+                return <div className="height90 width100 flex-center-column c-mode">Opzione non disponibile in questa versione<ComingSoon /></div>
         }
     };
 
@@ -47,12 +50,17 @@ export default function Settings() {
                     {!currentSettings && (
                         <>
                             <SettingCard
-                                onClick={() => handleSettingsClick("Directories")}
+                                onClick={() => handleSettingsClick("Preferenze")}
+                                Icon={FaSlidersH}
+                                Title="Preferenze"
+                            />
+                            <SettingCard
+                                onClick={() => handleSettingsClick("Cartelle")}
                                 Icon={GoFileDirectoryFill}
                                 Title="Cartelle"
                             />
-                              <SettingCard
-                                onClick={() => handleSettingsClick("Connections")}
+                            <SettingCard
+                                onClick={() => handleSettingsClick("Connesioni")}
                                 Icon={GrConnect}
                                 Title="Connesioni"
                             />

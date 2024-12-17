@@ -1,0 +1,340 @@
+.SchedaIO_MainDiv {
+  background: var(--main_bg_color_linear);
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.SchedaIO_MainDiv_Img {
+  width: 100%;
+  height: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.SchedaIO_MainDiv_Img img {
+  height: 100%;
+  width: auto;
+  z-index: 2;
+}
+
+.Schedaio_IMG {
+  background-color: rgba(23, 204, 32, 0.596);
+  width: 50%;
+  height: 4px;
+  position: absolute;
+}
+
+.Schedaio_IMG_Out {
+  background-color: rgba(241, 120, 7, 0.651);
+  width: 50%;
+  height: 4px;
+  position: absolute;
+}
+
+.Schedaio_IMG_Out.Out1 {
+  top: 8%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out2 {
+  top: 11%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out3 {
+  top: 14%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out4 {
+  top: 17%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out5 {
+  top: 20%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out6 {
+  top: 23%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out7 {
+  top: 26%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out8 {
+  top: 29%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out9 {
+  top: 37%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out10 {
+  top: 40%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out11 {
+  top: 43%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out12 {
+  top: 46%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out13 {
+  top: 49%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out14 {
+  top: 52%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out15 {
+  top: 55%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out16 {
+  top: 58%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out17 {
+  top: 66%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out18 {
+  top: 69%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out19 {
+  top: 72%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out20 {
+  top: 75%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out21 {
+  top: 78%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out22 {
+  top: 81%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out23 {
+  top: 84%;
+  right: 0;
+}
+.Schedaio_IMG_Out.Out24 {
+  top: 87%;
+  right: 0;
+}
+
+.Schedaio_IMG.In1 {
+  top: 8%;
+  left: 0;
+}
+.Schedaio_IMG.In2 {
+  top: 11%;
+  left: 0;
+}
+.Schedaio_IMG.In3 {
+  top: 14%;
+  left: 0;
+}
+.Schedaio_IMG.In4 {
+  top: 17%;
+  left: 0;
+}
+.Schedaio_IMG.In5 {
+  top: 20%;
+  left: 0;
+}
+.Schedaio_IMG.In6 {
+  top: 23%;
+  left: 0;
+}
+.Schedaio_IMG.In7 {
+  top: 26%;
+  left: 0;
+}
+.Schedaio_IMG.In8 {
+  top: 29%;
+  left: 0;
+}
+.Schedaio_IMG.In9 {
+  top: 37%;
+  left: 0;
+}
+.Schedaio_IMG.In10 {
+  top: 40%;
+  left: 0;
+}
+.Schedaio_IMG.In11 {
+  top: 43%;
+  left: 0;
+}
+.Schedaio_IMG.In12 {
+  top: 46%;
+  left: 0;
+}
+.Schedaio_IMG.In13 {
+  top: 49%;
+  left: 0;
+}
+.Schedaio_IMG.In14 {
+  top: 52%;
+  left: 0;
+}
+.Schedaio_IMG.In15 {
+  top: 55%;
+  left: 0;
+}
+.Schedaio_IMG.In16 {
+  top: 58%;
+  left: 0;
+}
+.Schedaio_IMG.In17 {
+  top: 66%;
+  left: 0;
+}
+.Schedaio_IMG.In18 {
+  top: 69%;
+  left: 0;
+}
+.Schedaio_IMG.In19 {
+  top: 72%;
+  left: 0;
+}
+.Schedaio_IMG.In20 {
+  top: 75%;
+  left: 0;
+}
+.Schedaio_IMG.In21 {
+  top: 78%;
+  left: 0;
+}
+.Schedaio_IMG.In22 {
+  top: 81%;
+  left: 0;
+}
+.Schedaio_IMG.In23 {
+  top: 84%;
+  left: 0;
+}
+.Schedaio_IMG.In24 {
+  top: 87%;
+  left: 0;
+}
+
+.Schedaio_IMG_InNum {
+  background-color: white;
+  height: 10px;
+  width: 17px;
+  z-index: 5;
+  position: absolute;
+  font-size: 13px;
+}
+
+.Schedaio_IMG_InNum.InNum1 {
+  top: 4%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum2 {
+  top: 7%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum3 {
+  top: 10%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum4 {
+  top: 13%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum5 {
+  top: 16%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum6 {
+  top: 19%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum7 {
+  top: 22%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum8 {
+  top: 25%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum9 {
+  top: 33%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum10 {
+  top: 36%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum11 {
+  top: 39%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum12 {
+  top: 42%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum13 {
+  top: 45%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum14 {
+  top: 48%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum15 {
+  top: 51%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum16 {
+  top: 54%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum17 {
+  top: 62%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum18 {
+  top: 65%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum19 {
+  top: 68%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum20 {
+  top: 71%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum21 {
+  top: 74%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum22 {
+  top: 77%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum23 {
+  top: 80%;
+  left: 10px;
+}
+.Schedaio_IMG_InNum.InNum24 {
+  top: 83%;
+  left: 10px;
+}
+
+/*# sourceMappingURL=schedaio.css.map */

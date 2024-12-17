@@ -1,6 +1,6 @@
 import ComingSoon from "../../globals/coming_soon";
 
-function Doc() {
+function Report() {
 
     return (
         <>
@@ -13,4 +13,4 @@ function Doc() {
 
 }
 
-export default Doc;
+export default Report;
