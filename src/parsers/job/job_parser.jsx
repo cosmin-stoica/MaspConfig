@@ -10,7 +10,23 @@ export default function JobParser({ dummiesData, jobData }) {
     const [showDummyAlert, setShowDummyAlert] = useState(false);
     const [ordinaJobCheck, setOrdinaJobCheck] = useState(false)
     const [keysWithNullValues, setKeysWithNullValues] = useState([]);
+    const [inputValues, setInputValues] = useState({});
+
+    useEffect(() => {
+        if (dummiesData && jobData) {
+            
+            console.log(dummiesData)
+            const jobDataMap = Object.fromEntries(jobData);
+            console.log(jobDataMap)
+            
+        }
+    }, [dummiesData, jobData]);
     
+    useEffect(() => {
+        console.log("Updated inputValues:", inputValues);
+    }, [inputValues]);
+    
+
     const handleCheckboxChange = (value) => {
         setOrdinaJobCheck(value);
     };
@@ -21,39 +37,54 @@ export default function JobParser({ dummiesData, jobData }) {
 
     useEffect(() => {
         if (dummiesData) {
-            const keysWithNullValuesTemp = []; 
-    
+            const keysWithNullValuesTemp = [];
+
             for (const [key, value] of Object.entries(dummiesData)) {
-                if (value === null) {
-                    keysWithNullValuesTemp.push(key); 
+                const jobSection = jobData.find(([section]) => section === key);
+                const tipoJobValue = capitalize(jobSection?.[1]?.["Tipo job"]);
+
+                if (value === null && !keysWithNullValuesTemp.map(String).includes(String(tipoJobValue))) {
+                    keysWithNullValuesTemp.push(tipoJobValue);
                 }
             }
-    
+
             if (keysWithNullValuesTemp.length > 0) {
-                setShowDummyAlert(true); 
-                setKeysWithNullValues(keysWithNullValuesTemp); 
+                setShowDummyAlert(true);
+                setKeysWithNullValues(keysWithNullValuesTemp);
             }
-    
-            console.log("Chiavi con valori null:", keysWithNullValuesTemp);
         }
-    }, [dummiesData]);
+    }, [dummiesData, jobData]);
+
+    const capitalize = (str) => {
+        if (typeof str !== "string") return "";
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    };
+
+
+
     return (
         <>
 
             <div className="JobParser_MainDiv">
                 <div className="Job_ModDiv" >
-                    <JobToolPanel
-                        onCheckboxChange={handleCheckboxChange}
-                        setShowConfirmReload={setShowConfirmReload}
-                    />
-                    <JobSectionViewer
-                        jobData={jobData}
-                        dummiesData={dummiesData}
-                        expandedSections={expandedSections}
-                        setExpandedSections={setExpandedSections}
-                        ordinaJob={ordinaJobCheck}
-                        setShowConfirmReload={setShowConfirmReload}
-                    />
+                    {keysWithNullValues.length === 0 &&
+                        <>
+                            <JobToolPanel
+                                onCheckboxChange={handleCheckboxChange}
+                                setShowConfirmReload={setShowConfirmReload}
+                            />
+                            <JobSectionViewer
+                                jobData={jobData}
+                                dummiesData={dummiesData}
+                                expandedSections={expandedSections}
+                                setExpandedSections={setExpandedSections}
+                                ordinaJob={ordinaJobCheck}
+                                setShowConfirmReload={setShowConfirmReload}
+                                inputValues={inputValues}
+                                setInputValues={setInputValues}
+                            />
+                        </>
+                    }
                     <Modals
                         showConfirmReload={showConfirmReload}
                         showDummyAlert={showDummyAlert}

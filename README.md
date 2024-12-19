@@ -1,70 +1,117 @@
-# Getting Started with Create React App
+# Masp Config - Versione 1
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Descrizione del Progetto
+Masp Config è un'applicazione progettata per fornire una configurazione locale e flessibile del Masp tramite un'interfaccia user-friendly. Combina tecnologie come React ed Electron per offrire una soluzione desktop potente e reattiva con un'architettura client-server per la gestione delle configurazioni.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Struttura del Progetto
 
-### `npm start`
+### **React (Cartelle `src` e `public`)**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+La parte frontend è sviluppata con React, una libreria JavaScript per la creazione di interfacce utente moderne e dinamiche. La cartella `src` contiene:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Componenti React:** Implementano le funzionalità principali dell'interfaccia utente.
+- **Logica di gestione dello stato:** Centralizzata per garantire un flusso dati coerente tra i componenti.
 
-### `npm test`
+La cartella `public` contiene risorse statiche accessibili direttamente, come immagini e file di configurazione utilizzati durante il caricamento dell'app.
+Contiene inoltre tutti i file css.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### Contenuto della cartella `src`
 
-### `npm run build`
+- **File principali:**
+  - `App.js` e `App.css`: Gestiscono la logica e lo stile principali dell'applicazione.
+  - `index.js` e `index.css`: Punto di ingresso dell'app React, responsabile del rendering principale.
+  - `Routes.jsx`: Gestisce il routing dell'applicazione.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Cartelle:**
+  - `elements`: Configurazioni e costanti globali condivise tra i componenti
+  - `globals`: Componenti UI riutilizzabili per costruire l'interfaccia.
+  - `pages`: Contiene le pagine principali dell'applicazione.
+  - `parsers`: Logica per l'analisi o la trasformazione dei dati.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **File di contesto:**
+  - `PathContext.js` e `TCPContext.js`: Gestiscono contesti React per condividere dati e logica tra componenti.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+### Electron
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Electron è un framework che consente di costruire applicazioni desktop multipiattaforma utilizzando tecnologie web come JavaScript, HTML e CSS. In **Masp Config**, Electron è utilizzato per integrare React con una logica backend, creando così un'app desktop potente e reattiva. La struttura di Electron separa chiaramente la parte frontend (React) dalla parte backend (Node.js), permettendo di gestire la logica server-client attraverso un'architettura ben definita.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Il progetto utilizza la configurazione di Electron per gestire la finestra principale, la comunicazione tra il processo principale (main process) e il renderer (processo di rendering, che esegue l'app React), e l'integrazione con il filesystem.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+#### **File principali**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. **`main.js`**
+   - Gestisce il processo principale di Electron.
+   - Crea la finestra dell'applicazione e carica la versione di produzione o di sviluppo dell'app React.
+   - Gestisce la comunicazione tra il backend e il frontend tramite il modulo `ipcMain`.
+   - Gestisce anche il server TCP per la comunicazione di rete.
 
-## Learn More
+2. **`preload.js`**
+   - Espone delle API sicure al frontend utilizzando `contextBridge` e `ipcRenderer`.
+   - Le API esposte permettono al frontend di interagire con il filesystem, inviare messaggi TCP, e altre operazioni senza compromettere la sicurezza.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. **`filehandler.js`**
+   - Gestisce la logica per interagire con il filesystem, come leggere e scrivere file, fare il backup di cartelle, e lavorare con file di configurazione come `.ini` e `.json`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### **Funzionalità principali**
 
-### Code Splitting
+- **Creazione della finestra principale**: La finestra viene creata e configurata con dimensioni e altre proprietà. Viene caricato il file `index.html` che contiene la versione React dell'app.
+  
+- **Comunicazione tra il main process e il renderer**: Utilizzando `ipcMain` nel processo principale e `ipcRenderer` nel processo di rendering, i dati vengono scambiati in modo sicuro tra le due parti dell'app. Ad esempio, per leggere file o inviare comandi TCP, il frontend comunica con il backend tramite canali IPC.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- **Gestione delle configurazioni**: Il file `filehandler.js` si occupa di leggere e scrivere file di configurazione, oltre a gestire backup e operazioni di lettura di file `.ini` e `.json`.
 
-### Analyzing the Bundle Size
+- **Server TCP**: Un server TCP è gestito nel processo principale per consentire la comunicazione di rete. Utilizzando la libreria `TCPClient`, il server può inviare e ricevere messaggi tramite TCP, e questi dati sono inviati al frontend tramite `ipcMain`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+#### **Avvio dell'app**
 
-### Making a Progressive Web App
+Quando l'app viene avviata:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+1. **Modalità sviluppo**: Se l'app è in modalità sviluppo (`NODE_ENV` è `development`), la finestra carica direttamente la versione locale di React tramite `http://localhost:3000`.
+2. **Modalità produzione**: Se l'app è in modalità produzione, viene caricata la versione compilata dell'app React dalla cartella `build`.
 
-### Advanced Configuration
+Il codice del server viene eseguito in un processo separato utilizzando `fork`, il che consente di gestire in modo indipendente la logica di rete.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## Configurazione
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+La configurazione del progetto è tutta in mano a node.js dentro il file package.json
 
-### `npm run build` fails to minify
+## Installazione
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Clona il repository:
+   ```bash
+   git clone <repository-url>
+   ```
+2. Installa le dipendenze:
+   ```bash
+   npm install
+   ```
+3. Avvia l'applicazione in modalità sviluppo:
+   ```bash
+   npm run dev
+   ```
+   
+---
+
+## Building
+
+1. Build di react
+   ```bash
+   npm run build
+   ```
+2. Build di electron con eseguibile
+   ```bash
+   npm run dist
+   ```
+3. Troverai l'applicativo dentro ./dist
+
+## Tecnologie Utilizzate
+
+- **React** per il frontend.
+- **Electron** per l'integrazione desktop e backend.
+- **Node.js** per la configurazione server-client.

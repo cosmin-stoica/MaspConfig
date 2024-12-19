@@ -83,7 +83,7 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "assets/logo.ico"
+      "icon": "electron/assets/logo.ico"
     },
     "mac": {
       "target": "dmg"

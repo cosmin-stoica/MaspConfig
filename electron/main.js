@@ -2,7 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const fileHandler = require("./filehandler"); // Importa il gestore dei file
 const { fork, exec } = require("child_process");
-const TCPClient = require('../server/client.js');
+const TCPClient = require("../server/client.js");
 
 let mainWindow;
 const tcpClient = new TCPClient();
@@ -35,14 +35,14 @@ function createWindow() {
   }
 
   const serverProcess = fork(path.join(__dirname, "../server/server.js"));
-  serverProcess.on('message', (data) => {
-    console.log('Dati ricevuti dal server TCP:', data);
+  serverProcess.on("message", (data) => {
+    console.log("Dati ricevuti dal server TCP:", data);
     if (mainWindow) {
-      mainWindow.webContents.send('tcp-data', data);
+      mainWindow.webContents.send("tcp-data", data);
     }
   });
 
-  serverProcess.on('exit', (code) => {
+  serverProcess.on("exit", (code) => {
     console.log(`Server TCP terminato con codice: ${code}`);
   });
 
@@ -50,8 +50,25 @@ function createWindow() {
 }
 
 app.on("ready", () => {
+  const args = process.argv.slice(1);
+  console.log("Argomenti passati:", args);
+
+  const pathArg = args.find((arg) => arg.startsWith("--path="));
+  const pathValue = pathArg ? pathArg.split("=")[1] : null;
+
   createWindow();
+
+  mainWindow.webContents.once("did-finish-load", () => {
+    if (pathValue) {
+      console.log("Invio valore di path a React:", pathValue);
+      mainWindow.webContents.send("path", pathValue);
+    }
+    else{
+      console.log("Nessun path inviato come argomento.")
+    }
+  });
 });
+
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -120,7 +137,7 @@ ipcMain.handle("read-jobs-from-folder", (_, folderPath) => {
   return fileHandler.readJobsFromFolder(folderPath);
 });
 
-ipcMain.handle('send-tcp-message', async (event, { host, port, message }) => {
+ipcMain.handle("send-tcp-message", async (event, { host, port, message }) => {
   return new Promise((resolve, reject) => {
     tcpClient.sendMessage(host, port, message, (err, response) => {
       if (err) {

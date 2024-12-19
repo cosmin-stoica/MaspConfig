@@ -50,7 +50,7 @@ export default function ConfigHalParser({ activeNavbar, onSetActive }) {
             const loadDummyFile = async () => {
                 if (isHal) {
                     try {
-                        const filePath = `${path}/Config/Dummies/hal/${configName}.ini`;
+                        const filePath = `${path}/Config/Dummies/Hardware Config/${configName}.ini`;
                         const parsedData = await window.electron.parseIniFile(filePath);
 
                         if (!parsedData) {

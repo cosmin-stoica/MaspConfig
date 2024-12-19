@@ -83,7 +83,7 @@ export default function Hal() {
     useEffect(() => {
         const fetchConfig = async () => {
             try {
-                const filePath = `${path}\\Config\\Dummies\\HalCategories.json`; // Percorso completo al file
+                const filePath = `public\\assets\\config_creator\\HalCategories.json`;
                 const data = await window.electron.readJsonFile(filePath);
 
                 if (!data || Object.keys(data).length === 0) {
