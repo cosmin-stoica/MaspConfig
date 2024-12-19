@@ -5,13 +5,13 @@ function Loader() {
         <>
             <div className='loading_modal_overlay'>
                 <div className="loader">
-                    <div class="loader-square"></div>
-                    <div class="loader-square"></div>
-                    <div class="loader-square"></div>
-                    <div class="loader-square"></div>
-                    <div class="loader-square"></div>
-                    <div class="loader-square"></div>
-                    <div class="loader-square"></div>
+                    <div className="loader-square"></div>
+                    <div className="loader-square"></div>
+                    <div className="loader-square"></div>
+                    <div className="loader-square"></div>
+                    <div className="loader-square"></div>
+                    <div className="loader-square"></div>
+                    <div className="loader-square"></div>
                 </div>
             </div>
         </>

@@ -7,7 +7,7 @@ function Job() {
     const navigate = useNavigate();
 
     useEffect(() =>{
-        navigate("/job-list")
+        navigate("/job-overview")
     },[]);
 
     return (

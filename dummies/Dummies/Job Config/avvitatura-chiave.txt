@@ -1,0 +1,28 @@
+============================================================================
+[JOB 1]
+============================================================================
+Tipo job = avvitatura-chiave
+Nome job = s
+Salta job = b
+Numero ripetizioni = n
+----------------------------------------------------------------------------
+Cartella immagini = s
+Immagine vite 1 = s
+Immagine vite 2 = s
+----------------------------------------------------------------------------
+Firma chiave = s
+----------------------------------------------------------------------------
+Numero viti = n
+Coppia nominale = d
+Tolleranza coppia = d
+Fattore di sovraccarico = d
+Angolo minimo = d
+Angolo massimo = d
+----------------------------------------------------------------------------
+Abilita posizione = b
+Nome coordinate = s
+Tolleranza X = n
+Tolleranza Y = n
+Tolleranza Z = n
+----------------------------------------------------------------------------
+

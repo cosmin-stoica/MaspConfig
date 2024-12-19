@@ -146,12 +146,21 @@
 
 .dashboard_drawer_widget_icon {
   font-size: 25px;
+  position: absolute;
+  right:7px;
+}
+
+.dashboard_drawer_widget_icon.open {
+  font-size: 25px;
+  position: relative;
+  font-size: 25px;
   display: flex;
   justify-content: center;
   align-items: center;
   color: var(--Dashboard_Font_Color);
   transition: all 0.3s ease;
 }
+
 
 .dashboard_drawer_widget_description {
   width: 100%;

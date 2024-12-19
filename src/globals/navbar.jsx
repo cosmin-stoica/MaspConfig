@@ -119,7 +119,7 @@ function NavBar({ activeNavbar }) {
                         </Link>
                     }
 
-                    {!activeNavbar ?
+                    {/*!activeNavbar ?
                         <button className={`Navbar_Button ${isActive(['/report', '/documents']) ? 'isActive' : ''}`}>
                             REPORT
                         </button>
@@ -129,7 +129,7 @@ function NavBar({ activeNavbar }) {
                                 REPORT
                             </button>
                         </Link>
-                    }
+                */}
 
                 </div>
                 <div className="Navbar_MainDiv_Account">

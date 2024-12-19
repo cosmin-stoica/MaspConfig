@@ -3,15 +3,14 @@ import { IoIosCheckmarkCircle, IoIosCloseCircle, IoIosWarning } from "react-icon
 function Alert({ Type, Title, Description, onClose, Modal }) {
     const alertContent = (
         <div
-            className={`Alert_MainDiv ${
-                Type === 'error'
+            className={`Alert_MainDiv ${Type === 'error'
                     ? 'Alert_Error'
                     : Type === 'warning'
-                    ? 'Alert_Warning'
-                    : Type === 'success'
-                    ? 'Alert_Success'
-                    : ''
-            }`}
+                        ? 'Alert_Warning'
+                        : Type === 'success'
+                            ? 'Alert_Success'
+                            : ''
+                }`}
         >
             <button onClick={onClose} className="Alert_MainDiv_Btn">
                 X
@@ -28,7 +27,14 @@ function Alert({ Type, Title, Description, onClose, Modal }) {
                 )}
             </div>
             <div className="Alert_MainDiv_Title">{Title}</div>
-            <div className="Alert_MainDiv_Description">{Description}</div>
+            <div className="Alert_MainDiv_Description">
+                {Description.split('\n').map((line, index) => (
+                    <span key={index}>
+                        {line}
+                        <br />
+                    </span>
+                ))}
+            </div>
         </div>
     );
 

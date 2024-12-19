@@ -12,6 +12,8 @@ import Startup from "./pages/startup/startup";
 import Settings from "./pages/settings/settings";
 import JobList from "./pages/job/job_list";
 import ConfigHalParser from "./parsers/config_hal/config_hal_parser";
+import JobOverview from "./pages/job/job-overview";
+import JobModifier from "./pages/job/job_modifier";
 
 function AppRoutes({ activeNavbar, onSetActive }) {
   return (
@@ -25,7 +27,9 @@ function AppRoutes({ activeNavbar, onSetActive }) {
       <Route path="/hal" element={<Hal />} />
       <Route path="/config-hal-parser" element={<ConfigHalParser activeNavbar={activeNavbar} onSetActive={onSetActive}/>}  />
       <Route path="/job" element={<Job />} />
+      <Route path="/job-overview" element={<JobOverview />} />
       <Route path="/job-list" element={<JobList />} />
+      <Route path="/job-modifier" element={<JobModifier />} />
       <Route path="/img" element={<Img />} />
       <Route path="/report" element={<Report />} />
       <Route path="/settings" element={<Settings />} />

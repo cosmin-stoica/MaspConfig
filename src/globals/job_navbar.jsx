@@ -1,23 +1,23 @@
 /* eslint-disable react/jsx-pascal-case */
 import { useState } from "react"
 import JobNavbar_Widget from "./job_navbar_widget";
-import { HiChartPie, HiCheckCircle, HiClipboard, HiClipboardCheck } from "react-icons/hi";
-import { HiMiniDocumentChartBar, HiMiniDocumentCheck, HiMiniFolderPlus } from "react-icons/hi2";
+import { FaList } from "react-icons/fa";
+import { GrOverview } from "react-icons/gr";
 import { IoMenu } from "react-icons/io5";
+import { useNavigate } from "react-router";
 
 
 function JobNavbar() {
     const [openDashboard, setOpenDashboard] = useState(false);
-    const [ticketNumber, setTicketsNumber] = useState(0);
-    const [archivioTicketNumber, setArchivioTicketsNumber] = useState(0);
-    const [activeSection, setActiveSection] = useState("");
+    const navigate = useNavigate()
 
     return (
         <>
 
             <div className={`dashboard_nav_drawer ${openDashboard ? 'open' : ''}`}>
-            <div onClick={() => setOpenDashboard(!openDashboard)} className={`dashboard_nav_drawer_menuicon ${openDashboard ? 'open' : ''}`}><IoMenu/></div>
-                <JobNavbar_Widget Text="Lista job" Icon={HiChartPie} onClick={() => setActiveSection("overview")} />
+                <div onClick={() => setOpenDashboard(!openDashboard)} className={`dashboard_nav_drawer_menuicon ${openDashboard ? 'open' : ''}`}><IoMenu /></div>
+                <JobNavbar_Widget openDashboard={openDashboard} Text="Overview" Icon={GrOverview} onClick={() => navigate("/job-overview")} />
+                <JobNavbar_Widget openDashboard={openDashboard} Text="Lista Config" Icon={FaList} onClick={() => navigate("/job-list")} />
             </div>
         </>
     );

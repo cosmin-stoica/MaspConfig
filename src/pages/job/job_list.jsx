@@ -3,8 +3,8 @@ import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 import { useEffect, useState, useRef } from "react";
 import { usePath } from "../../PathContext";
 import Loader from "../../globals/loader";
-import JobVisualizer from "./job_visualizer";
 import JobNavbar from "../../globals/job_navbar";
+import { useNavigate } from "react-router";
 
 export default function JobList() {
     const { path } = usePath();
@@ -14,9 +14,10 @@ export default function JobList() {
     const [isSticky, setIsSticky] = useState(false);
     const [clickedData, setClickedData] = useState(false);
     const containerRef = useRef(null);
+    const navigate = useNavigate()
 
     useEffect(() => {
-        const loaderTimeout = setTimeout(() => setIsLoading(false), 1500);
+        const loaderTimeout = setTimeout(() => setIsLoading(false), 1000);
         window.electron.readJobsFromFolder(`${path}\\Config`)
             .then((parsedData) => {
                 setJobList(parsedData); // Nessun ordinamento iniziale
@@ -74,6 +75,10 @@ export default function JobList() {
         setSortedBy({ field, order: newOrder });
     };
 
+    const handleClickedData = (data) => {
+        navigate(`/job-modifier?fileName=${data.nomeFile}`)
+    }
+
     return (
         <>
             {isLoading && <Loader />}
@@ -123,7 +128,7 @@ export default function JobList() {
                                 <tr key={index}>
                                     <td className="text-center">{parseInt(index) + 1}</td>
                                     <td className="JobViewer_NomeFileTd">
-                                        <div className="JobViewer_IconOpenJob"><BiLinkExternal onClick={() => setClickedData(data)} /></div>
+                                        <div className="JobViewer_IconOpenJob"><BiLinkExternal onClick={() => handleClickedData(data)} /></div>
                                         {data.nomeFile}
                                     </td>
                                     <td>
@@ -152,7 +157,6 @@ export default function JobList() {
                 </div>
             </div>
             }
-            {clickedData && <JobVisualizer JobData={clickedData}/>}
         </>
     );
 }
