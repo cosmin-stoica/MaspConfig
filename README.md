@@ -85,7 +85,7 @@ La configurazione del progetto è tutta in mano a node.js dentro il file package
 
 1. Clona il repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/cosmin-stoica/MaspConfig
    ```
 2. Installa le dipendenze:
    ```bash
