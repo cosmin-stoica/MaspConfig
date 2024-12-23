@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>PathContext.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Namespaces</li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="Alert.html">Alert</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="Alert.html#.Alert">Alert</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="ComingSoon.html">ComingSoon</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="ComingSoon.html#.ComingSoon">ComingSoon</a></span></li><li class="nav-heading"><span class="nav-item-type type-namespace">N</span><span class="nav-item-name"><a href="ItodoImg.html">ItodoImg</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#App">App</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#AppContent">AppContent</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#AppRoutes">AppRoutes</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#ItodoImage">ItodoImage</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#NavBarWrapper">NavBarWrapper</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#PathProvider">PathProvider</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#TCPProvider">TCPProvider</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#root">root</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#useMessages">useMessages</a></span></li><li class="nav-item"><span class="nav-item-type type-member">M</span><span class="nav-item-name"><a href="global.html#usePath">usePath</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">PathContext.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { createContext, useContext, useState, useEffect } from "react";
+
+// Crea un contesto per gestire e condividere il percorso e altre impostazioni
+const PathContext = createContext();
+
+/**
+ * Provider del contesto Path che gestisce la logica di memorizzazione e recupero dei dati 
+ * come il percorso, la modalità tablet e la modalità luminosa nel localStorage e tramite Electron.
+ * 
+ * @component
+ * @param {Object} props - Le proprietà passate al componente.
+ * @param {ReactNode} props.children - I componenti figli che riceveranno il contesto.
+ * @returns {React.Element} Il componente che fornisce il contesto Path.
+ */
+export const PathProvider = ({ children }) => {
+  /**
+   * Stato che contiene il percorso selezionato.
+   * Recupera il valore iniziale dal localStorage.
+   * 
+   * @type {string}
+   */
+  const [path, setPath] = useState(() => {
+    return localStorage.getItem("selectedPath");
+  });
+
+  /**
+   * Salva il valore `path` nel localStorage ogni volta che cambia.
+   * 
+   * @effect
+   */
+  useEffect(() => {
+    if (path) {
+      localStorage.setItem("selectedPath", path);
+    }
+  }, [path]);
+
+  /**
+   * Recupera il valore del percorso da Electron (se esiste) e lo imposta nello stato.
+   * 
+   * @effect
+   */
+  useEffect(() => {
+    if (window.electron) {
+      window.electron.onPathValue((value) => {
+        if (value) {
+          setPath(value); // Imposta il valore da Electron
+          console.log("Valore di path ricevuto:", value);
+        }
+      });
+    }
+  }, []);
+
+  /**
+   * Stato che gestisce la modalità tablet (modifica la visualizzazione).
+   * Il valore iniziale viene recuperato dal localStorage.
+   * 
+   * @type {boolean}
+   */
+  const [modTablet, setModTablet] = useState(() => {
+    const storedValue = localStorage.getItem("modTablet");
+    return storedValue !== null ? storedValue === "true" : true;
+  });
+
+  /**
+   * Salva il valore di `modTablet` nel localStorage ogni volta che cambia.
+   * 
+   * @effect
+   */
+  useEffect(() => {
+    localStorage.setItem("modTablet", modTablet);
+  }, [modTablet]);
+
+  /**
+   * Stato che gestisce la modalità luminosa (light mode).
+   * Il valore iniziale viene recuperato dal localStorage.
+   * 
+   * @type {boolean}
+   */
+  const [lightMode, setLightMode] = useState(() => {
+    const storedValue = localStorage.getItem("lightMode");
+    return storedValue !== null ? storedValue === "true" : false;
+  });
+
+  /**
+   * Salva il valore di `lightMode` nel localStorage e applica il tema al documento.
+   * 
+   * @effect
+   */
+  useEffect(() => {
+    localStorage.setItem("lightMode", lightMode);
+    if (lightMode) document.documentElement.setAttribute("data-theme", "light");
+    else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+  }, [lightMode]);
+
+  return (
+    &lt;PathContext.Provider
+      value={{
+        path,
+        setPath,
+        modTablet,
+        setModTablet,
+        lightMode,
+        setLightMode,
+      }}
+    >
+      {children}
+    &lt;/PathContext.Provider>
+  );
+};
+
+/**
+ * Hook per accedere al contesto Path.
+ * 
+ * @returns {Object} I valori del contesto Path, inclusi `path`, `setPath`, `modTablet`, `setModTablet`, `lightMode`, `setLightMode`.
+ */
+export const usePath = () => {
+  return useContext(PathContext);
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.4</a> on Thu Dec 19 2024 17:01:06 GMT+0100 (Ora standard dell’Europa centrale) using the Minami theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

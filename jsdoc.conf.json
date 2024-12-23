@@ -1,0 +1,16 @@
+{
+    "source": {
+      "include": ["src"], 
+      "includePattern": ".+\\.jsx?$" 
+    },
+    "plugins": ["plugins/markdown"], 
+    "opts": {
+      "recurse": true,
+      "destination": "docs",
+	  "template": "node_modules/minami"
+    },
+    "templates": {
+      "cleverLinks": false,
+      "monospaceLinks": false
+    }
+  }

@@ -2,7 +2,7 @@ import ItodoImage from "../elements/itodo-img";
 import { HiCog, HiUser } from "react-icons/hi";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { usePath } from "../PathContext";
+import { usePath } from "../MAIN/Config/PathContext";
 
 function NavBar({ activeNavbar }) {
     const location = useLocation();

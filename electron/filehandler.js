@@ -248,6 +248,22 @@ const fileHandler = {
       return [];
     }
   },
+  getAllFilesAndFolders(folderPath) {
+    const fs = require("fs");
+    const path = require("path");
+  
+    try {
+      const entries = fs.readdirSync(folderPath, { withFileTypes: true });
+      return entries.map((entry) => ({
+        name: entry.name, // Nome dell'elemento
+        fullPath: path.join(folderPath, entry.name), // Percorso completo
+        isFolder: entry.isDirectory(), // Indica se è una cartella
+      }));
+    } catch (error) {
+      console.error("Errore durante la lettura della directory:", error);
+      return [];
+    }
+  },  
 };
 
 module.exports = fileHandler;

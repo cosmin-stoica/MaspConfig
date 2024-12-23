@@ -1,5 +1,21 @@
+/**
+ * @namespace Alert
+ * @description Contiene componenti e utilità globali.
+ */
 import { IoIosCheckmarkCircle, IoIosCloseCircle, IoIosWarning } from "react-icons/io";
 
+/**
+ * Componente di allerta per la visualizzazione di messaggi di errore, avviso o successo.
+ * 
+ * @component
+ * @param {string} Type - Il tipo di allerta ('error', 'warning', 'success').
+ * @param {string} Title - Il titolo dell'allerta.
+ * @param {string} Description - La descrizione dell'allerta.
+ * @param {function} onClose - La funzione per chiudere l'allerta.
+ * @param {boolean} Modal - Se `true`, visualizza l'allerta in un modal.
+ * @returns {React.Element} Il componente dell'allerta.
+ * @memberof Alert
+ */
 function Alert({ Type, Title, Description, onClose, Modal }) {
     const alertContent = (
         <div

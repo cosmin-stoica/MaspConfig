@@ -5,17 +5,20 @@ const { fork, exec } = require("child_process");
 const TCPClient = require("../server/client.js");
 
 let mainWindow;
+let isReportGlobal = false;
 const tcpClient = new TCPClient();
 
 const isDev = process.env.NODE_ENV === "development";
 const filePath = path.join(__dirname, "../build/index.html");
 console.log("Path to index.html:", filePath);
 
-function createWindow() {
+function createWindow(appTitle, isReport) {
+  isReportGlobal = isReport; 
+
   mainWindow = new BrowserWindow({
     width: 950,
     height: 700,
-    icon: path.join(__dirname, "assets", "logo.ico"),
+    icon: !isReport ? path.join(__dirname, "assets", "logo.ico") : path.join(__dirname, "assets", "logo_report.ico"),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -23,6 +26,7 @@ function createWindow() {
       allowRunningInsecureContent: true,
       webSecurity: false,
     },
+    title: appTitle,
   });
 
   mainWindow.setMinimumSize(950, 700);
@@ -56,19 +60,23 @@ app.on("ready", () => {
   const pathArg = args.find((arg) => arg.startsWith("--path="));
   const pathValue = pathArg ? pathArg.split("=")[1] : null;
 
-  createWindow();
+  const isReportArg = args.find((arg) => arg.startsWith("--app="));
+  const isReport = isReportArg === "--app=report";
+
+  createWindow(isReport ? "Masp Report" : "Masp Config", isReport);
 
   mainWindow.webContents.once("did-finish-load", () => {
+    mainWindow.webContents.send("isReport", isReport);
+    console.log("Invio isReport a React:", isReport);
+
     if (pathValue) {
       console.log("Invio valore di path a React:", pathValue);
       mainWindow.webContents.send("path", pathValue);
-    }
-    else{
-      console.log("Nessun path inviato come argomento.")
+    } else {
+      console.log("Nessun path inviato come argomento.");
     }
   });
 });
-
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -155,4 +163,8 @@ ipcMain.handle("open-keyboard", () => {
       console.error("Errore nell'aprire la tastiera:", err);
     }
   });
+});
+
+ipcMain.handle("get-all-files-and-folders", (_, folderPath) => {
+  return fileHandler.getAllFilesAndFolders(folderPath);
 });
