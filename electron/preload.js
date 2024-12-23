@@ -33,4 +33,8 @@ contextBridge.exposeInMainWorld("electron", {
     }),
   getAllFilesAndFolders: (folderPath) =>
     ipcRenderer.invoke("get-all-files-and-folders", folderPath),
+  parseCsvFilesInFolder: (folderPath) =>
+    ipcRenderer.invoke("parse-csv-files-in-folder", folderPath),
+  parseCsvFile: (filePath) =>
+    ipcRenderer.invoke("parse-csv-file", filePath),
 });

@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const ini = require("ini");
+const Papa = require("papaparse");
 
 const fileHandler = {
   getFiles(folderPath) {
@@ -251,7 +252,7 @@ const fileHandler = {
   getAllFilesAndFolders(folderPath) {
     const fs = require("fs");
     const path = require("path");
-  
+
     try {
       const entries = fs.readdirSync(folderPath, { withFileTypes: true });
       return entries.map((entry) => ({
@@ -263,7 +264,35 @@ const fileHandler = {
       console.error("Errore durante la lettura della directory:", error);
       return [];
     }
-  },  
+  },
+  async parseCsvFilesInFolder(folderPath) {
+    const allEntries = this.getAllFilesAndFolders(folderPath);
+    const csvFiles = allEntries.filter(
+      (entry) => !entry.isFolder && (entry.name.endsWith(".csv") || entry.name.endsWith(".txt"))
+    );
+    const results = {};
+
+    for (const file of csvFiles) {
+      const fileContent = fs.readFileSync(file.fullPath, "utf-8");
+      const parsed = Papa.parse(fileContent, {
+        header: true,
+        skipEmptyLines: true,
+      });
+      results[file.name] = parsed.data;
+    }
+
+    return results;
+  },
+  parseCsvFile(filePath) {
+    try {
+      const fileContent = fs.readFileSync(filePath, "utf-8");
+      const parsed = Papa.parse(fileContent, { header: true, skipEmptyLines: true });
+      return parsed.data; 
+    } catch (error) {
+      console.error("Errore durante il parsing del file CSV:", error);
+      return null; 
+    }
+  },
 };
 
 module.exports = fileHandler;

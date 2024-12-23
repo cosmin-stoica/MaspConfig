@@ -16,6 +16,7 @@
     "file-saver": "^2.0.5",
     "immutability-helper": "^3.1.1",
     "ini": "^5.0.0",
+    "papaparse": "^5.4.1",
     "react": "^18.3.1",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
@@ -37,13 +38,11 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron": "electron .",
-  
     "dev:config": "cross-env NODE_ENV=development concurrently \"npm start\" \"wait-on http://localhost:3000 && electron . --app=config\"",
     "dev:report": "cross-env NODE_ENV=development concurrently \"npm start\" \"wait-on http://localhost:3000 && electron . --app=report\"",
-  
     "dist:config": "cd MaspConfig && npm run build && cd ../electron && electron-builder --config.extraMetadata.main=main-config.js",
     "dist:report": "cd MaspReport && npm run build && cd ../electron && electron-builder --config.extraMetadata.main=main-report.js"
-  },  
+  },
   "eslintConfig": {
     "extends": [
       "react-app",

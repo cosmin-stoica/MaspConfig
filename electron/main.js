@@ -145,6 +145,19 @@ ipcMain.handle("read-jobs-from-folder", (_, folderPath) => {
   return fileHandler.readJobsFromFolder(folderPath);
 });
 
+ipcMain.handle("parse-csv-files-in-folder", async (_, folderPath) => {
+  try {
+    return await fileHandler.parseCsvFilesInFolder(folderPath);
+  } catch (error) {
+    console.error("Errore durante il parsing dei file CSV:", error);
+    throw error;
+  }
+});
+
+ipcMain.handle("parse-csv-file", (_, filePath) => {
+  return fileHandler.parseCsvFile(filePath);
+});
+
 ipcMain.handle("send-tcp-message", async (event, { host, port, message }) => {
   return new Promise((resolve, reject) => {
     tcpClient.sendMessage(host, port, message, (err, response) => {
