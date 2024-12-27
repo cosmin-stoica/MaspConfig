@@ -1,7 +1,7 @@
-# Masp Config - Versione 1
+# Masp Config e Masp Report - Versione 1
 
 ## Descrizione del Progetto
-Masp Config è un'applicazione progettata per fornire una configurazione locale e flessibile del Masp tramite un'interfaccia user-friendly. Combina tecnologie come React ed Electron per offrire una soluzione desktop potente e reattiva con un'architettura client-server per la gestione delle configurazioni.
+Masp Config e Masp Report sono applicazioni progettate per fornire rispettivamente una configurazione locale e flessibile del Masp e per visualizzare, ricercare e fare analisi sui report. Entrambe le applicazioni condividono una base tecnologica solida, combinando React ed Electron per offrire soluzioni desktop potenti e reattive con un'architettura client-server.
 
 ---
 
@@ -9,37 +9,39 @@ Masp Config è un'applicazione progettata per fornire una configurazione locale 
 
 ### **React (Cartelle `src` e `public`)**
 
-La parte frontend è sviluppata con React, una libreria JavaScript per la creazione di interfacce utente moderne e dinamiche. La cartella `src` contiene:
+La parte frontend di entrambe le applicazioni è sviluppata con React. La cartella `src` contiene:
 
 - **Componenti React:** Implementano le funzionalità principali dell'interfaccia utente.
 - **Logica di gestione dello stato:** Centralizzata per garantire un flusso dati coerente tra i componenti.
 
-La cartella `public` contiene risorse statiche accessibili direttamente, come immagini e file di configurazione utilizzati durante il caricamento dell'app.
-Contiene inoltre tutti i file css.
+La cartella `public` contiene risorse statiche accessibili direttamente, come immagini e file di configurazione utilizzati durante il caricamento dell'app. Contiene inoltre tutti i file CSS.
 
 #### Contenuto della cartella `src`
 
-- **File principali:**
-  - `App.js` e `App.css`: Gestiscono la logica e lo stile principali dell'applicazione.
-  - `index.js` e `index.css`: Punto di ingresso dell'app React, responsabile del rendering principale.
-  - `Routes.jsx`: Gestisce il routing dell'applicazione.
+- **File principali per Config:**
+  - Dentro `MAIN/Config`:
+    - `App.js` e `App.css`: Gestiscono la logica e lo stile principali dell'applicazione Config.
+    - `PathContext.js` e `TCPContext.js`: Gestiscono contesti React per condividere dati e logica tra componenti.
+    - `routes.jsx`: Gestisce il routing dell'app Config.
 
-- **Cartelle:**
-  - `elements`: Configurazioni e costanti globali condivise tra i componenti
+- **File principali per Report:**
+  - Dentro `MAIN/Report`:
+    - `ReportApp.js`: Gestisce la logica principale dell'applicazione Report.
+    - `routes.jsx`: Gestisce il routing dell'app Report.
+
+- **Cartelle condivise tra Config e Report:**
+  - `Config` e `Report`:
+    - **`pages`**: Contiene le pagine principali delle rispettive applicazioni.
+    - **`parsers`**: Logica per l'analisi o la trasformazione dei dati.
+  - `elements`: Configurazioni e costanti globali condivise tra i componenti.
   - `globals`: Componenti UI riutilizzabili per costruire l'interfaccia.
-  - `pages`: Contiene le pagine principali dell'applicazione.
-  - `parsers`: Logica per l'analisi o la trasformazione dei dati.
-
-- **File di contesto:**
-  - `PathContext.js` e `TCPContext.js`: Gestiscono contesti React per condividere dati e logica tra componenti.
+  - `MAIN`: Contiene i file principali delle applicazioni Config e Report.
 
 ---
 
 ### Electron
 
-Electron è un framework che consente di costruire applicazioni desktop multipiattaforma utilizzando tecnologie web come JavaScript, HTML e CSS. In **Masp Config**, Electron è utilizzato per integrare React con una logica backend, creando così un'app desktop potente e reattiva. La struttura di Electron separa chiaramente la parte frontend (React) dalla parte backend (Node.js), permettendo di gestire la logica server-client attraverso un'architettura ben definita.
-
-Il progetto utilizza la configurazione di Electron per gestire la finestra principale, la comunicazione tra il processo principale (main process) e il renderer (processo di rendering, che esegue l'app React), e l'integrazione con il filesystem.
+Electron è il framework utilizzato per creare applicazioni desktop multipiattaforma. Integra React con una logica backend, creando un'app desktop potente e reattiva.
 
 #### **File principali**
 
@@ -58,28 +60,33 @@ Il progetto utilizza la configurazione di Electron per gestire la finestra princ
 
 #### **Funzionalità principali**
 
-- **Creazione della finestra principale**: La finestra viene creata e configurata con dimensioni e altre proprietà. Viene caricato il file `index.html` che contiene la versione React dell'app.
-  
-- **Comunicazione tra il main process e il renderer**: Utilizzando `ipcMain` nel processo principale e `ipcRenderer` nel processo di rendering, i dati vengono scambiati in modo sicuro tra le due parti dell'app. Ad esempio, per leggere file o inviare comandi TCP, il frontend comunica con il backend tramite canali IPC.
-
-- **Gestione delle configurazioni**: Il file `filehandler.js` si occupa di leggere e scrivere file di configurazione, oltre a gestire backup e operazioni di lettura di file `.ini` e `.json`.
-
-- **Server TCP**: Un server TCP è gestito nel processo principale per consentire la comunicazione di rete. Utilizzando la libreria `TCPClient`, il server può inviare e ricevere messaggi tramite TCP, e questi dati sono inviati al frontend tramite `ipcMain`.
+- **Creazione della finestra principale**: La finestra viene configurata con dimensioni e altre proprietà. Viene caricato il file `index.html` che contiene la versione React dell'app.
+- **Comunicazione tra il main process e il renderer**: I dati vengono scambiati in modo sicuro tra backend e frontend tramite `ipcMain` e `ipcRenderer`.
+- **Gestione delle configurazioni**: `filehandler.js` legge e scrive file di configurazione, oltre a gestire backup e operazioni su file `.ini` e `.json`.
+- **Server TCP**: Un server TCP è gestito nel processo principale per consentire la comunicazione di rete.
 
 #### **Avvio dell'app**
 
 Quando l'app viene avviata:
 
-1. **Modalità sviluppo**: Se l'app è in modalità sviluppo (`NODE_ENV` è `development`), la finestra carica direttamente la versione locale di React tramite `http://localhost:3000`.
+   - È necessario passare il path di lavoro come argomento: `--path=<path>`.
+   - Se l'app viene avviata come Masp Report, è necessario passare anche `--app=report` come argomento.
+1. **Modalità sviluppo**: Se l'app è in modalità sviluppo (`NODE_ENV` è `development`), la finestra carica la versione locale di React tramite `http://localhost:3000`.
 2. **Modalità produzione**: Se l'app è in modalità produzione, viene caricata la versione compilata dell'app React dalla cartella `build`.
-
-Il codice del server viene eseguito in un processo separato utilizzando `fork`, il che consente di gestire in modo indipendente la logica di rete.
 
 ---
 
 ## Configurazione
 
-La configurazione del progetto è tutta in mano a node.js dentro il file package.json
+La configurazione del progetto è gestita tramite Node.js e definita nel file `package.json`.
+
+Nuove configurazioni:
+- `npm run dev:config`: Avvia l'app Config in modalità sviluppo.
+- `npm run dev:report`: Avvia l'app Report in modalità sviluppo.
+
+Ogni configurazione include un'icona, un titolo e un file JS di entrata specifici, mentre `index.html` rimane condiviso.
+
+---
 
 ## Installazione
 
@@ -93,25 +100,30 @@ La configurazione del progetto è tutta in mano a node.js dentro il file package
    ```
 3. Avvia l'applicazione in modalità sviluppo:
    ```bash
-   npm run dev
+   npm run dev:config
+   # oppure
+   npm run dev:report
    ```
-   
+
 ---
 
 ## Building
 
-1. Build di react
+1. Build di React:
    ```bash
    npm run build
    ```
-2. Build di electron con eseguibile
+2. Build di Electron con eseguibile:
    ```bash
    npm run dist
    ```
-3. Troverai l'applicativo dentro ./dist
+3. Troverai l'applicativo dentro `./dist`.
+
+---
 
 ## Tecnologie Utilizzate
 
 - **React** per il frontend.
 - **Electron** per l'integrazione desktop e backend.
 - **Node.js** per la configurazione server-client.
+
