@@ -5,50 +5,117 @@ export default function CsvViewer({ data }) {
         return <div>Nessun dato da visualizzare.</div>;
     }
 
-    const generalInfo = data.slice(0, 7); // Prime righe con informazioni generali
-    const headersRow = data.find((row) => row["REPORT OP160"] === "Vite");
-    const details = data.filter((row) => parseInt(row["REPORT OP160"]) > 0); // Filtra le righe delle avvitature
+    // Trova dinamicamente la colonna principale
+    const primaryColumn = Object.keys(data[0])[0];
+
+    // Elenco delle sezioni riconosciute
+    const sectionNames = ["Barcode componenti", "Risultati avvitature", "Risultati collaudo", "Controlli"];
+
+    // Funzione per analizzare dinamicamente intestazioni e righe
+    const parseDynamicHeadersAndRows = (sectionName) => {
+        const sectionIndex = data.findIndex((row) => row[primaryColumn] === sectionName);
+        if (sectionIndex < 0) return null;
+
+        const headerRow = data[sectionIndex + 1];
+        const detailRows = [];
+
+        for (let i = sectionIndex + 2; i < data.length; i++) {
+            const currentRow = data[i];
+
+            // Controlla se è una nuova sezione
+            if (sectionNames.includes(currentRow[primaryColumn])) {
+                break;
+            }
+
+            detailRows.push(currentRow);
+        }
+
+        const headers = [
+            headerRow[primaryColumn],
+            headerRow[""],
+            ...(headerRow.__parsed_extra || []),
+        ].filter((header) => header && header.trim().length > 0);
+
+        const details = detailRows.map((row) => [
+            row[primaryColumn],
+            row[""],
+            ...(row.__parsed_extra || []),
+        ]);
+
+        return { headers, details };
+    };
+
+    // Trova i dati generali (prima della prima sezione)
+    const generalDataEndIndex = data.findIndex((row) => sectionNames.includes(row[primaryColumn]));
+    const generalData = data.slice(0, generalDataEndIndex).map((row) => ({
+        label: row[primaryColumn],
+        value: row[""],
+    }));
+
+    // Rileva dati per ogni sezione
+    const sections = [
+        { name: "Barcode componenti", data: parseDynamicHeadersAndRows("Barcode componenti") },
+        { name: "Risultati avvitature", data: parseDynamicHeadersAndRows("Risultati avvitature") },
+        { name: "Risultati collaudo", data: parseDynamicHeadersAndRows("Risultati collaudo") },
+        { name: "Controlli", data: parseDynamicHeadersAndRows("Controlli") },
+    ];
+
+    // Componente per generare una tabella dinamica
+    const DynamicTable = ({ title, data }) => (
+        <div>
+            <h2>{title}</h2>
+            <table border="1" style={{ width: "100%", textAlign: "left", marginBottom: "20px" }}>
+                <thead>
+                    <tr>
+                        {data.headers.map((header, index) => (
+                            <th key={index} style={{ padding: "8px" }}>
+                                {header}
+                            </th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.details.map((row, rowIndex) => (
+                        <tr key={rowIndex}>
+                            {row.map((cell, colIndex) => (
+                                <td key={colIndex} style={{ padding: "8px" }}>
+                                    {cell}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
 
     return (
         <div>
-            <h2>Informazioni Generali</h2>
-            <ul>
-                {generalInfo.map((row, index) => (
-                    <li key={index}>
-                        <strong>{row["REPORT OP160"]}:</strong> {row[""]}
-                    </li>
-                ))}
-            </ul>
+            {/* Visualizza la sezione generale */}
+            {generalData.length > 0 && (
+                <div>
+                    <h2>Dati Generali</h2>
+                    <ul>
+                        {generalData.map((item, index) => (
+                            <li key={index}>
+                                <strong>{item.label}:</strong> {item.value}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
 
-            {headersRow && (
-                <>
-                    <h2>Dettagli Avvitature</h2>
-                    <table border="1" style={{ width: "100%", textAlign: "left" }}>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Nome Job</th>
-                                <th>ID Job</th>
-                                <th>ID Vite</th>
-                                <th>UCA</th>
-                                <th>Coppia</th>
-                                <th>Angolo</th>
-                                <th>Esito</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {details.map((row, index) => (
-                                <tr key={index}>
-                                    <td>{row["REPORT OP160"]}</td>
-                                    <td>{row[""]}</td>
-                                    {headersRow.__parsed_extra.map((header, headerIndex) => (
-                                        <td key={headerIndex}>{row.__parsed_extra[headerIndex]}</td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </>
+            {/* Visualizza le tabelle per ogni sezione */}
+            {sections.map(
+                (section, index) =>
+                    section.data && (
+                        <DynamicTable key={index} title={section.name} data={section.data} />
+                    )
+            )}
+
+            {/* Mostra un messaggio se nessuna sezione specifica è stata trovata */}
+            {sections.every((section) => !section.data) && (
+                <div>Nessuna sezione specifica trovata.</div>
             )}
         </div>
     );

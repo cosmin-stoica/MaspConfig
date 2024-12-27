@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { usePath } from "../../../MAIN/Config/PathContext";
 import CsvViewer from "../../parsers/csvViewer";
+import { IoArrowBackCircle } from "react-icons/io5";
+import ListaToolbox from "./lista_toolbox";
+import ListaTable from "./lista_table";
+import Loader from "../../../globals/loader"
 
 export default function ListaReport() {
     const [files, setFiles] = useState([]);
@@ -8,16 +12,22 @@ export default function ListaReport() {
     const [pathHistory, setPathHistory] = useState([]);
     const [selectedFileContent, setSelectedFileContent] = useState(null);
     const { path } = usePath();
-    const pathToSearch = `${path}/Report`;
+    const pathToSearch = `${path}\\ReportCollaudo`;
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const loadFiles = async (folderPath) => {
         try {
+            setIsLoading(true);
             const filesAndFolders = await window.electron.getAllFilesAndFolders(folderPath);
             setFiles(filesAndFolders);
             setCurrentPath(folderPath);
-            setSelectedFileContent(null); // Resetta la vista del file selezionato
+            setSelectedFileContent(null);
+            console.log(filesAndFolders);
+            setIsLoading(false);
         } catch (error) {
             console.error("Errore durante la lettura dei file:", error);
+            setIsLoading(false);
         }
     };
 
@@ -54,33 +64,27 @@ export default function ListaReport() {
     };
 
     return (
-        <div className="dashboard_report_div bg_main c-white pt-100">
-            {pathHistory.length > 0 && (
-                <button onClick={handleGoBack}>Indietro</button>
-            )}
-            {!selectedFileContent ? (
-                <ul>
-                    {files.map((file, index) => (
-                        <li
-                            key={index}
-                            onClick={() =>
-                                file.isFolder
-                                    ? handleFolderClick(file.fullPath)
-                                    : handleFileClick(file.fullPath)
-                            }
-                            style={{ cursor: file.isFolder ? "pointer" : "default" }}
-                        >
-                            {file.isFolder ? `📁 ${file.name}` : `📄 ${file.name}`}
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <div>
-                    <button onClick={() => setSelectedFileContent(null)}>Torna alla lista</button>
-                    <CsvViewer data={selectedFileContent} /> {/* Usa CsvViewer */}
-                </div>
-            )}
-        </div>
+        <>
+        {isLoading && <Loader/>}
+            <div className="lista_MAIN_DIV">
+                {pathHistory.length > 0 && (
+                    <button className="lista_btn_indietro" onClick={handleGoBack}><IoArrowBackCircle /></button>
+                )}
+                {!selectedFileContent ? (
+                    <div className="table_lista_report_upper_upper">
+                        <ListaToolbox path={currentPath} />
+                        <div className="table_lista_report_upper">
+                            <ListaTable files={files} handleFileClick={handleFileClick} handleFolderClick={handleFolderClick} />
+                        </div>
+                    </div>
+                ) : (
+                    <div>
+                        <button onClick={() => setSelectedFileContent(null)}>Torna alla lista</button>
+                        <CsvViewer data={selectedFileContent} />
+                    </div>
+                )}
+            </div>
+        </>
     );
 }
 

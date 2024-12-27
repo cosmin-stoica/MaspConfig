@@ -252,19 +252,45 @@ const fileHandler = {
   getAllFilesAndFolders(folderPath) {
     const fs = require("fs");
     const path = require("path");
-
+  
     try {
       const entries = fs.readdirSync(folderPath, { withFileTypes: true });
-      return entries.map((entry) => ({
-        name: entry.name, // Nome dell'elemento
-        fullPath: path.join(folderPath, entry.name), // Percorso completo
-        isFolder: entry.isDirectory(), // Indica se è una cartella
-      }));
+      return entries.map((entry) => {
+        const fullPath = path.join(folderPath, entry.name);
+        const stats = fs.statSync(fullPath); 
+        let operatore = null;
+        let codice = null;
+        let progressivo = null;
+
+        if(!entry.isDirectory()){
+          const csvParsed =  this.parseCsvFile(fullPath);
+          const primaryColumn = Object.keys(csvParsed[0])[0];
+          operatore = csvParsed.find(
+            (item) => item[primaryColumn] === "Operatore"
+          )?.[""];
+          codice = csvParsed.find(
+            (item) => item[primaryColumn] === "Codice"
+          )?.[""];
+          progressivo = csvParsed.find(
+            (item) => item[primaryColumn] === "Progressivo"
+          )?.[""];
+        }
+
+        return {
+          name: entry.name, 
+          fullPath: fullPath, 
+          isFolder: entry.isDirectory(), 
+          creationDate: stats.birthtime,
+          csvDataOperatore: operatore,
+          csvDataCodice: codice,
+          csvDataProgressivo: progressivo,
+        };
+      });
     } catch (error) {
       console.error("Errore durante la lettura della directory:", error);
       return [];
     }
-  },
+  },  
   async parseCsvFilesInFolder(folderPath) {
     const allEntries = this.getAllFilesAndFolders(folderPath);
     const csvFiles = allEntries.filter(

@@ -1,8 +1,9 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, session, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const fileHandler = require("./filehandler"); // Importa il gestore dei file
 const { fork, exec } = require("child_process");
 const TCPClient = require("../server/client.js");
+const os = require("os")
 
 let mainWindow;
 let isReportGlobal = false;
@@ -77,6 +78,15 @@ app.on("ready", () => {
     }
   });
 });
+
+//const reactDevToolsPath = path.join(
+//  os.homedir(),
+//  '/Appdata/Local/Google/Chrome/User Data/Profile 2/Extensions/fmkadmapgofadopljbjfkapdkoienihi/6.0.1_0'
+//)
+//console.log('reactDevTools PATH',reactDevToolsPath)
+//app.whenReady().then(async () => {
+//  await session.defaultSession.loadExtension(reactDevToolsPath)
+//})
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
