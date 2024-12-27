@@ -1,8 +1,7 @@
 import { HashRouter } from "react-router-dom";
 import { PathProvider } from "../Config/PathContext";
-import { TCPProvider } from "../Config/TCPContext";
 import AppRoutes from "./Routes";
-import ReportNavBar from "../../globals/reportNavbar";
+import ReportNavBar from "../../UI/globals/reportNavbar";
 
 function ReportApp() {
   return (

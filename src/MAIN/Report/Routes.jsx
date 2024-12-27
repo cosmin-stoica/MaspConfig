@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import Dashboard from "../../Report/pages/dashboard/dashboard";
-import ListaReport from "../../Report/pages/lista/listaReport";
-import Settings from "../../Config/pages/settings/settings"
+import Dashboard from "../../UI/Report/pages/dashboard/dashboard";
+import ListaReport from "../../UI/Report/pages/lista/listaReport";
+import Settings from "../../UI/Config/pages/settings/settings"
 
 /**
  * Componente che gestisce le rotte principali dell'applicazione.

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import NavBar from "../../globals/navbar";
+import NavBar from "../../UI/globals/navbar";
 
 /**
  * Wrapper per il componente NavBar che gestisce la visibilità della barra di navigazione

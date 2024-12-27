@@ -1,19 +1,19 @@
 import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import Dashboard from "../../Config/pages/dashboard/dashboard";
-import Config from "../../Config/pages/config/config";
-import Hal from "../../Config/pages/hal/hal";
-import Job from "../../Config/pages/job/job";
-import Img from "../../Config/pages/img/img";
-import Report from "../../Config/pages/report/report";
-import Login from "../../Config/pages/login/login";
-import ConfigOpener from "../../Config/pages/config/config_opener";
-import Startup from "../../Config/pages/startup/startup";
-import Settings from "../../Config/pages/settings/settings";
-import JobList from "../../Config/pages/job/job_list";
-import ConfigHalParser from "../../Config/parsers/config_hal/config_hal_parser";
-import JobOverview from "../../Config/pages/job/job-overview";
-import JobModifier from "../../Config/pages/job/job_modifier";
+import Dashboard from "../../UI/Config/pages/dashboard/dashboard";
+import Config from "../../UI/Config/pages/config/config";
+import Hal from "../../UI/Config/pages/hal/hal";
+import Job from "../../UI/Config/pages/job/job";
+import Img from "../../UI/Config/pages/img/img";
+import Report from "../../UI/Config/pages/report/report";
+import Login from "../../UI/Config/pages/login/login";
+import ConfigOpener from "../../UI/Config/pages/config/config_opener";
+import Startup from "../../UI/Config/pages/startup/startup";
+import Settings from "../../UI/Config/pages/settings/settings";
+import JobList from "../../UI/Config/pages/job/job_list";
+import ConfigHalParser from "../../UI/Config/parsers/config_hal/config_hal_parser";
+import JobOverview from "../../UI/Config/pages/job/job-overview";
+import JobModifier from "../../UI/Config/pages/job/job_modifier";
 
 /**
  * Componente che gestisce le rotte principali dell'applicazione.

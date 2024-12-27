@@ -30,11 +30,11 @@ La cartella `public` contiene risorse statiche accessibili direttamente, come im
     - `routes.jsx`: Gestisce il routing dell'app Report.
 
 - **Cartelle condivise tra Config e Report:**
-  - `Config` e `Report`:
+  - `UI/Config` e `UI/Report`:
     - **`pages`**: Contiene le pagine principali delle rispettive applicazioni.
     - **`parsers`**: Logica per l'analisi o la trasformazione dei dati.
-  - `elements`: Configurazioni e costanti globali condivise tra i componenti.
-  - `globals`: Componenti UI riutilizzabili per costruire l'interfaccia.
+  - `UI/elements`: Configurazioni e costanti globali condivise tra i componenti.
+  - `UI/globals`: Componenti UI riutilizzabili per costruire l'interfaccia.
   - `MAIN`: Contiene i file principali delle applicazioni Config e Report.
 
 ---
