@@ -33,8 +33,16 @@ contextBridge.exposeInMainWorld("electron", {
     }),
   getAllFilesAndFolders: (folderPath) =>
     ipcRenderer.invoke("get-all-files-and-folders", folderPath),
+  getAllFilesAndFoldersWithSubFolders: (folderPath) =>
+    ipcRenderer.invoke("get-all-files-and-folders-with-subfolders", folderPath),
   parseCsvFilesInFolder: (folderPath) =>
     ipcRenderer.invoke("parse-csv-files-in-folder", folderPath),
   parseCsvFile: (filePath) =>
     ipcRenderer.invoke("parse-csv-file", filePath),
+  indexFilesAndFolders: (directory, pathToSave) =>
+    ipcRenderer.invoke("index-files", directory, pathToSave),
+  searchInIndex: (fileIndexPath, searchTerm) =>
+    ipcRenderer.invoke("search-files", fileIndexPath, searchTerm),
+  readIndexFile: (filePath) =>
+    ipcRenderer.invoke("read-index-file", filePath),
 });

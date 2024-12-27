@@ -1,6 +1,7 @@
 const { app, session, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const fileHandler = require("./filehandler"); // Importa il gestore dei file
+const reportHandler = require("./reporthandler"); // Importa il gestore dei file
 const { fork, exec } = require("child_process");
 const TCPClient = require("../server/client.js");
 const os = require("os")
@@ -157,7 +158,7 @@ ipcMain.handle("read-jobs-from-folder", (_, folderPath) => {
 
 ipcMain.handle("parse-csv-files-in-folder", async (_, folderPath) => {
   try {
-    return await fileHandler.parseCsvFilesInFolder(folderPath);
+    return await reportHandler.parseCsvFilesInFolder(folderPath);
   } catch (error) {
     console.error("Errore durante il parsing dei file CSV:", error);
     throw error;
@@ -165,7 +166,7 @@ ipcMain.handle("parse-csv-files-in-folder", async (_, folderPath) => {
 });
 
 ipcMain.handle("parse-csv-file", (_, filePath) => {
-  return fileHandler.parseCsvFile(filePath);
+  return reportHandler.parseCsvFile(filePath);
 });
 
 ipcMain.handle("send-tcp-message", async (event, { host, port, message }) => {
@@ -189,5 +190,21 @@ ipcMain.handle("open-keyboard", () => {
 });
 
 ipcMain.handle("get-all-files-and-folders", (_, folderPath) => {
-  return fileHandler.getAllFilesAndFolders(folderPath);
+  return reportHandler.getAllFilesAndFolders(folderPath);
+});
+
+ipcMain.handle("get-all-files-and-folders-with-subfolders", (_, folderPath) => {
+  return reportHandler.getAllFilesAndFoldersWithSubFolders(folderPath);
+});
+
+ipcMain.handle('index-files', async (event, directory, pathToSave) => {
+  return reportHandler.indexFilesAndFolders(directory, pathToSave);
+});
+
+ipcMain.handle('search-files', async (event, fileIndexPath, searchTerm) => {
+  return reportHandler.searchInIndex(fileIndexPath, searchTerm);
+});
+
+ipcMain.handle('read-index-file', async (event, filePath) => {
+  return reportHandler.readIndexFile(filePath);
 });

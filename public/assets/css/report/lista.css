@@ -25,7 +25,8 @@
     border-radius: 10px;
     width: 100%;
     height: 100%;
-    overflow-y: auto;
+    overflow-y: hidden;
+    position: relative;
 }
 
 .table_lista_report{
@@ -110,4 +111,105 @@
 
 .table_lista_report td{
     border-bottom: 1px solid rgba(255, 255, 255, 0.267);
+}
+
+.table_lista_report_toolboxBar_searchBtn{
+    font-size: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.table_lista_report_toolboxBar_searchBtn:hover{
+    color: bisque;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.table_lista_report_row{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.285);
+}
+
+.table_lista_report_row > div {
+    flex-shrink: 0; 
+    width: 4%; 
+    text-align: center; 
+}
+
+.table_lista_report_row > span {
+    flex-shrink: 0;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    white-space: nowrap; 
+    height: 30px;
+    padding: 5px;
+}
+
+:root{
+    --s:black;
+}
+
+.table_lista_report_row > span:nth-child(2) {
+    width: 40%; /* Codice */
+}
+
+.table_lista_report_row > span:nth-child(3) {
+    width: 20%; /* Data */
+}
+
+.table_lista_report_row > span:nth-child(4) {
+    width: 16%; /* Progressivo */
+}
+
+.table_lista_report_row > span:nth-child(5) {
+    width: 20%; /* Operatore */
+}
+
+
+.table_lista_report_header {
+    display: flex;
+    align-items: center; 
+}
+
+.table_lista_report_header > div {
+    flex-grow: 0; 
+    flex-shrink: 0;
+    padding: 5px;
+    text-align: left; 
+}
+
+.table_lista_report_header > div:nth-child(1) {
+    width: 3.5%; /* Larghezza della prima colonna */
+}
+
+.table_lista_report_header > div:nth-child(2) {
+    width: 40%; /* Larghezza della colonna "Codice" */
+}
+
+.table_lista_report_header > div:nth-child(3) {
+    width: 20%; /* Larghezza della colonna "Data" */
+}
+
+.table_lista_report_header > div:nth-child(4) {
+    width: 16%; /* Larghezza della colonna "Progressivo" */
+}
+
+.table_lista_report_header > div:nth-child(5) {
+    width: 20%; /* Larghezza della colonna "Operatore" */
+}
+
+.table_lista_report_header_file_trovati{
+    position: absolute;
+    top:0;
+    right:0;
+    font-size: 11px;
+    background-color: white;
+    border-bottom-left-radius: 20px;
+    color:rgb(56, 56, 56);
+    padding: 5px;
 }
