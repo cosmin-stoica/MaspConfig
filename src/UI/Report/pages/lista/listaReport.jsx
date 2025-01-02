@@ -15,7 +15,7 @@ export default function ListaReport() {
     const [pathHistory, setPathHistory] = useState([]);
     const [selectedFileContent, setSelectedFileContent] = useState(null);
     const { path } = usePath();
-    const pathToSearch = `${path}\\ReportCollaudo`;
+    const pathToSearch = `${path}\\ReportOld`;
 
     const [fileIndex, setFileIndex] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
@@ -140,6 +140,7 @@ export default function ListaReport() {
         try {
             const parsedContent = await window.electron.parseCsvFile(filePath);
             setSelectedFileContent(parsedContent);
+            console.log(parsedContent)
         } catch (error) {
             console.error("Errore durante il parsing del file:", error);
         }
@@ -206,9 +207,9 @@ export default function ListaReport() {
                         </div>}
                     </div>
                 ) : (
-                    <div>
-                        <button onClick={() => setSelectedFileContent(null)}>
-                            Torna alla lista
+                    <div className="CsvViewer_MainDiv">
+                        <button className="lista_btn_indietro" onClick={() => setSelectedFileContent(null)}>
+                            <IoArrowBackCircle />
                         </button>
                         <CsvViewer data={selectedFileContent} />
                     </div>

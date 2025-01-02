@@ -309,3 +309,73 @@
     padding: 5px;
     border-radius: 5px;
 }
+
+.CsvViewer_MainDiv{
+    min-height: 100vh;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    scrollbar-width: 0;
+    padding-bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Csv_Viewer_Part_MainDiv{
+    width: 90%;
+    margin-bottom: 10px;
+}
+
+.Csv_Viewer_Part_MainDiv table{
+    width: 100%;
+}
+
+.Csv_Viewer_Part_MainDiv table tr{
+    border: 1px solid rgba(255, 255, 255, 0.426);
+    border-radius: 10px;
+}
+
+.Csv_MainHeader{
+    background-color: white;
+    color:rgb(39, 39, 39);
+    padding-left: 5px;
+    border-radius: 7px;
+    position: relative;
+    display: flex;
+    gap:5px;
+}
+
+.Csv_MainHeader_CircleIcon{
+    position: absolute;
+    right:5px;
+    top: 45%;
+    transform: translateY(-50%);
+    font-size: 25px;
+    cursor: pointer;
+    color:gray;
+}
+
+.CsvViewer_Toolbar_MainDiv{
+    width: 90%;
+    height: 50px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 7px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.CsvViewer_Toolbar_CancelIcon{
+    color: rgb(81, 81, 81);
+    font-size: 30px;
+    padding-right: 5px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.CsvViewer_Toolbar_CancelIcon:hover{
+    color:black;
+    font-size: 35px;
+    transition: all 0.2s ease;
+}
