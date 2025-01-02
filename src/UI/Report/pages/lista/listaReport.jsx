@@ -5,6 +5,8 @@ import { IoArrowBackCircle } from "react-icons/io5";
 import ListaToolbox from "./lista_toolbox";
 import ListaTable from "./lista_table";
 import Loader from "../../../globals/loader";
+import { ListaSearchHandler } from "./handlers/lista_search_handler";
+import Alert from "../../../globals/alert"
 
 export default function ListaReport() {
 
@@ -18,9 +20,14 @@ export default function ListaReport() {
     const [fileIndex, setFileIndex] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
     const [currentQuery, setCurrentQuery] = useState("");
+    const [currentProgressivo, setCurrentProgressivo] = useState("");
+    const [currentOperatore, setCurrentOperatore] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [selectedStartDate, setSelectedStartDate] = useState("");
     const [selectedEndDate, setSelectedEndDate] = useState("");
+
+    const [viewError, setViewEror] = useState(false);
+    const [errorDescription, setErrorDescription] = useState("");
 
     useEffect(() => {
         const initialize = async () => {
@@ -44,56 +51,74 @@ export default function ListaReport() {
     }, [pathToSearch]);
 
 
-    const handleFileNameOnChange = (value) => {
+    const handleFileNameOnChange = (e) => {
+        const value = e?.target?.value;
+        if (!value) {
+            setCurrentQuery("");
+            return;
+        }
         setCurrentQuery(value);
     };
     const handleStartDateChange = (e) => {
-        setSelectedStartDate(new Date(e.target.value).toISOString());
-    };
-    const handleEndDateChange = (e) => {
-        setSelectedEndDate(new Date(e.target.value).toISOString());
-    };
-
-    const handleSearch = () => {
-        if (!currentQuery.trim() && (!selectedEndDate && !selectedStartDate)) {
-            setSearchResults([]);
+        const value = e?.target?.value;
+        if (!value) {
+            setSelectedStartDate("");
             return;
         }
-
-        const formatDate = (dateString) => {
-            const date = new Date(dateString);
-            return date.toISOString().split("T")[0]; // Ritorna solo YYYY-MM-DD
-        };
-
-
-        
-        const results = fileIndex.filter((item) => {
-            const itemCreationDate = formatDate(item.creationDate);
-
-            const isQueryMatched =
-                !item.isFolder &&
-                item.csvDataCodice &&
-                item.csvDataCodice.toLowerCase().includes(currentQuery.toLowerCase());
-
-            const isStartDateMatched =
-                selectedStartDate && itemCreationDate === selectedStartDate;
-
-            const isEndDateMatched =
-                selectedStartDate &&
-                selectedEndDate &&
-                itemCreationDate >= selectedStartDate &&
-                itemCreationDate <= selectedEndDate;
-
-            return (
-                isQueryMatched &&
-                ((selectedStartDate && !selectedEndDate && isStartDateMatched) ||
-                    (selectedStartDate && selectedEndDate && isEndDateMatched) ||
-                    (!selectedStartDate && !selectedEndDate))
-            );
-        });
-
-        setSearchResults(results);
+        const formattedDate = new Date(value).toISOString();
+        setSelectedStartDate(formattedDate);
     };
+    const handleEndDateChange = (e) => {
+        const value = e?.target?.value;
+        if (!value) {
+            setSelectedEndDate("");
+            return;
+        }
+        const formattedDate = new Date(value).toISOString();
+        setSelectedEndDate(formattedDate);
+    };
+    const handleProgressivoChange = (e) => {
+        const value = e?.target?.value;
+        if (!value) {
+            setCurrentProgressivo("");
+            return;
+        }
+        setCurrentProgressivo(value);
+    };
+    const handleOperatoreChange = (e) => {
+        const value = e?.target?.value;
+        if (!value) {
+            setCurrentOperatore("");
+            return;
+        }
+        setCurrentOperatore(value);
+    };
+
+
+    const handleExitSearch = () => {
+        if (!selectedEndDate && !selectedStartDate && !currentQuery.trim() && !currentProgressivo && !currentOperatore) {
+            setErrorDescription("Non è stato inserito nessun parametro");
+            setViewEror(true)
+            return false;
+        }
+        return true;
+    }
+
+    const handleSearch = () => {
+        if (!handleExitSearch())
+            return;
+        const results = ListaSearchHandler(fileIndex, currentQuery, currentProgressivo, currentOperatore, selectedStartDate, selectedEndDate);
+        setSearchResults(results);
+        if (results.length === 0) {
+            setErrorDescription("Non è stato trovato nessun report");
+            setViewEror(true)
+        }
+    };
+
+    const handleCancelReportSearch = () => {
+        setSearchResults([]);
+        setCurrentQuery("");
+    }
 
     // Carica i file della directory
     const loadFiles = async (folderPath) => {
@@ -147,7 +172,7 @@ export default function ListaReport() {
         <>
             {isLoading && <Loader />}
             <div className="lista_MAIN_DIV">
-                {pathHistory.length > 0 || searchResults.length > 0 && (
+                {(pathHistory.length > 0 || searchResults.length > 0) && (
                     <button className="lista_btn_indietro" onClick={handleGoBack}>
                         <IoArrowBackCircle />
                     </button>
@@ -160,8 +185,11 @@ export default function ListaReport() {
                             handleSearchBtn={handleSearch}
                             handleStartDateChange={handleStartDateChange}
                             handleEndDateChange={handleEndDateChange}
+                            handleCancelReportSearch={handleCancelReportSearch}
+                            handleProgressivoChange={handleProgressivoChange}
+                            handleOperatoreChange={handleOperatoreChange}
                         />
-                        <div className="table_lista_report_upper">
+                        {<div className="table_lista_report_upper">
                             {searchResults.length > 0 ? (
                                 <ListaTable
                                     files={searchResults}
@@ -175,7 +203,7 @@ export default function ListaReport() {
                                     handleFolderClick={handleFolderClick}
                                 />
                             )}
-                        </div>
+                        </div>}
                     </div>
                 ) : (
                     <div>
@@ -186,6 +214,19 @@ export default function ListaReport() {
                     </div>
                 )}
             </div>
+
+
+
+            {viewError && <Alert
+                Type="warning"
+                Title="Attenzione"
+                Description={errorDescription}
+                Modal={true}
+                onClose={() => {
+                    setErrorDescription("")
+                    setViewEror(false)
+                }}
+            />}
         </>
     );
 };

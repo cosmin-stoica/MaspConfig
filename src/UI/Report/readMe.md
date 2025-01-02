@@ -5,9 +5,11 @@
 - ...Velocità di caricamento pagina (loader)
 
 - ...Ricerca per codice (da cambiare solo logica ma già fatto)
-- Ricerca per data e intervallo
-- Ricerca per progressivo
-- Ricerca per operatore
+- ...Ricerca per data e intervallo
+- ...Ricerca per progressivo
+- ...Ricerca per operatore
+
+- Visualizzazione del CSV
 
 - Aggiungere ricerca avanzata (barcode, avvitature)
 - Aggiungere stampa pdf singolo
