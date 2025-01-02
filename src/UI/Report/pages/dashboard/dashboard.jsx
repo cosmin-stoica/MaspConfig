@@ -1,28 +1,18 @@
 import Loader from "../../../globals/loader"
-import { useEffect, useState } from "react";
-import { usePath } from "../../../../MAIN/Config/PathContext";
+import { useState, useEffect } from "react";
 
 function Dashboard() {
 
-    const [isLoading, setIsLoading] = useState(false);
-    const { path } = usePath();
-    const pathToSearch = `${path}\\ReportCollaudo`;
-    const pathToSave = `${path}\\ReportCollaudo\\fileIndex.json`;
-
-    const updateIndex = async () => {
-        setIsLoading(true);
-        try {
-            await window.electron.indexFilesAndFolders(pathToSearch, pathToSave);
-            setIsLoading(false);
-        } catch (error) {
-            console.error("Errore durante l'aggiornamento dell'indice:", error);
-            setIsLoading(false);
-        }
-    };
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        updateIndex();
-    },[])
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 600);
+
+        return () => clearTimeout(timer); 
+    }, []);
+
 
     return (
         <>

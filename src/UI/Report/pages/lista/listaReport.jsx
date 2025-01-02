@@ -19,6 +19,8 @@ export default function ListaReport() {
     const [searchResults, setSearchResults] = useState([]);
     const [currentQuery, setCurrentQuery] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedStartDate, setSelectedStartDate] = useState("");
+    const [selectedEndDate, setSelectedEndDate] = useState("");
 
     useEffect(() => {
         const initialize = async () => {
@@ -45,21 +47,53 @@ export default function ListaReport() {
     const handleFileNameOnChange = (value) => {
         setCurrentQuery(value);
     };
+    const handleStartDateChange = (e) => {
+        setSelectedStartDate(new Date(e.target.value).toISOString());
+    };
+    const handleEndDateChange = (e) => {
+        setSelectedEndDate(new Date(e.target.value).toISOString());
+    };
 
     const handleSearch = () => {
-        if (!currentQuery.trim()) {
+        if (!currentQuery.trim() && (!selectedEndDate && !selectedStartDate)) {
             setSearchResults([]);
             return;
         }
-        const results = fileIndex.filter((item) =>
-            !item.isFolder && item.name.toLowerCase().includes(currentQuery.toLowerCase())
-        );
+
+        const formatDate = (dateString) => {
+            const date = new Date(dateString);
+            return date.toISOString().split("T")[0]; // Ritorna solo YYYY-MM-DD
+        };
+
+
+        
+        const results = fileIndex.filter((item) => {
+            const itemCreationDate = formatDate(item.creationDate);
+
+            const isQueryMatched =
+                !item.isFolder &&
+                item.csvDataCodice &&
+                item.csvDataCodice.toLowerCase().includes(currentQuery.toLowerCase());
+
+            const isStartDateMatched =
+                selectedStartDate && itemCreationDate === selectedStartDate;
+
+            const isEndDateMatched =
+                selectedStartDate &&
+                selectedEndDate &&
+                itemCreationDate >= selectedStartDate &&
+                itemCreationDate <= selectedEndDate;
+
+            return (
+                isQueryMatched &&
+                ((selectedStartDate && !selectedEndDate && isStartDateMatched) ||
+                    (selectedStartDate && selectedEndDate && isEndDateMatched) ||
+                    (!selectedStartDate && !selectedEndDate))
+            );
+        });
+
         setSearchResults(results);
     };
-
-    const handleCancelSearch = () => {
-        setSearchResults([]);
-    }
 
     // Carica i file della directory
     const loadFiles = async (folderPath) => {
@@ -88,8 +122,7 @@ export default function ListaReport() {
 
     const handleFolderClick = (folderPath) => {
         setPathHistory((prevHistory) => [...prevHistory, currentPath]);
-        setSearchResults([]); // Pulisce i risultati della ricerca
-        setCurrentQuery(""); // Resetta la query
+        setSearchResults([]);
         loadFiles(folderPath);
     };
 
@@ -99,11 +132,13 @@ export default function ListaReport() {
 
 
     const handleGoBack = () => {
+        if (searchResults.length > 0) {
+            setSearchResults([]);
+        }
         if (pathHistory.length > 0) {
             const previousPath = pathHistory[pathHistory.length - 1];
             setPathHistory((prevHistory) => prevHistory.slice(0, -1));
-            setSearchResults([]); 
-            setCurrentQuery(""); 
+            setSearchResults([]);
             loadFiles(previousPath);
         }
     };
@@ -112,7 +147,7 @@ export default function ListaReport() {
         <>
             {isLoading && <Loader />}
             <div className="lista_MAIN_DIV">
-                {pathHistory.length > 0 && (
+                {pathHistory.length > 0 || searchResults.length > 0 && (
                     <button className="lista_btn_indietro" onClick={handleGoBack}>
                         <IoArrowBackCircle />
                     </button>
@@ -123,7 +158,8 @@ export default function ListaReport() {
                             path={currentPath}
                             handleFileNameOnChange={handleFileNameOnChange}
                             handleSearchBtn={handleSearch}
-                            handleCancelSearch={handleCancelSearch}
+                            handleStartDateChange={handleStartDateChange}
+                            handleEndDateChange={handleEndDateChange}
                         />
                         <div className="table_lista_report_upper">
                             {searchResults.length > 0 ? (

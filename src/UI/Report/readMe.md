@@ -2,9 +2,9 @@
 
 ## Da fare:
 
-- Velocità di caricamento pagina (loader)
+- ...Velocità di caricamento pagina (loader)
 
-- Ricerca per codice (da cambiare solo logica ma già fatto)
+- ...Ricerca per codice (da cambiare solo logica ma già fatto)
 - Ricerca per data e intervallo
 - Ricerca per progressivo
 - Ricerca per operatore
