@@ -3,15 +3,21 @@ import Loader from "../../../globals/loader"
 import SettingCard from "./setting_card";
 import Directories from "./pages/directories";
 import { GoFileDirectoryFill } from "react-icons/go";
-import { FaArrowAltCircleLeft, FaUser, FaSlidersH  } from "react-icons/fa";
+import { FaArrowAltCircleLeft, FaUser, FaSlidersH } from "react-icons/fa";
 import ComingSoon from "../../../globals/coming_soon";
 import Connection from "./pages/connection";
 import { GrConnect } from "react-icons/gr";
 import Preferences from "./pages/preferences";
+import { usePath } from "../../../../MAIN/Config/PathContext";
 
 export default function Settings() {
     const [isLoading, setIsLoading] = useState(true);
     const [currentSettings, setCurrentSettings] = useState("");
+    const { isReportApp } = usePath()
+  
+    useEffect(() => {
+        console.log(isReportApp)
+    }, [isReportApp]);
 
     useEffect(() => {
         const loaderTimeout = setTimeout(() => setIsLoading(false), 1000);
@@ -28,7 +34,7 @@ export default function Settings() {
             case "Cartelle":
                 return <Directories onConfirm={() => handleSettingsClick(null)} />;
             case "Connesioni":
-                return <Connection />;
+                return isReportApp ? <div className="height90 width100 flex-center-column c-mode">Opzione non disponibile in questa versione<ComingSoon /></div> : <Connection />;
             case "Preferenze":
                 return <Preferences />;
             default:

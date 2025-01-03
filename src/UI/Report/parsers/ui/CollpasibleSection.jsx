@@ -4,6 +4,7 @@ import { IoIosHome } from "react-icons/io";
 import { LiaBarcodeSolid } from "react-icons/lia";
 import { SiTestcafe } from "react-icons/si";
 import { VscChecklist } from "react-icons/vsc";
+import { PiScrewdriverFill, PiScrewdriver  } from "react-icons/pi";
 
 export default function CollapsibleSection ({ title, data, children }){
     const [isVisible, setIsVisible] = useState(false);
@@ -24,6 +25,10 @@ export default function CollapsibleSection ({ title, data, children }){
                 return <SiTestcafe />;
             case "Controlli":
                 return <VscChecklist />;
+            case "Risultati avvitature":
+                return <PiScrewdriverFill/>;
+            case "Risultati rivettatura":
+                    return <PiScrewdriver/>;
             default:
                 return null;
         }

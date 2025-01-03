@@ -12,27 +12,32 @@ const PathContext = createContext();
  * @param {ReactNode} props.children - I componenti figli che riceveranno il contesto.
  * @returns {React.Element} Il componente che fornisce il contesto Path.
  */
-export const PathProvider = ({ children }) => {
+export const PathProvider = ({ children, isReport }) => {
+
+  const [isReportApp] = useState(isReport);
+
   /**
    * Stato che contiene il percorso selezionato.
    * Recupera il valore iniziale dal localStorage.
    * 
    * @type {string}
    */
-  const [path, setPath] = useState(() => {
+  /*const [path, setPath] = useState(() => {
     return localStorage.getItem("selectedPath");
-  });
+  });*/
+
+  const [path, setPath] = useState("");
 
   /**
    * Salva il valore `path` nel localStorage ogni volta che cambia.
    * 
    * @effect
    */
-  useEffect(() => {
+  /*useEffect(() => {
     if (path) {
       localStorage.setItem("selectedPath", path);
     }
-  }, [path]);
+  }, [path]);*/
 
   /**
    * Recupera il valore del percorso da Electron (se esiste) e lo imposta nello stato.
@@ -40,16 +45,25 @@ export const PathProvider = ({ children }) => {
    * @effect
    */
   useEffect(() => {
-    if (window.electron) {
-      window.electron.onPathValue((value) => {
+    const fetchPathValue = async () => {
+      if (window.electron) {
+        const value = await window.electron.getPathValue();
         if (value) {
-          setPath(value); // Imposta il valore da Electron
-          console.log("Valore di path ricevuto:", value);
+          setPath(value);
+          console.log("Valore di path recuperato:", value);
         }
-      });
-    }
+      } else {
+        console.log("Electron non è disponibile");
+      }
+    };
+    fetchPathValue();
   }, []);
 
+
+  useEffect(() => {
+    console.log("path aggiornato:", path);
+  }, [path]);
+  
   /**
    * Stato che gestisce la modalità tablet (modifica la visualizzazione).
    * Il valore iniziale viene recuperato dal localStorage.
@@ -103,6 +117,7 @@ export const PathProvider = ({ children }) => {
         setModTablet,
         lightMode,
         setLightMode,
+        isReportApp
       }}
     >
       {children}

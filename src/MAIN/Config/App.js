@@ -59,11 +59,11 @@ const AppContent = () => {
  * 
  * @component
  */
-function App() {
+function App({isReport}) {
   return (
     <HashRouter>
       {/* PathProvider gestisce il contesto relativo ai percorsi */}
-      <PathProvider>
+      <PathProvider isReport={isReport}>
         {/* TCPProvider gestisce il contesto relativo alla comunicazione TCP */}
         <TCPProvider>
           <AppContent />

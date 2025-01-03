@@ -25,6 +25,7 @@ contextBridge.exposeInMainWorld("electron", {
   openKeyboard: () => ipcRenderer.invoke("open-keyboard"),
   onPathValue: (callback) =>
     ipcRenderer.on("path", (event, value) => callback(value)),
+  getPathValue: () => ipcRenderer.invoke("get-path-value"),
   getIsReport: () =>
     new Promise((resolve) => {
       ipcRenderer.once("isReport", (event, isReport) => {

@@ -13,6 +13,7 @@ const tcpClient = new TCPClient();
 const isDev = process.env.NODE_ENV === "development";
 const filePath = path.join(__dirname, "../build/index.html");
 console.log("Path to index.html:", filePath);
+let cachedPathValue = null;
 
 function createWindow(appTitle, isReport) {
   isReportGlobal = isReport; 
@@ -61,6 +62,7 @@ app.on("ready", () => {
 
   const pathArg = args.find((arg) => arg.startsWith("--path="));
   const pathValue = pathArg ? pathArg.split("=")[1] : null;
+  cachedPathValue = pathValue;
 
   const isReportArg = args.find((arg) => arg.startsWith("--app="));
   const isReport = isReportArg === "--app=report";
@@ -73,12 +75,14 @@ app.on("ready", () => {
 
     if (pathValue) {
       console.log("Invio valore di path a React:", pathValue);
-      mainWindow.webContents.send("path", pathValue);
+      mainWindow.webContents.send("path", cachedPathValue);
     } else {
       console.log("Nessun path inviato come argomento.");
     }
   });
 });
+
+ipcMain.handle("get-path-value", () => cachedPathValue);
 
 //const reactDevToolsPath = path.join(
 //  os.homedir(),

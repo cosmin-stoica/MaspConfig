@@ -3,7 +3,7 @@ import CollapsibleSection from "./ui/CollpasibleSection";
 import CsvViewerToolbar from "./ui/CsvViewerToolbar";
 import { generateStructuredPdf } from "./csvPdfMaker";
 
-export default function CsvViewer({ data }) {
+export default function CsvViewer({ data, dataFile }) {
 
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -14,7 +14,11 @@ export default function CsvViewer({ data }) {
 
     const highlightText = (text, term) => {
         if (!term) return text;
-        const regex = new RegExp(`(${term})`, "gi");
+    
+        // Escapa i caratteri speciali in `term`
+        const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    
+        const regex = new RegExp(`(${escapedTerm})`, "gi");
         return text.split(regex).map((part, index) =>
             part.toLowerCase() === term.toLowerCase() ? (
                 <span key={index} style={{ backgroundColor: "purple", color: "white" }}>
@@ -25,13 +29,13 @@ export default function CsvViewer({ data }) {
             )
         );
     };
-
+    
     if (!data || data.length === 0) {
         return <div>Nessun dato da visualizzare.</div>;
     }
 
     const primaryColumn = Object.keys(data[0])[0];
-    const sectionNames = ["Barcode componenti", "Risultati avvitature", "Risultati collaudo", "Controlli"];
+    const sectionNames = ["Barcode componenti", "Risultati avvitature", "Risultati rivettatura", "Risultati collaudo", "Controlli"];
 
     const parseDynamicHeadersAndRows = (sectionName) => {
         const sectionIndex = data.findIndex((row) => row[primaryColumn] === sectionName);
@@ -70,24 +74,25 @@ export default function CsvViewer({ data }) {
     const sections = [
         { name: "Barcode componenti", data: parseDynamicHeadersAndRows("Barcode componenti") },
         { name: "Risultati avvitature", data: parseDynamicHeadersAndRows("Risultati avvitature") },
+        { name: "Risultati rivettatura", data: parseDynamicHeadersAndRows("Risultati rivettatura") },
         { name: "Risultati collaudo", data: parseDynamicHeadersAndRows("Risultati collaudo") },
         { name: "Controlli", data: parseDynamicHeadersAndRows("Controlli") },
     ];
+
+    const handlePdfCreation = () => {
+        generateStructuredPdf(
+            data,
+            ["Dati Generali", "Barcode componenti", "Risultati avvitature", "Risultati rivettatura", "Risultati collaudo", "Controlli"],
+            Object.keys(data[0])[0],
+            Object.keys(data[0])[0],
+            `${Object.keys(data[0])[0]} ${dataFile.csvDataCodice} ${dataFile.csvDataProgressivo} ${dataFile.csvDataOperatore}`,
+            "/assets/images/masp.png"
+        )
+    }
+
     return (
         <>
-            <CsvViewerToolbar handleOnWordChange={handleOnWordChange} />
-            <button
-                onClick={() =>
-                    generateStructuredPdf(
-                        data,
-                        ["Barcode componenti", "Risultati avvitature", "Risultati collaudo", "Controlli"],
-                        Object.keys(data[0])[0],
-                        Object.keys(data[0])[0] 
-                    )
-                }
-            >
-                Genera pdf
-            </button>
+            <CsvViewerToolbar handleOnWordChange={handleOnWordChange} handleOnPdf={handlePdfCreation} />
             {generalData.length > 0 && (
                 <CollapsibleSection title="Dati Generali" data={generalData}>
                     <ul>

@@ -1,4 +1,12 @@
-export const ListaSearchHandler = (fileIndex, currentQuery, currentProgressivo, currentOperatore, selectedStartDate, selectedEndDate) => {
+export const ListaSearchHandler = (
+    fileIndex,
+    currentQuery,
+    currentProgressivo,
+    currentOperatore,
+    currentBarcode,
+    selectedStartDate,
+    selectedEndDate
+) => {
     const formatDate = (dateString) => {
         return new Date(dateString).toISOString().split("T")[0];
     };
@@ -22,6 +30,13 @@ export const ListaSearchHandler = (fileIndex, currentQuery, currentProgressivo, 
             item.csvDataOperatore &&
             item.csvDataOperatore.toLowerCase() === currentOperatore.toLowerCase().trim();
 
+        const isBarcodeMatched =
+            currentBarcode.trim() &&
+            item.barcodes &&
+            item.barcodes.some((barcode) =>
+                barcode.toLowerCase().includes(currentBarcode.toLowerCase().trim())
+            );
+
         const isDateMatched = (() => {
             if (selectedStartDate && !selectedEndDate) {
                 return itemCreationDate === formatDate(selectedStartDate);
@@ -39,6 +54,7 @@ export const ListaSearchHandler = (fileIndex, currentQuery, currentProgressivo, 
             (!currentQuery.trim() || isQueryMatched) &&
             (!currentProgressivo.trim() || isProgressivoMatched) &&
             (!currentOperatore.trim() || isOperatoreMatched) &&
+            (!currentBarcode.trim() || isBarcodeMatched) &&
             isDateMatched
         );
     });

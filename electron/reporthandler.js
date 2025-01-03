@@ -21,13 +21,14 @@ const reportHandler = {
     let index = [];
     const items = fs.readdirSync(directory, { withFileTypes: true });
 
-    for (const item of items) {
+    const tasks = items.map(async (item) => {
       const fullPath = path.join(directory, item.name);
       const stats = fs.statSync(fullPath);
 
       let operatore = null;
       let codice = null;
       let progressivo = null;
+      let barcodes = [];
 
       if (
         !item.isDirectory() &&
@@ -37,18 +38,53 @@ const reportHandler = {
         if (csvParsed && csvParsed.length > 0) {
           const primaryColumn = Object.keys(csvParsed[0])[0];
           operatore = csvParsed.find(
-            (item) => item[primaryColumn] === "Operatore"
+            (row) => row[primaryColumn] === "Operatore"
           )?.[""];
-          codice = csvParsed.find((item) => item[primaryColumn] === "Codice")?.[
+          codice = csvParsed.find((row) => row[primaryColumn] === "Codice")?.[
             ""
           ];
           progressivo = csvParsed.find(
-            (item) => item[primaryColumn] === "Progressivo"
+            (row) => row[primaryColumn] === "Progressivo"
           )?.[""];
+
+          // Estrai i barcode solo dalla sezione "Barcode componenti"
+          let isInBarcodeSection = false;
+
+          csvParsed.forEach((row) => {
+            const primaryColumn = Object.keys(row)[0]; // Determina dinamicamente il nome della prima colonna
+            const sectionHeader = row[primaryColumn]?.trim();
+
+            if (sectionHeader === "Barcode componenti") {
+              isInBarcodeSection = true; // Inizia la sezione "Barcode componenti"
+              return;
+            }
+
+            // Se raggiunge un'altra sezione, smetti di elaborare
+            if (
+              isInBarcodeSection &&
+              [
+                "Risultati avvitature",
+                "Risultati rivettatura",
+                "Risultati collaudo",
+                "Controlli",
+              ].includes(sectionHeader)
+            ) {
+              isInBarcodeSection = false;
+              return;
+            }
+
+            // Se siamo nella sezione "Barcode componenti", elaboriamo i dati
+            if (isInBarcodeSection && row[primaryColumn]?.match(/^\d+$/)) {
+              const barcode = row[""];
+              if (barcode) {
+                barcodes.push(barcode.trim());
+              }
+            }
+          });
         }
       }
 
-      index.push({
+      const entry = {
         name: item.name,
         fullPath: fullPath,
         isFolder: item.isDirectory(),
@@ -56,14 +92,18 @@ const reportHandler = {
         csvDataOperatore: operatore,
         csvDataCodice: codice,
         csvDataProgressivo: progressivo,
-      });
+        barcodes: barcodes,
+      };
+
+      index.push(entry);
 
       if (item.isDirectory()) {
-        index = index.concat(
-          await this.indexFilesAndFolders(fullPath, pathToSave)
-        );
+        const subIndex = await this.indexFilesAndFolders(fullPath, pathToSave);
+        index = index.concat(subIndex);
       }
-    }
+    });
+
+    await Promise.all(tasks);
 
     fs.writeFileSync(pathToSave, JSON.stringify(index, null, 2));
     return index;

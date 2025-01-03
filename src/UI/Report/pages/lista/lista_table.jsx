@@ -7,7 +7,7 @@ export default function ListaTable({ files, handleFolderClick, handleFileClick }
 
     useEffect(() => {
         const updateHeight = () => {
-            const availableHeight = window.innerHeight - 180;
+            const availableHeight = window.innerHeight - 220;
             setListHeight(availableHeight);
         };
 
@@ -29,7 +29,7 @@ export default function ListaTable({ files, handleFolderClick, handleFileClick }
                     onClick={() =>
                         file.isFolder
                             ? handleFolderClick(file.fullPath)
-                            : handleFileClick(file.fullPath)
+                            : handleFileClick(file.fullPath, file)
                     }
                 >
                     {file.isFolder ? "📁" : "📄"}

@@ -164,20 +164,23 @@ const fileHandler = {
       return false; // Errore durante l'eliminazione
     }
   },
-  backupFolder(sourceFolder, backupFolder) {
-    const copyFolderSync = (source, destination) => {
+  async backupFolder(sourceFolder, backupFolder) {
+    const copyFolderAsync = async (source, destination) => {
       try {
         if (!fs.existsSync(destination)) {
-          fs.mkdirSync(destination, { recursive: true });
+          await fs.promises.mkdir(destination, { recursive: true });
         }
-        const entries = fs.readdirSync(source, { withFileTypes: true });
+  
+        const entries = await fs.promises.readdir(source, { withFileTypes: true });
+  
         for (const entry of entries) {
           const sourcePath = path.join(source, entry.name);
           const destinationPath = path.join(destination, entry.name);
+          
           if (entry.isDirectory()) {
-            copyFolderSync(sourcePath, destinationPath);
+            await copyFolderAsync(sourcePath, destinationPath);  // Usando await per operazioni asincrone
           } else if (entry.isFile()) {
-            fs.copyFileSync(sourcePath, destinationPath);
+            await fs.promises.copyFile(sourcePath, destinationPath); // Usando copyFile asincrono
           }
         }
       } catch (error) {
@@ -185,13 +188,14 @@ const fileHandler = {
         throw error;
       }
     };
-
+  
     try {
       // Crea una cartella con il timestamp
       const timestamp = new Date().toISOString().replace(/:/g, "-"); // Rimuove i `:` per evitare problemi nei nomi dei file
       const timestampedFolder = path.join(backupFolder, timestamp);
-      copyFolderSync(sourceFolder, timestampedFolder);
-
+  
+      await copyFolderAsync(sourceFolder, timestampedFolder); // Aspetta che il backup venga completato
+  
       console.log(
         `Backup completato con successo da ${sourceFolder} a ${backupFolder} e ${timestampedFolder}`
       );
@@ -200,7 +204,7 @@ const fileHandler = {
       console.error("Errore durante il backup:", error);
       return false;
     }
-  },
+  },  
   readJob(filePath) {
     try {
       const stats = fs.statSync(filePath); // Ottiene le informazioni sul file

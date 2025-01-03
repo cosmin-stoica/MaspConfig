@@ -14,14 +14,16 @@ export default function ListaReport() {
     const [currentPath, setCurrentPath] = useState("");
     const [pathHistory, setPathHistory] = useState([]);
     const [selectedFileContent, setSelectedFileContent] = useState(null);
+    const [currentFile, setCurrentFile] = useState(null);
     const { path } = usePath();
-    const pathToSearch = `${path}\\ReportOld`;
+    const pathToSearch = `${path}\\Report`;
 
     const [fileIndex, setFileIndex] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
     const [currentQuery, setCurrentQuery] = useState("");
     const [currentProgressivo, setCurrentProgressivo] = useState("");
     const [currentOperatore, setCurrentOperatore] = useState("");
+    const [currentBarcode, setCurrentBarcode] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [selectedStartDate, setSelectedStartDate] = useState("");
     const [selectedEndDate, setSelectedEndDate] = useState("");
@@ -29,24 +31,24 @@ export default function ListaReport() {
     const [viewError, setViewEror] = useState(false);
     const [errorDescription, setErrorDescription] = useState("");
 
+
+    const initialize = async () => {
+        try {
+            setIsLoading(true);
+
+            const index = await window.electron.readIndexFile(`${pathToSearch}\\fileIndex.json`);
+            setFileIndex(index);
+
+            // Carica i file della directory iniziale
+            await loadFiles(pathToSearch);
+            setPathHistory([]);
+        } catch (error) {
+            console.error("Errore durante l'inizializzazione:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
     useEffect(() => {
-        const initialize = async () => {
-            try {
-                setIsLoading(true);
-
-                const index = await window.electron.readIndexFile(`${pathToSearch}\\fileIndex.json`);
-                setFileIndex(index);
-
-                // Carica i file della directory iniziale
-                await loadFiles(pathToSearch);
-                setPathHistory([]);
-            } catch (error) {
-                console.error("Errore durante l'inizializzazione:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         initialize();
     }, [pathToSearch]);
 
@@ -93,10 +95,18 @@ export default function ListaReport() {
         }
         setCurrentOperatore(value);
     };
+    const handleBarcodeChange = (e) => {
+        const value = e?.target?.value;
+        if (!value) {
+            setCurrentBarcode("");
+            return;
+        }
+        setCurrentBarcode(value);
+    };
 
 
     const handleExitSearch = () => {
-        if (!selectedEndDate && !selectedStartDate && !currentQuery.trim() && !currentProgressivo && !currentOperatore) {
+        if (!selectedEndDate && !selectedStartDate && !currentQuery.trim() && !currentProgressivo && !currentOperatore && !currentBarcode) {
             setErrorDescription("Non è stato inserito nessun parametro");
             setViewEror(true)
             return false;
@@ -107,7 +117,8 @@ export default function ListaReport() {
     const handleSearch = () => {
         if (!handleExitSearch())
             return;
-        const results = ListaSearchHandler(fileIndex, currentQuery, currentProgressivo, currentOperatore, selectedStartDate, selectedEndDate);
+        console.log(selectedEndDate, selectedStartDate, currentQuery.trim(), currentProgressivo, currentOperatore, currentBarcode)
+        const results = ListaSearchHandler(fileIndex, currentQuery, currentProgressivo, currentOperatore, currentBarcode, selectedStartDate, selectedEndDate);
         setSearchResults(results);
         if (results.length === 0) {
             setErrorDescription("Non è stato trovato nessun report");
@@ -152,8 +163,9 @@ export default function ListaReport() {
         loadFiles(folderPath);
     };
 
-    const handleFileClick = (filePath) => {
+    const handleFileClick = (filePath, file) => {
         parseFile(filePath);
+        setCurrentFile(file);
     };
 
 
@@ -189,6 +201,9 @@ export default function ListaReport() {
                             handleCancelReportSearch={handleCancelReportSearch}
                             handleProgressivoChange={handleProgressivoChange}
                             handleOperatoreChange={handleOperatoreChange}
+                            handleBarcodeChange={handleBarcodeChange}
+                            setIsLoading={setIsLoading}
+                            handleReloadIndex={initialize}
                         />
                         {<div className="table_lista_report_upper">
                             {searchResults.length > 0 ? (
@@ -211,7 +226,7 @@ export default function ListaReport() {
                         <button className="lista_btn_indietro" onClick={() => setSelectedFileContent(null)}>
                             <IoArrowBackCircle />
                         </button>
-                        <CsvViewer data={selectedFileContent} />
+                        <CsvViewer data={selectedFileContent} dataFile={currentFile} />
                     </div>
                 )}
             </div>
