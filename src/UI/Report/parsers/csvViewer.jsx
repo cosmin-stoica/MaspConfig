@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import CollapsibleSection from "./ui/CollpasibleSection";
 import CsvViewerToolbar from "./ui/CsvViewerToolbar";
-import { generateStructuredPdf } from "./csvPdfMaker";
+import PdfCreator from "../pdf/pdf_creator";
 
 export default function CsvViewer({ data, dataFile }) {
 
     const [searchTerm, setSearchTerm] = useState("");
+    const [viewPdfConfig, setViewPdfConfig] = useState(false);
 
     const handleOnWordChange = (e) => {
         setSearchTerm(e.target.value);
@@ -14,10 +15,10 @@ export default function CsvViewer({ data, dataFile }) {
 
     const highlightText = (text, term) => {
         if (!term) return text;
-    
+
         // Escapa i caratteri speciali in `term`
         const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    
+
         const regex = new RegExp(`(${escapedTerm})`, "gi");
         return text.split(regex).map((part, index) =>
             part.toLowerCase() === term.toLowerCase() ? (
@@ -29,7 +30,7 @@ export default function CsvViewer({ data, dataFile }) {
             )
         );
     };
-    
+
     if (!data || data.length === 0) {
         return <div>Nessun dato da visualizzare.</div>;
     }
@@ -79,23 +80,17 @@ export default function CsvViewer({ data, dataFile }) {
         { name: "Controlli", data: parseDynamicHeadersAndRows("Controlli") },
     ];
 
-    const handlePdfCreation = () => {
-        generateStructuredPdf(
-            data,
-            ["Dati Generali", "Barcode componenti", "Risultati avvitature", "Risultati rivettatura", "Risultati collaudo", "Controlli"],
-            Object.keys(data[0])[0],
-            Object.keys(data[0])[0],
-            `${Object.keys(data[0])[0]} ${dataFile.csvDataCodice} ${dataFile.csvDataProgressivo} ${dataFile.csvDataOperatore}`,
-            "/assets/images/masp.png"
-        )
+    const handlePdfStartConfig = () => {
+        setViewPdfConfig(true)
     }
 
     return (
         <>
-            <CsvViewerToolbar handleOnWordChange={handleOnWordChange} handleOnPdf={handlePdfCreation} />
+            {viewPdfConfig && <PdfCreator OnExit={() => setViewPdfConfig(false)} data={data} dataFile={dataFile}/>}
+            <CsvViewerToolbar handleOnWordChange={handleOnWordChange} handleOnPdf={handlePdfStartConfig} />
             {generalData.length > 0 && (
                 <CollapsibleSection title="Dati Generali" data={generalData}>
-                    <ul>
+                    <ul className="CsvViewer_Text_Color">
                         {generalData.map((item, index) => (
                             <li key={index}>
                                 <strong>
@@ -112,7 +107,7 @@ export default function CsvViewer({ data, dataFile }) {
                 (section, index) =>
                     section.data && (
                         <CollapsibleSection key={index} title={section.name} data={section.data}>
-                            <table>
+                            <table className="CsvViewer_Text_Color">
                                 <thead>
                                     <tr>
                                         {section.data.headers.map((header, index) => (

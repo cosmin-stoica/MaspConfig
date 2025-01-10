@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { HiArrowCircleDown } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import ConfirmModal from "../../../globals/confirm_modal"
+import ConfirmModal from "../../../globals/components/confirm_modal"
 import { usePath } from "../../../../MAIN/Config/PathContext";
-import Alert from "../../../globals/alert";
+import Alert from "../../../globals/components/alert";
 
 function Dashboard_Upper_Right({setIsLoading}) {
 
@@ -16,7 +16,7 @@ function Dashboard_Upper_Right({setIsLoading}) {
 
     const getLastBackup = async () => {
         try {
-            const success = await window.electron.getFiles(`${path}/Backup Report`);
+            const success = await window.electron.getFiles(`${path}/Masp Tools/Backup Report`);
             const lastItem = success[success.length - 1];
             console.log(lastItem)
             setLastBackup(lastItem);
@@ -40,7 +40,7 @@ function Dashboard_Upper_Right({setIsLoading}) {
         setShowConfirm(false);
 
         try {
-            const success = await window.electron.backupFolder(`${path}/Report`, `${path}/Backup Report`);
+            const success = await window.electron.backupFolder(`${path}/Report`, `${path}/Masp Tools/Backup Report`);
             console.log(success ? "Backup completato con successo!" : "Errore durante il backup.");
             setShowConfirm(false);
             setShowSuccess(true);
@@ -97,14 +97,14 @@ function Dashboard_Upper_Right({setIsLoading}) {
             </div>
             {showConfirm && <ConfirmModal
                 Title="Conferma"
-                Description="Sei sicuro di voler eseguire un backup dei report? Troverai il backup dentro Backup Report"
+                Description="Sei sicuro di voler eseguire un backup dei report? Troverai il backup dentro Masp Tools/Backup Report"
                 onCancel={() => setShowConfirm(false)}
                 onConfirm={handleBackup}
             />}
             {showSuccess && <Alert
                 Type="success"
                 Title="Successo"
-                Description="Backup effettuato con successo! Troverai il backup dentro Backup Report"
+                Description="Backup effettuato con successo! Troverai il backup dentro Masp Tools/Backup Report"
                 onClose={() => setShowSuccess(false)}
             />
             }

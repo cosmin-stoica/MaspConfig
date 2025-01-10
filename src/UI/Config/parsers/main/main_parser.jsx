@@ -1,4 +1,4 @@
-import ConfirmModal from "../../../globals/confirm_modal"
+import ConfirmModal from "../../../globals/components/confirm_modal"
 import { useNavigate } from "react-router";
 import { usePath } from "../../../../MAIN/Config/PathContext";
 

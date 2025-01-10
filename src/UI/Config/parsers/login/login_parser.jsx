@@ -1,7 +1,7 @@
 import UserManagement from "./UserManagement";
 import LogoutParams from "./LogoutParams";
 import useLoginParser from "./useLoginParser";
-import ConfirmModal from "../../../globals/confirm_modal"
+import ConfirmModal from "../../../globals/components/confirm_modal"
 import UserModal from "./ux/user_modal"
 import { usePath } from "../../../../MAIN/Config/PathContext";
 import { TbArrowLeft } from "react-icons/tb";

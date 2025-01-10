@@ -1,5 +1,5 @@
 import { PiUserFill, PiUserGearFill, PiEraserFill, PiPencilBold, PiArrowSquareUpRightFill } from "react-icons/pi";
-import ConfirmModal from "../../../../globals/confirm_modal"
+import ConfirmModal from "../../../../globals/components/confirm_modal"
 import { useState } from "react";
 import UserCardViewer from "./user_card_viewer";
 

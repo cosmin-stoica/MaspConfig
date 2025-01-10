@@ -1,0 +1,55 @@
+.PdfCreator_MainDiv{
+    padding: 20px;
+    height: 100%;
+}
+
+.PdfCreator_ContentMainDiv{
+    max-height: 87%;
+    overflow-y: scroll;
+}
+
+.PdfCreator_Btns_Modal{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:15px;
+    position: absolute;
+    bottom: 10px;
+}
+
+.PdfCreator_ColorPicker_MainDiv{
+    display: flex;
+    gap:10px;
+    padding: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.199);
+    width: auto;
+    cursor: pointer;
+    width: 250px;
+    border-radius: 5px;
+}
+
+.Logo_Checkboxes_Div_Images{
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.Logo_Checkboxes_Div_Images_Text{
+    color:black;
+}
+.scegli_file_input{
+    background: var(--button_confirm_bg_color);
+    padding: 5px 20px 5px 20px;
+    border-radius: 5px; 
+    color:rgb(230, 230, 230);
+    cursor: pointer;
+}
+
+.Logo_Checkboxes_Div_Images_Btn{
+    background: var(--button_confirm_bg_color);
+    color:rgb(230, 230, 230);
+    padding: 5px 20px 5px 20px;
+    border-radius: 5px; 
+    cursor: pointer;
+}

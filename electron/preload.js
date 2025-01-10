@@ -46,4 +46,8 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("search-files", fileIndexPath, searchTerm),
   readIndexFile: (filePath) =>
     ipcRenderer.invoke("read-index-file", filePath),
+  readImageAsBase64: (imagePath) =>
+    ipcRenderer.invoke("read-image", imagePath),
+  saveImageFromBase64: (base64String, outputPath) =>
+    ipcRenderer.invoke("save-image", base64String, outputPath),
 });

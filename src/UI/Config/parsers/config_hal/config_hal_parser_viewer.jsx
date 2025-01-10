@@ -5,7 +5,7 @@ import { usePath } from "../../../../MAIN/Config/PathContext";
 import ToolPanel from "./ToolPanel";
 import SectionViewer from "./SectionViewer";
 import ConfirmModals from "./ConfirmModals";
-import ConfirmModal from "../../../globals/confirm_modal"
+import ConfirmModal from "../../../globals/components/confirm_modal"
 import { TbArrowLeft } from "react-icons/tb";
 
 import {
@@ -14,7 +14,7 @@ import {
     deleteConfiguration,
     addNewProgram,
 } from "./helpers";
-import Alert from "../../../globals/alert";
+import Alert from "../../../globals/components/alert";
 
 export default function ConfigHalParserViewer({ activeNavbar, onSetActive, dummyFile, realFile, configName, groupName, configIcon, isHal, isAvv }) {
     const [showConfirmReload, setShowConfirmReload] = useState(null);

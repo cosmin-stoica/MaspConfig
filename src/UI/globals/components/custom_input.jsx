@@ -1,5 +1,5 @@
 import { IoIosSearch } from "react-icons/io";
-import { usePath } from "../../MAIN/Config/PathContext";
+import { usePath } from "../../../MAIN/Config/PathContext";
 
 export default function CustomInput({ width, value, handleOnChange, inputRef, placeHolder }) {
     const { modTablet } = usePath();

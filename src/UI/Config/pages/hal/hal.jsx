@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Alert from "../../../globals/alert";
+import Alert from "../../../globals/components/alert";
 import { usePath } from "../../../../MAIN/Config/PathContext";
 import { useNavigate, useLocation } from "react-router";
 import iconMap from "../../parsers/config_hal/iconMap";

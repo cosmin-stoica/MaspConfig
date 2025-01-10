@@ -1,42 +1,45 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { usePath } from "../../../../MAIN/Config/PathContext";
 import CsvViewer from "../../parsers/csvViewer";
 import { IoArrowBackCircle } from "react-icons/io5";
-import ListaToolbox from "./lista_toolbox";
+import ListaToolbox from "./toolbar/lista_toolbox";
 import ListaTable from "./lista_table";
 import Loader from "../../../globals/loader";
 import { ListaSearchHandler } from "./handlers/lista_search_handler";
-import Alert from "../../../globals/alert"
+import Alert from "../../../globals/components/alert"
+import PdfCreator from "../../pdf/pdf_creator";
 
 export default function ListaReport() {
 
     const [files, setFiles] = useState([]);
     const [currentPath, setCurrentPath] = useState("");
     const [pathHistory, setPathHistory] = useState([]);
-    const [selectedFileContent, setSelectedFileContent] = useState(null);
+    const [selectedFileContent, setSelectedFileContent] = useState([]);
     const [currentFile, setCurrentFile] = useState(null);
     const { path } = usePath();
     const pathToSearch = `${path}\\Report`;
 
     const [fileIndex, setFileIndex] = useState([]);
     const [searchResults, setSearchResults] = useState([]);
-    const [currentQuery, setCurrentQuery] = useState("");
-    const [currentProgressivo, setCurrentProgressivo] = useState("");
-    const [currentOperatore, setCurrentOperatore] = useState("");
-    const [currentBarcode, setCurrentBarcode] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+
+    const currentQuery = useRef("");
+    const currentProgressivo = useRef("");
+    const currentOperatore = useRef("");
+    const currentBarcode = useRef("");
     const [selectedStartDate, setSelectedStartDate] = useState("");
     const [selectedEndDate, setSelectedEndDate] = useState("");
 
-    const [viewError, setViewEror] = useState(false);
-    const [errorDescription, setErrorDescription] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
+    const [viewError, setViewEror] = useState(false);
+    const [typeError, setTypeError] = useState("warning");
+    const [errorDescription, setErrorDescription] = useState("");
 
     const initialize = async () => {
         try {
             setIsLoading(true);
 
-            const index = await window.electron.readIndexFile(`${pathToSearch}\\fileIndex.json`);
+            const index = await window.electron.readIndexFile(`${path}\\Masp Tools\\FileIndex\\fileIndex.json`);
             setFileIndex(index);
 
             // Carica i file della directory iniziale
@@ -48,87 +51,81 @@ export default function ListaReport() {
             setIsLoading(false);
         }
     };
+
     useEffect(() => {
         initialize();
     }, [pathToSearch]);
 
 
-    const handleFileNameOnChange = (e) => {
-        const value = e?.target?.value;
-        if (!value) {
-            setCurrentQuery("");
-            return;
-        }
-        setCurrentQuery(value);
-    };
-    const handleStartDateChange = (e) => {
-        const value = e?.target?.value;
-        if (!value) {
-            setSelectedStartDate("");
-            return;
-        }
-        const formattedDate = new Date(value).toISOString();
-        setSelectedStartDate(formattedDate);
-    };
-    const handleEndDateChange = (e) => {
-        const value = e?.target?.value;
-        if (!value) {
-            setSelectedEndDate("");
-            return;
-        }
-        const formattedDate = new Date(value).toISOString();
-        setSelectedEndDate(formattedDate);
-    };
-    const handleProgressivoChange = (e) => {
-        const value = e?.target?.value;
-        if (!value) {
-            setCurrentProgressivo("");
-            return;
-        }
-        setCurrentProgressivo(value);
-    };
-    const handleOperatoreChange = (e) => {
-        const value = e?.target?.value;
-        if (!value) {
-            setCurrentOperatore("");
-            return;
-        }
-        setCurrentOperatore(value);
-    };
-    const handleBarcodeChange = (e) => {
-        const value = e?.target?.value;
-        if (!value) {
-            setCurrentBarcode("");
-            return;
-        }
-        setCurrentBarcode(value);
-    };
+    const handleFileNameOnChange = useCallback((e) => {
+        const value = e?.target?.value || "";
+        currentQuery.current = value;
+
+        console.log('currentQuery', currentQuery)
+    }, []);
+
+    const handleStartDateChange = useCallback((e) => {
+        const value = e?.target?.value || "";
+        setSelectedStartDate(value ? new Date(value).toISOString() : "");
+    }, []);
+
+    const handleEndDateChange = useCallback((e) => {
+        const value = e?.target?.value || "";
+        setSelectedEndDate(value ? new Date(value).toISOString() : "");
+    }, []);
+
+    const handleProgressivoChange = useCallback((e) => {
+        const value = e?.target?.value || "";
+        //setCurrentProgressivo(value);
+        currentProgressivo.current = value;
+    }, []);
+
+    const handleOperatoreChange = useCallback((e) => {
+        const value = e?.target?.value || "";
+        //setCurrentOperatore(value);
+        currentOperatore.current = value;
+    }, []);
+
+    const handleBarcodeChange = useCallback((e) => {
+        const value = e?.target?.value || "";
+        //setCurrentBarcode(value);
+        currentBarcode.current = value;
+    }, []);
 
 
-    const handleExitSearch = () => {
-        if (!selectedEndDate && !selectedStartDate && !currentQuery.trim() && !currentProgressivo && !currentOperatore && !currentBarcode) {
+    const handleExitSearch = useCallback(() => {
+        //console.log(!selectedEndDate , !selectedStartDate , !currentQuery.current.trim() , !currentProgressivo.current.trim()  , !currentOperatore.current.trim() , !currentBarcode.current.trim() )
+        if (!selectedEndDate && !selectedStartDate && !currentQuery.current.trim() && !currentProgressivo.current.trim() && !currentOperatore.current.trim() && !currentBarcode.current.trim()) {
             setErrorDescription("Non è stato inserito nessun parametro");
-            setViewEror(true)
+            setTypeError("error");
+            setViewEror(true);
             return false;
         }
         return true;
-    }
+    }, [selectedEndDate, selectedStartDate, currentQuery, currentProgressivo, currentOperatore, currentBarcode]);
+
 
     const handleSearch = () => {
         if (!handleExitSearch())
             return;
-        console.log(selectedEndDate, selectedStartDate, currentQuery.trim(), currentProgressivo, currentOperatore, currentBarcode)
-        const results = ListaSearchHandler(fileIndex, currentQuery, currentProgressivo, currentOperatore, currentBarcode, selectedStartDate, selectedEndDate);
+        const results = ListaSearchHandler(fileIndex, currentQuery.current, currentProgressivo.current, currentOperatore.current, currentBarcode.current, selectedStartDate, selectedEndDate);
         setSearchResults(results);
+
         if (results.length === 0) {
-            setErrorDescription("Non è stato trovato nessun report");
+            setErrorDescription("Non è stato trovato nessun report \n Se pensi sia sbagliato ricarica i file con l'icona della toolbar sulla destra");
+            setTypeError("warning");
             setViewEror(true)
         }
     };
 
     const handleCancelReportSearch = () => {
         setSearchResults([]);
-        setCurrentQuery("");
+        setSelectedStartDate("")
+        setSelectedEndDate("")
+        currentQuery.current = "";
+        currentProgressivo.current = "";
+        currentOperatore.current = "";
+        currentBarcode.current = "";
     }
 
     // Carica i file della directory
@@ -194,6 +191,7 @@ export default function ListaReport() {
                     <div className="table_lista_report_upper_upper">
                         <ListaToolbox
                             path={currentPath}
+                            pathIndex={path}
                             handleFileNameOnChange={handleFileNameOnChange}
                             handleSearchBtn={handleSearch}
                             handleStartDateChange={handleStartDateChange}
@@ -234,7 +232,7 @@ export default function ListaReport() {
 
 
             {viewError && <Alert
-                Type="warning"
+                Type={typeError}
                 Title="Attenzione"
                 Description={errorDescription}
                 Modal={true}
@@ -243,6 +241,8 @@ export default function ListaReport() {
                     setViewEror(false)
                 }}
             />}
+
+            {false && <PdfCreator />}
         </>
     );
 };

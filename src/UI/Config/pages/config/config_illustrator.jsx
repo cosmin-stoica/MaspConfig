@@ -9,7 +9,7 @@ import {
     PiScrewdriverFill
 } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
-import Alert from "../../../globals/alert";
+import Alert from "../../../globals/components/alert";
 
 function ConfigIllustrator({ files }) {
     const [alertDetails, setAlertDetails] = useState(null);

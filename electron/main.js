@@ -212,3 +212,11 @@ ipcMain.handle('search-files', async (event, fileIndexPath, searchTerm) => {
 ipcMain.handle('read-index-file', async (event, filePath) => {
   return reportHandler.readIndexFile(filePath);
 });
+
+ipcMain.handle('read-image', async (_, imagePath) => {
+  return reportHandler.readImageAsBase64(imagePath);
+});
+
+ipcMain.handle('save-image', async (_, base64String, outputPath) => {
+  return reportHandler.saveImageFromBase64(base64String, outputPath);
+});

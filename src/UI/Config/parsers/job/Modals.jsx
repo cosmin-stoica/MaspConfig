@@ -1,5 +1,5 @@
-import Alert from "../../../globals/alert";
-import ConfirmModal from "../../../globals/confirm_modal"
+import Alert from "../../../globals/components/alert";
+import ConfirmModal from "../../../globals/components/confirm_modal"
 
 export default function Modals({
     showConfirmReload,

@@ -50,7 +50,7 @@ export default function ConfigHalParser({ activeNavbar, onSetActive }) {
             const loadDummyFile = async () => {
                 if (isHal) {
                     try {
-                        const filePath = `${path}/Config/Dummies/Hardware Config/${configName}.ini`;
+                        const filePath = `${path}/Config/Masp Tools/Dummies/Hardware Config/${configName}.ini`;
                         const parsedData = await window.electron.parseIniFile(filePath);
 
                         if (!parsedData) {
@@ -67,7 +67,7 @@ export default function ConfigHalParser({ activeNavbar, onSetActive }) {
                 }
                 else {
                     try {
-                        const filePath = `${path}/Config/Dummies/${configName}.ini`;
+                        const filePath = `${path}/Config/Masp Tools/Dummies/${configName}.ini`;
                         const parsedData = await window.electron.parseIniFile(filePath);
 
                         if (!parsedData) {
@@ -91,7 +91,7 @@ export default function ConfigHalParser({ activeNavbar, onSetActive }) {
             const loadFiles = async () => {
                 try {
                     const realFilePath = `${path}/Config/${configName}.ini`;
-                    const dummyFilePath = `${path}/Config/Dummies/${configName}.ini`;
+                    const dummyFilePath = `${path}/Config/Masp Tools/Dummies/${configName}.ini`;
 
                     const [realFileData, dummyFileData] = await Promise.all([
                         window.electron.parseIniFile(realFilePath),

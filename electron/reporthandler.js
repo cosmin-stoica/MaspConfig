@@ -248,6 +248,35 @@ const reportHandler = {
       return null;
     }
   },
+  async readImageAsBase64(imagePath) {
+    try {
+      if (fs.existsSync(imagePath)) {
+        const imageBuffer = fs.readFileSync(imagePath);
+        const imageBase64 = `data:image/${imagePath
+          .split(".")
+          .pop()};base64,${imageBuffer.toString("base64")}`;
+        return imageBase64;
+      } else {
+        console.error(`Il file immagine ${imagePath} non esiste.`);
+        return null;
+      }
+    } catch (error) {
+      console.error("Errore durante la lettura dell'immagine:", error);
+      throw error;
+    }
+  },
+  async saveImageFromBase64(base64String, outputPath) {
+    try {
+      const base64Data = base64String.replace(/^data:image\/\w+;base64,/, ""); 
+      const buffer = Buffer.from(base64Data, "base64"); 
+      fs.writeFileSync(outputPath, buffer);
+      console.log(`Immagine salvata con successo in: ${outputPath}`);
+      return true;
+    } catch (error) {
+      console.error("Errore durante il salvataggio dell'immagine:", error);
+      throw error;
+    }
+  },
 };
 
 module.exports = reportHandler;

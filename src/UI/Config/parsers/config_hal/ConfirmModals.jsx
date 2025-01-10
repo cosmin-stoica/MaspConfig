@@ -1,4 +1,4 @@
-import ConfirmModal from "../../../globals/confirm_modal"
+import ConfirmModal from "../../../globals/components/confirm_modal"
 
 export default function ConfirmModals({
     showConfirmReload,

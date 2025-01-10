@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ConfirmModal from "../../../../globals/confirm_modal"
+import ConfirmModal from "../../../../globals/components/confirm_modal"
 import { usePath } from "../../../../../MAIN/Config/PathContext";
 
 export default function Directories({ onConfirm }) {

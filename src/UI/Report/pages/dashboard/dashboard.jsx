@@ -43,7 +43,7 @@ function Dashboard() {
 
     return (
         <>
-        {isLoading && <Loader/>}
+            {isLoading && <Loader />}
             <div className="dashboard_DEF_MAIN bg_main">
                 <div className="dashboard_firstpart">
                     <div className="dashboard_upper">
@@ -55,7 +55,7 @@ function Dashboard() {
                     </div>
                 </div>
                 <div className="dashboard_secondpart">
-                    <Dashboard_Upper_Right setIsLoading={setIsLoading}/>
+                    <Dashboard_Upper_Right setIsLoading={setIsLoading} />
                 </div>
             </div>
         </>

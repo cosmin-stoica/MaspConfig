@@ -13,10 +13,11 @@ import { IoIosCheckmarkCircle, IoIosCloseCircle, IoIosWarning } from "react-icon
  * @param {string} Description - La descrizione dell'allerta.
  * @param {function} onClose - La funzione per chiudere l'allerta.
  * @param {boolean} Modal - Se `true`, visualizza l'allerta in un modal.
+ * @param {string} Image - Base64 o URL dell'immagine da visualizzare nell'allerta.
  * @returns {React.Element} Il componente dell'allerta.
  * @memberof Alert
  */
-function Alert({ Type, Title, Description, onClose, Modal }) {
+function Alert({ Type, Title, Description, onClose, Modal, Image }) {
     const alertContent = (
         <div
             className={`Alert_MainDiv ${Type === 'error'
@@ -51,6 +52,11 @@ function Alert({ Type, Title, Description, onClose, Modal }) {
                     </span>
                 ))}
             </div>
+            {Image && (
+                <div className="Alert_MainDiv_Image">
+                    <img src={Image} alt="Alert visual" />
+                </div>
+            )}
         </div>
     );
 

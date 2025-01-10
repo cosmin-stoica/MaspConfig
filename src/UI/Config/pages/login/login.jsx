@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import ItodoImage from "../../../elements/itodo-img";
 import { NavLink, useNavigate } from 'react-router-dom';
 import { usePath } from "../../../../MAIN/Config/PathContext";
-import Alert from "../../../globals/alert";
+import Alert from "../../../globals/components/alert";
 import Startup from "../startup/startup.jsx";
 import { GoFileDirectoryFill } from "react-icons/go";
 

@@ -73,6 +73,7 @@ export default function ListaTable({ files, handleFolderClick, handleFileClick }
                 itemSize={35}
                 width="100%"
                 style={{ scrollbarWidth: 'none' }}
+                className="table_lista_report_list"
             >
                 {Row}
             </List>

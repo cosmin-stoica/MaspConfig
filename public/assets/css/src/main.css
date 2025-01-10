@@ -4,6 +4,8 @@
   --main_bg_color_linear: linear-gradient(to top right, rgba(6, 29, 68, 0.95) 0%, var(--main_bg_color) 100%);
   --c_mode: white;
   scrollbar-width: none;
+  --button_confirm_bg_color: rgb(59, 149, 255);
+  --general_modal_header_bg_color: rgb(59, 149, 255);
 }
 
 [data-theme="light"] {
@@ -40,6 +42,15 @@
 .c-white {
   color: white;
 }
+
+.c-black {
+  color: rgb(43,43,43);
+}
+
+.c-blue-confirm{
+  color:var(--button_confirm_bg_color)
+}
+
 
 /* Width Classes */
 .width10 {
@@ -128,6 +139,10 @@
 }
 
 /* Margin Bottom Classes */
+.mb-5 {
+  margin-bottom: 5px;
+}
+
 .mb-10 {
   margin-bottom: 10px;
 }
@@ -1402,4 +1417,147 @@
     right: 0;
     left: unset;
   }
+}
+
+.Main_Button{
+  background-color: rgb(150, 150, 150);
+  color:rgb(248, 248, 248);
+  padding: 5px 40px 5px 40px;
+  border: none;
+  transition: all 0.2s ease;
+  border-radius: 10px;
+}
+
+.Main_Button:hover{
+  background-color: rgb(192, 192, 192);
+}
+
+.Main_Button.confirm{
+  background-color: var(--button_confirm_bg_color);
+}
+
+.Main_Button.confirm:hover{
+  background-color:rgb(116, 174, 240);
+  transition: all 0.2s ease;
+}
+
+
+.GeneralModal_MainDiv{
+  background-color: white;
+  border-radius: 10px;
+  position: relative;
+}
+
+.GeneralModal_Header{
+  background-color: var(--general_modal_header_bg_color);
+  color:rgb(243, 243, 243);
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  position: relative;
+}
+
+.GeneralModal_Btn_Exit{
+  position: absolute;
+  right:2px;
+  top: 35%;
+  transform: translateY(-50%); 
+  font-size: 30px;
+  color:rgb(231, 231, 231);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.GeneralModal_Btn_Exit:hover{
+  color:rgb(255, 255, 255);
+  transition: all 0.2s ease;
+}
+
+
+
+/* From Uiverse.io by vishnupprajapat */ 
+.checkbox-wrapper-46 input[type="checkbox"] {
+  display: none;
+  visibility: hidden;
+}
+
+.checkbox-wrapper-46 .cbx {
+  margin: auto;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+.checkbox-wrapper-46 .cbx span {
+  display: inline-block;
+  vertical-align: middle;
+  transform: translate3d(0, 0, 0);
+}
+.checkbox-wrapper-46 .cbx span:first-child {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  transform: scale(1);
+  vertical-align: middle;
+  border: 1px solid #9098a9;
+  transition: all 0.2s ease;
+}
+.checkbox-wrapper-46 .cbx span:first-child svg {
+  position: absolute;
+  top: 3px;
+  left: 2px;
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 16px;
+  stroke-dashoffset: 16px;
+  transition: all 0.3s ease;
+  transition-delay: 0.1s;
+  transform: translate3d(0, 0, 0);
+}
+.checkbox-wrapper-46 .cbx span:first-child:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: #2b386b;
+  display: block;
+  transform: scale(0);
+  opacity: 1;
+  border-radius: 50%;
+}
+.checkbox-wrapper-46 .cbx span:last-child {
+  padding-left: 8px;
+}
+.checkbox-wrapper-46 .cbx:hover span:first-child {
+  border-color: #ec5050;
+}
+
+.checkbox-wrapper-46 .inp-cbx:checked + .cbx span:first-child {
+  background: var(--button_confirm_bg_color);
+  border-color: #506eec;
+  animation: wave-46 0.4s ease;
+}
+.checkbox-wrapper-46 .inp-cbx:checked + .cbx span:first-child svg {
+  stroke-dashoffset: 0;
+}
+.checkbox-wrapper-46 .inp-cbx:checked + .cbx span:first-child:before {
+  transform: scale(3.5);
+  opacity: 0;
+  transition: all 0.6s ease;
+}
+
+@keyframes wave-46 {
+  50% {
+    transform: scale(0.9);
+  }
+}
+
+
+.fs-25{
+  font-size: 25px;
 }

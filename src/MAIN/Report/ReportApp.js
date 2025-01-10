@@ -9,12 +9,12 @@ function ReportAppToIndex({ setIsLoading }) {
   const { path } = usePath();
   const hasStarted = useRef(false);
 
-  /*useEffect(() => {
+  useEffect(() => {
     if (!path || hasStarted.current) return;
 
     hasStarted.current = true;
     const pathToSearch = `${path}\\Report`;
-    const pathToSave = `${path}\\Report\\fileIndex.json`;
+    const pathToSave = `${path}\\Masp Tools\\FileIndex\\fileIndex.json`;
 
     const updateIndex = async () => {
       console.log("Inizio aggiornamento indice...");
@@ -30,7 +30,7 @@ function ReportAppToIndex({ setIsLoading }) {
     };
 
     updateIndex();
-  }, [path, setIsLoading]);*/
+  }, [path, setIsLoading]);
 
   return null;
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMessages } from "../../../../../MAIN/Config/TCPContext";
 import { FaServer, FaUser } from "react-icons/fa";
-import ConfirmModal from "../../../../globals/confirm_modal"
+import ConfirmModal from "../../../../globals/components/confirm_modal"
 
 export default function Connection() {
     const { messages, clientIP, setClientIP, clientPort, setClientPort } = useMessages();

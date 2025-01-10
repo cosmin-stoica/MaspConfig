@@ -2,7 +2,7 @@ import { useState } from "react";
 import iconMap from "./iconMap";
 import InputRenderer from "./InputRenderer";
 import { TbInfoCircleFilled } from "react-icons/tb";
-import Alert from "../../../globals/alert";
+import Alert from "../../../globals/components/alert";
 
 export default function SectionViewer({ dummyFile, realFile, configIcon, expandedSections, setExpandedSections, inputValues, setInputValues, isHal, modTablet }) {
 
