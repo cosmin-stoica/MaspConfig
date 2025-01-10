@@ -1,7 +1,7 @@
 {
-  "name": "maspconfigreport",
+  "name": "masptools",
   "main": "electron/main.js",
-  "description": "Masp Config",
+  "description": "MASP tools",
   "author": "Scanteq",
   "homepage": "./",
   "version": "0.1.0",
@@ -13,6 +13,7 @@
     "@tsparticles/react": "^3.0.0",
     "axios": "^1.7.2",
     "docx": "^8.5.0",
+    "electron-updater": "^6.3.9",
     "file-saver": "^2.0.5",
     "immutability-helper": "^3.1.1",
     "ini": "^5.0.0",
@@ -38,7 +39,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && electron-builder",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron": "electron .",
@@ -75,14 +76,15 @@
     "wait-on": "^8.0.1"
   },
   "build": {
-    "appId": "com.masp.local",
-    "productName": "Masp Config",
+    "appId": "com.masp.tools",
+    "productName": "MASPTools",
     "directories": {
       "output": "dist"
     },
     "files": [
       "build/**/*",
       "electron/main.js",
+      "electron/updater.js",
       "electron/filehandler.js",
       "electron/reporthandler.js",
       "electron/preload.js",
@@ -91,6 +93,15 @@
     "extraMetadata": {
       "main": "electron/main.js"
     },
+    "compression": "maximum",
+    "publish": [
+      {
+        "provider": "github",
+        "repo": "https://github.com/cosmin-stoica/MaspConfig",
+        "owner": "cosmin-stoica",
+        "releaseType": "draft"
+      }
+    ],
     "win": {
       "target": [
         {
@@ -102,15 +113,17 @@
         }
       ],
       "icon": "electron/assets/logo.ico",
-      "artifactName": "${productName}-Setup-${version}.${ext}",
-      "nsis": {
-        "oneClick": false,
-        "allowToChangeInstallationDirectory": true,
-        "perMachine": true,
-        "installerIcon": "electron/assets/logo.ico",
-        "uninstallerIcon": "electron/assets/logo.ico",
-        "deleteAppDataOnUninstall": true
-      }
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": true,
+      "installerIcon": "electron/assets/logo.ico",
+      "uninstallerIcon": "electron/assets/logo.ico",
+      "deleteAppDataOnUninstall": true,
+      "createDesktopShortcut": false,
+      "include": "installer.nsh"
     },
     "mac": {
       "target": "dmg"

@@ -5,6 +5,7 @@ const reportHandler = require("./reporthandler"); // Importa il gestore dei file
 const { fork, exec } = require("child_process");
 const TCPClient = require("../server/client.js");
 const os = require("os")
+const Updater = require("./updater");
 
 let mainWindow;
 let isReportGlobal = false;
@@ -79,6 +80,9 @@ app.on("ready", () => {
     } else {
       console.log("Nessun path inviato come argomento.");
     }
+
+    new Updater(mainWindow);
+
   });
 });
 
