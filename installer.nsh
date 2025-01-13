@@ -1,5 +1,4 @@
-!macro preInit
-  ; Directory di installazione predefinita
-  !define APP_INSTALL_DIR "C:\\Scanteq"
-  StrCpy $INSTDIR "${APP_INSTALL_DIR}"
+!macro customInit
+  ; Imposta la directory di installazione predefinita
+  StrCpy $INSTDIR "C:\\Scanteq\\MASP Tools"
 !macroend

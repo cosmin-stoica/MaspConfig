@@ -109,11 +109,11 @@ Ogni configurazione include un'icona, un titolo e un file JS di entrata specific
 
 ## Building
 
-1. Build di React:
+1. Build completa:
    ```bash
    npm run build
    ```
-2. Build di Electron con eseguibile:
+2. Build solamente di electron:
    ```bash
    npm run dist
    ```

@@ -1,10 +1,10 @@
 {
   "name": "masptools",
   "main": "electron/main.js",
-  "description": "MASP tools",
+  "description": "Masp Tools",
   "author": "Scanteq",
   "homepage": "./",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
@@ -77,7 +77,7 @@
   },
   "build": {
     "appId": "com.masp.tools",
-    "productName": "MASPTools",
+    "productName": "MaspTools",
     "directories": {
       "output": "dist"
     },
@@ -97,7 +97,7 @@
     "publish": [
       {
         "provider": "github",
-        "repo": "https://github.com/cosmin-stoica/MaspConfig",
+        "repo": "MaspConfig",
         "owner": "cosmin-stoica",
         "releaseType": "draft"
       }
@@ -117,7 +117,7 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
+      "allowToChangeInstallationDirectory": false,
       "perMachine": true,
       "installerIcon": "electron/assets/logo.ico",
       "uninstallerIcon": "electron/assets/logo.ico",

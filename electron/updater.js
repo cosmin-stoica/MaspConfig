@@ -10,12 +10,6 @@ class Updater {
     this.checkInternetConnection().then((isConnected) => {
       if (isConnected) 
         this.initUpdater();
-      /*} else {
-        this.showDialog(
-          "Connessione assente",
-          "Non è possibile verificare gli aggiornamenti senza una connessione a Internet."
-        );
-      }*/
     });
   }
 
