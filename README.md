@@ -109,6 +109,12 @@ Ogni configurazione include un'icona, un titolo e un file JS di entrata specific
 
 ## Building
 
+La distribuzione viene compilata utilizzando anche "installer.nsh" dove viene definita la cartella predefinita di install.
+L'attuale è
+```bash
+C:\Scanteq\Masp Tools
+```
+
 1. Build completa:
    ```bash
    npm run build
@@ -118,6 +124,7 @@ Ogni configurazione include un'icona, un titolo e un file JS di entrata specific
    npm run dist
    ```
 3. Troverai l'applicativo dentro `./dist`.
+
 
 ---
 
