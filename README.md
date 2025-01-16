@@ -115,15 +115,15 @@ L'attuale è
 C:\Scanteq\Masp Tools
 ```
 
-1. Build completa:
+- Build completa:
    ```bash
    npm run build
    ```
-2. Build solamente di electron:
+- Build solamente di electron:
    ```bash
    npm run dist
    ```
-3. Troverai l'applicativo dentro `./dist`.
+- Troverai l'applicativo dentro `./dist`.
 
 
 ---
