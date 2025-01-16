@@ -220,8 +220,6 @@ export default function PdfCreator({ data, dataFile, OnExit }) {
                         Description="Vuoi salvare questa immagine come predefinita per il logo iniziale?"
                         onCancel={() => setShowConfirmSavingImage(false)}
                         onConfirm={() => handleSaveImage(1, selectedImage, `${path}/Masp Tools/Images/logo.jpg`, )}
-                        TextConfirm={true}
-                        TextToConfirm="salva"
                         Image={selectedImage}
                     />
                 }
@@ -231,8 +229,6 @@ export default function PdfCreator({ data, dataFile, OnExit }) {
                         Description="Vuoi salvare questa immagine come predefinita per il logo in alto a sinistra?"
                         onCancel={() => setShowConfirmSavingImage2(false)}
                         onConfirm={() => handleSaveImage(2, selectedImage2, `${path}/Masp Tools/Images/logo2.jpg`, )}
-                        TextConfirm={true}
-                        TextToConfirm="salva"
                         Image={selectedImage2}
                     />
                 }

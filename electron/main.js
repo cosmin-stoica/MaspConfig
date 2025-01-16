@@ -3,18 +3,19 @@ const path = require("path");
 const fileHandler = require("./filehandler"); // Importa il gestore dei file
 const reportHandler = require("./reporthandler"); // Importa il gestore dei file
 const { fork, exec } = require("child_process");
-const TCPClient = require("../server/client.js");
+//const TCPClient = require("../server/client.js");
 const os = require("os")
 const Updater = require("./updater");
 
 let mainWindow;
 let isReportGlobal = false;
-const tcpClient = new TCPClient();
+//const tcpClient = new TCPClient();
 
 const isDev = process.env.NODE_ENV === "development";
 const filePath = path.join(__dirname, "../build/index.html");
 console.log("Path to index.html:", filePath);
 let cachedPathValue = null;
+let serverProcess;
 
 function createWindow(appTitle, isReport) {
   isReportGlobal = isReport; 
@@ -42,7 +43,7 @@ function createWindow(appTitle, isReport) {
     mainWindow.loadFile(path.join(app.getAppPath(), "build", "index.html"));
   }
 
-  const serverProcess = fork(path.join(__dirname, "../server/server.js"));
+  /*serverProcess = fork(path.join(__dirname, "../server/server.js"));
   serverProcess.on("message", (data) => {
     console.log("Dati ricevuti dal server TCP:", data);
     if (mainWindow) {
@@ -52,7 +53,7 @@ function createWindow(appTitle, isReport) {
 
   serverProcess.on("exit", (code) => {
     console.log(`Server TCP terminato con codice: ${code}`);
-  });
+  });*/
 
   mainWindow.setMenuBarVisibility(false);
 }
@@ -98,8 +99,18 @@ ipcMain.handle("get-path-value", () => cachedPathValue);
 //})
 
 app.on("window-all-closed", () => {
+  if (serverProcess) {
+    serverProcess.kill(); 
+  }
+
   if (process.platform !== "darwin") {
     app.quit();
+  }
+});
+
+app.on("quit", () => {
+  if (serverProcess) {
+    serverProcess.kill(); 
   }
 });
 
@@ -177,7 +188,7 @@ ipcMain.handle("parse-csv-file", (_, filePath) => {
   return reportHandler.parseCsvFile(filePath);
 });
 
-ipcMain.handle("send-tcp-message", async (event, { host, port, message }) => {
+/*ipcMain.handle("send-tcp-message", async (event, { host, port, message }) => {
   return new Promise((resolve, reject) => {
     tcpClient.sendMessage(host, port, message, (err, response) => {
       if (err) {
@@ -187,7 +198,7 @@ ipcMain.handle("send-tcp-message", async (event, { host, port, message }) => {
       }
     });
   });
-});
+});*/
 
 ipcMain.handle("open-keyboard", () => {
   exec("osk.exe", (err) => {
@@ -206,7 +217,7 @@ ipcMain.handle("get-all-files-and-folders-with-subfolders", (_, folderPath) => {
 });
 
 ipcMain.handle('index-files', async (event, directory, pathToSave) => {
-  return reportHandler.indexFilesAndFolders(directory, pathToSave);
+  return await reportHandler.indexFilesAndFolders(directory, pathToSave);
 });
 
 ipcMain.handle('search-files', async (event, fileIndexPath, searchTerm) => {
@@ -223,4 +234,12 @@ ipcMain.handle('read-image', async (_, imagePath) => {
 
 ipcMain.handle('save-image', async (_, base64String, outputPath) => {
   return reportHandler.saveImageFromBase64(base64String, outputPath);
+});
+
+ipcMain.handle('save-color-file', async (_, color, filePath) => {
+  return reportHandler.saveColorToFile(color, filePath);
+});
+
+ipcMain.handle('read-color-file', async (_, filePath) => {
+  return reportHandler.readColorFromFile(filePath);
 });

@@ -50,4 +50,8 @@ contextBridge.exposeInMainWorld("electron", {
     ipcRenderer.invoke("read-image", imagePath),
   saveImageFromBase64: (base64String, outputPath) =>
     ipcRenderer.invoke("save-image", base64String, outputPath),
+  saveColorToFile: (color, filePath) =>
+    ipcRenderer.invoke("save-color-file", color, filePath),
+  readColorFromFile: (filePath) =>
+    ipcRenderer.invoke("read-color-file", filePath)
 });

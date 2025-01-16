@@ -41,12 +41,12 @@ export default function JobModifier() {
                 for (const section of Object.keys(fileParsed)) {
                     if (section === "SEZIONE GENERALE") {
                         if (!data[section]) {
-                            data[section] = await window.electron.parseIniFile(`${path}/Config/Masp Tools/Dummies/Job Config/Sezione Generale.ini`);
+                            data[section] = await window.electron.parseIniFile(`${path}/Masp Tools/Dummies/Job Config/Sezione Generale.ini`);
                         }
                     } else {
                         const tipoJob = fileParsed[section]?.["Tipo job"];
                         if (tipoJob && !data[section]) {
-                            data[section] = await window.electron.parseIniFile(`${path}/Config/Masp Tools/Dummies/Job Config/${tipoJob}.ini`);
+                            data[section] = await window.electron.parseIniFile(`${path}/Masp Tools/Dummies/Job Config/${tipoJob}.ini`);
                         } else if (!tipoJob) {
                             console.warn(`Tipo Job non trovato per la sezione: ${section}`);
                         }

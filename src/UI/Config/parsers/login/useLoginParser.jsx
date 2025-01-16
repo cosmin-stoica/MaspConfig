@@ -23,7 +23,7 @@ const useLoginParser = (onSetActive) => {
       //const response = await fetch("/assets/dummies/LoginDummy.ini");
       //const dummyText = await response.text();
       //return ini.parse(dummyText);
-      const dummyPath = `${path}/Config/Masp Tools/Dummies/Login.ini`;
+      const dummyPath = `${path}/Masp Tools/Dummies/Login.ini`;
       const dummyContent = await window.electron.parseIniFile(dummyPath);
       return dummyContent;
     } catch (error) {

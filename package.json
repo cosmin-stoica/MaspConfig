@@ -4,7 +4,7 @@
   "description": "Masp Tools",
   "author": "Scanteq",
   "homepage": "./",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",

@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { promises: fsPromises } = fs;
 const path = require("path");
 const Papa = require("papaparse");
 
@@ -19,93 +20,101 @@ const reportHandler = {
   },
   async indexFilesAndFolders(directory, pathToSave) {
     let index = [];
-    const items = fs.readdirSync(directory, { withFileTypes: true });
+    const items = await fs.promises.readdir(directory, { withFileTypes: true });
 
-    const tasks = items.map(async (item) => {
-      const fullPath = path.join(directory, item.name);
-      const stats = fs.statSync(fullPath);
+    await Promise.all(
+      items.map(async (item) => {
+        const fullPath = path.join(directory, item.name);
+        const stats = await fsPromises.stat(fullPath);
 
-      let operatore = null;
-      let codice = null;
-      let progressivo = null;
-      let barcodes = [];
+        let operatore = null;
+        let codice = null;
+        let progressivo = null;
+        let barcodes = [];
 
-      if (
-        !item.isDirectory() &&
-        (path.extname(fullPath) === ".csv" || path.extname(fullPath) === ".txt")
-      ) {
-        const csvParsed = this.parseCsvFile(fullPath);
-        if (csvParsed && csvParsed.length > 0) {
-          const primaryColumn = Object.keys(csvParsed[0])[0];
-          operatore = csvParsed.find(
-            (row) => row[primaryColumn] === "Operatore"
-          )?.[""];
-          codice = csvParsed.find((row) => row[primaryColumn] === "Codice")?.[
-            ""
-          ];
-          progressivo = csvParsed.find(
-            (row) => row[primaryColumn] === "Progressivo"
-          )?.[""];
+        if (
+          !item.isDirectory() &&
+          (path.extname(fullPath) === ".csv" ||
+            path.extname(fullPath) === ".txt")
+        ) {
+          const csvParsed = this.parseCsvFile(fullPath); // Definisci o importa questa funzione
+          if (csvParsed && csvParsed.length > 0) {
+            const primaryColumn = Object.keys(csvParsed[0])[0];
+            operatore = csvParsed.find(
+              (row) => row[primaryColumn] === "Operatore"
+            )?.[""];
+            codice = csvParsed.find((row) => row[primaryColumn] === "Codice")?.[
+              ""
+            ];
+            progressivo = csvParsed.find(
+              (row) => row[primaryColumn] === "Progressivo"
+            )?.[""];
 
-          // Estrai i barcode solo dalla sezione "Barcode componenti"
-          let isInBarcodeSection = false;
+            let isInBarcodeSection = false;
 
-          csvParsed.forEach((row) => {
-            const primaryColumn = Object.keys(row)[0]; // Determina dinamicamente il nome della prima colonna
-            const sectionHeader = row[primaryColumn]?.trim();
+            csvParsed.forEach((row) => {
+              const primaryColumn = Object.keys(row)[0];
+              const sectionHeader = row[primaryColumn]?.trim();
 
-            if (sectionHeader === "Barcode componenti") {
-              isInBarcodeSection = true; // Inizia la sezione "Barcode componenti"
-              return;
-            }
-
-            // Se raggiunge un'altra sezione, smetti di elaborare
-            if (
-              isInBarcodeSection &&
-              [
-                "Risultati avvitature",
-                "Risultati rivettatura",
-                "Risultati collaudo",
-                "Controlli",
-              ].includes(sectionHeader)
-            ) {
-              isInBarcodeSection = false;
-              return;
-            }
-
-            // Se siamo nella sezione "Barcode componenti", elaboriamo i dati
-            if (isInBarcodeSection && row[primaryColumn]?.match(/^\d+$/)) {
-              const barcode = row[""];
-              if (barcode) {
-                barcodes.push(barcode.trim());
+              if (sectionHeader === "Barcode componenti") {
+                isInBarcodeSection = true;
+                return;
               }
-            }
-          });
+
+              if (
+                isInBarcodeSection &&
+                [
+                  "Risultati avvitature",
+                  "Risultati rivettatura",
+                  "Risultati collaudo",
+                  "Controlli",
+                ].includes(sectionHeader)
+              ) {
+                isInBarcodeSection = false;
+                return;
+              }
+
+              if (isInBarcodeSection && row[primaryColumn]?.match(/^\d+$/)) {
+                const barcode = row[""];
+                if (barcode) {
+                  barcodes.push(barcode.trim());
+                }
+              }
+            });
+          }
         }
-      }
 
-      const entry = {
-        name: item.name,
-        fullPath: fullPath,
-        isFolder: item.isDirectory(),
-        creationDate: stats.birthtime,
-        csvDataOperatore: operatore,
-        csvDataCodice: codice,
-        csvDataProgressivo: progressivo,
-        barcodes: barcodes,
-      };
+        const entry = {
+          name: item.name,
+          fullPath: fullPath,
+          isFolder: item.isDirectory(),
+          creationDate: stats.birthtime,
+          csvDataOperatore: operatore,
+          csvDataCodice: codice,
+          csvDataProgressivo: progressivo,
+          barcodes: barcodes,
+        };
 
-      index.push(entry);
+        index.push(entry);
 
-      if (item.isDirectory()) {
-        const subIndex = await this.indexFilesAndFolders(fullPath, pathToSave);
-        index = index.concat(subIndex);
-      }
-    });
+        if (item.isDirectory()) {
+          const subIndex = await this.indexFilesAndFolders(
+            fullPath,
+            pathToSave
+          );
+          index = index.concat(subIndex);
+        }
+      })
+    );
 
-    await Promise.all(tasks);
+    const saveDir = path.dirname(pathToSave);
+    try {
+      await fsPromises.mkdir(saveDir, { recursive: true });
+      await fsPromises.writeFile(pathToSave, JSON.stringify(index, null, 2));
+    } catch (err) {
+      console.error("Errore durante il salvataggio:", err);
+    }
 
-    fs.writeFileSync(pathToSave, JSON.stringify(index, null, 2));
     return index;
   },
   searchInIndex(fileIndexPath, searchTerm) {
@@ -267,13 +276,48 @@ const reportHandler = {
   },
   async saveImageFromBase64(base64String, outputPath) {
     try {
-      const base64Data = base64String.replace(/^data:image\/\w+;base64,/, ""); 
-      const buffer = Buffer.from(base64Data, "base64"); 
+      const base64Data = base64String.replace(/^data:image\/\w+;base64,/, "");
+      const buffer = Buffer.from(base64Data, "base64");
+
+      const saveDir = path.dirname(outputPath);
+      if (!fs.existsSync(saveDir)) {
+        fs.mkdirSync(saveDir, { recursive: true });
+      }
+
       fs.writeFileSync(outputPath, buffer);
       console.log(`Immagine salvata con successo in: ${outputPath}`);
       return true;
     } catch (error) {
       console.error("Errore durante il salvataggio dell'immagine:", error);
+      throw error;
+    }
+  },
+  async saveColorToFile(color, filePath) {
+    try {
+      const saveDir = path.dirname(filePath);
+      if (!fs.existsSync(saveDir)) {
+        fs.mkdirSync(saveDir, { recursive: true });
+      }
+
+      fs.writeFileSync(filePath, color, "utf8");
+      console.log(`Colore salvato con successo in: ${filePath}`);
+      return true;
+    } catch (error) {
+      console.error("Errore durante il salvataggio del colore:", error);
+      throw error;
+    }
+  },
+
+  async readColorFromFile(filePath) {
+    try {
+      if (!fs.existsSync(filePath)) {
+        throw new Error(`Il file ${filePath} non esiste.`);
+      }
+      const color = fs.readFileSync(filePath, "utf8");
+      console.log(`Colore letto dal file: ${color}`);
+      return color;
+    } catch (error) {
+      console.error("Errore durante la lettura del colore:", error);
       throw error;
     }
   },

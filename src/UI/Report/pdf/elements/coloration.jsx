@@ -1,15 +1,34 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SketchPicker } from "react-color";
 import { IoIosColorPalette } from "react-icons/io";
+import { usePath } from "../../../../MAIN/Config/PathContext"
+import ConfirmModal from "../../../globals/components/confirm_modal"
+import StyledButton from "../../../globals/components/styled_button";
 
 export default function Coloration({ setOpenColorPicker, openColorPicker, mainColor, setMainColor }) {
 
+    const { path } = usePath()
+    const [openConfirmSaveColor, setOpenConfirmSaveColor] = useState(false);
+    const [isColorLoaded, setIsColorLoaded] = useState(false)
+    const pathToTxt = `${path}/Masp Tools/Colors/main.txt`
 
     useEffect(() => {
 
-        const savedColor = localStorage.getItem("savedColor");
-        if (savedColor) {
-            setMainColor(savedColor);
+        if (!isColorLoaded) {
+            console.log("qui")
+            async function readColor() {
+                try {
+                    const savedColor = await window.electron.readColorFromFile(pathToTxt);
+                    if (savedColor) {
+                        setMainColor(savedColor);
+                    }
+                } catch (error) {
+                    console.error("Errore durante la lettura del colore:", error);
+                } finally {
+                    setIsColorLoaded(true);
+                }
+            }
+            readColor();
         }
 
         const handleClickOutside = (event) => {
@@ -22,27 +41,34 @@ export default function Coloration({ setOpenColorPicker, openColorPicker, mainCo
         return () => {
             document.removeEventListener("click", handleClickOutside);
         };
-    }, [setOpenColorPicker, openColorPicker, setMainColor]);
+    }, [setOpenColorPicker, openColorPicker, setMainColor, pathToTxt]);
 
 
     const handleColorChange = (newColor) => {
         setMainColor(newColor.hex);
-        localStorage.setItem("savedColor", newColor.hex);
     };
+
+    const handleSaveColor = () => {
+        window.electron.saveColorToFile(mainColor, pathToTxt)
+        setOpenConfirmSaveColor(false)
+    }
 
     return (
         <>
             <div className="table_lista_report_toolboxBar_otherParams_SingleDiv">
                 <h1><div className="fs-25 c-blue-confirm"><IoIosColorPalette /></div>Colorazione</h1>
-                <div
-                    className="PdfCreator_ColorPicker_MainDiv"
-                    onClick={() => setOpenColorPicker(!openColorPicker)}
-                >
-                    <div style={{ width: "25px", height: "25px", background: mainColor, borderRadius: "4px" }}>
+                <div className="flex-center-row-noalign gap-15">
+                    <div
+                        className="PdfCreator_ColorPicker_MainDiv"
+                        onClick={() => setOpenColorPicker(!openColorPicker)}
+                    >
+                        <div style={{ width: "25px", height: "25px", background: mainColor, borderRadius: "4px" }}>
+                        </div>
+                        <div className="c-black">
+                            Colore del pdf
+                        </div>
                     </div>
-                    <div className="c-black">
-                        Colore del pdf
-                    </div>
+                    <StyledButton Title="Salva predefinito" Confirm={true} onClick={() => setOpenConfirmSaveColor(true)}></StyledButton>
                 </div>
             </div>
             {openColorPicker && (
@@ -57,6 +83,14 @@ export default function Coloration({ setOpenColorPicker, openColorPicker, mainCo
                     />
                 </div>
             )}
+            {openConfirmSaveColor &&
+                <ConfirmModal
+                    Title="Conferma"
+                    Description="Sei sicuro di voler salvare questo colore come predefinito?"
+                    onCancel={() => setOpenConfirmSaveColor(false)}
+                    onConfirm={handleSaveColor}
+                />
+            }
         </>
     );
 };

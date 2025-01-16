@@ -5,6 +5,7 @@ import { useNavigate, useLocation } from "react-router";
 import iconMap from "../../parsers/config_hal/iconMap";
 import { TbArrowLeft } from "react-icons/tb";
 import { FaSquarePlus } from "react-icons/fa6";
+import halCategories from "./HalCategories.json"
 
 import {
     TbSettingsStar,
@@ -83,8 +84,9 @@ export default function Hal() {
     useEffect(() => {
         const fetchConfig = async () => {
             try {
-                const filePath = `public\\assets\\config_creator\\HalCategories.json`;
-                const data = await window.electron.readJsonFile(filePath);
+                //const filePath = `public\\assets\\config_creator\\HalCategories.json`;
+                //const data = await window.electron.readJsonFile(filePath);
+                const data = halCategories;
 
                 if (!data || Object.keys(data).length === 0) {
                     throw new Error("File JSON vuoto o non trovato");
