@@ -1,17 +1,18 @@
 export default function JobInputRenderer({ currentValue, keyName, section, dummyValue, inputValues, setInputValues, disabled, modTablet }) {
 
-        const handleInputChange = (section, key, value) => {
+    const handleInputChange = (section, key, value) => {
         setInputValues((prev) => ({
             ...prev,
             [section]: {
-                ...prev[section],
+                ...prev[section] ?? {}, 
                 [key]: value || "",
             },
         }));
     };
+    
     const uniqueId = `${section}_${keyName}`;
-    //const inputValue = inputValues[section]?.[keyName] || "";
-    const inputValue = currentValue;
+    const inputValue = inputValues[section]?.[keyName] || "";
+    //const inputValue = currentValue;
     //console.log(inputValues[1])
 
     const handleFocus = () => {

@@ -46,9 +46,7 @@ const AppContent = () => {
 
   return (
     <div className="App">
-      {/* Componente NavBarWrapper che riceve lo stato della navbar come prop */}
       <NavBarWrapper activeNavbar={activeNavbar} />
-      {/* Componente per la gestione delle route, con lo stato della navbar */}
       <AppRoutes activeNavbar={activeNavbar} onSetActive={handleSetActive} />
     </div>
   );
@@ -62,9 +60,7 @@ const AppContent = () => {
 function App({isReport}) {
   return (
     <HashRouter>
-      {/* PathProvider gestisce il contesto relativo ai percorsi */}
       <PathProvider isReport={isReport}>
-        {/* TCPProvider gestisce il contesto relativo alla comunicazione TCP */}
         <TCPProvider>
           <AppContent />
         </TCPProvider>

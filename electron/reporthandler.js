@@ -129,13 +129,15 @@ const reportHandler = {
 
     try {
       const entries = fs.readdirSync(folderPath, { withFileTypes: true });
+
       const filteredEntries = entries.filter((entry) => {
         return (
           entry.isDirectory() ||
           [".txt", ".csv"].includes(path.extname(entry.name).toLowerCase())
         );
       });
-      return filteredEntries.map((entry) => {
+
+      let results = filteredEntries.map((entry) => {
         const fullPath = path.join(folderPath, entry.name);
         const stats = fs.statSync(fullPath);
 
@@ -145,16 +147,12 @@ const reportHandler = {
 
         if (!entry.isDirectory()) {
           const csvParsed = this.parseCsvFile(fullPath);
-          const primaryColumn = Object.keys(csvParsed[0])[0];
-          operatore = csvParsed.find(
-            (item) => item[primaryColumn] === "Operatore"
-          )?.[""];
-          codice = csvParsed.find((item) => item[primaryColumn] === "Codice")?.[
-            ""
-          ];
-          progressivo = csvParsed.find(
-            (item) => item[primaryColumn] === "Progressivo"
-          )?.[""];
+          if (csvParsed && csvParsed.length > 0) {
+            const primaryColumn = Object.keys(csvParsed[0])[0];
+            operatore = csvParsed.find(item => item[primaryColumn] === "Operatore")?.[""];
+            codice = csvParsed.find(item => item[primaryColumn] === "Codice")?.[""];
+            progressivo = csvParsed.find(item => item[primaryColumn] === "Progressivo")?.[""];
+          }
         }
 
         return {
@@ -167,6 +165,11 @@ const reportHandler = {
           csvDataProgressivo: progressivo,
         };
       });
+
+      // Filtra per rimuovere i file con csvDataCodice null
+      results = results.filter(entry => entry.isFolder || entry.csvDataCodice !== null);
+
+      return results;
     } catch (error) {
       console.error("Errore durante la lettura della directory:", error);
       return [];

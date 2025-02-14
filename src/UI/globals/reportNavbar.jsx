@@ -68,6 +68,30 @@ function ReportNavBar({ activeNavbar }) {
                             </button>
                         </Link>
                     }
+
+
+                    {!activeNavbar ?
+                        <button
+                            className={`Navbar_Button ${isActive(['/setup']) ||
+                                (isActive(['/setup']) && !isActive(['/setup'], '', ''))
+                                ? 'isActive'
+                                : ''
+                                }`}
+                        >
+                            SETUP
+                        </button>
+                        : <Link to={!activeNavbar ? "#" : "/setup?config=Report Config"}>
+                            <button
+                                className={`Navbar_Button ${isActive(['/setup']) ||
+                                    (isActive(['/setup']) && !isActive(['/setup'], '', ''))
+                                    ? 'isActive'
+                                    : ''
+                                    }`}
+                            >
+                                SETUP
+                            </button>
+                        </Link>
+                    }
                 </div>
                 <div className="Navbar_MainDiv_Account">
                     <div className="Navbar_MainDiv_Account_Container">

@@ -17,14 +17,16 @@ function ReportAppToIndex({ setIsLoading }) {
     const pathToSave = `${path}\\Masp Tools\\FileIndex\\fileIndex.json`;
 
     const updateIndex = async () => {
+      setIsLoading(true); // Imposta lo stato di caricamento all'inizio dell'operazione
       console.log("Inizio aggiornamento indice...");
+
       try {
         await window.electron.indexFilesAndFolders(pathToSearch, pathToSave);
         console.log("Indice aggiornato correttamente.");
       } catch (error) {
         console.error("Errore durante l'aggiornamento dell'indice:", error);
       } finally {
-        setIsLoading(false);
+        setTimeout(() => setIsLoading(false), 500); // Aggiungi un piccolo delay per evitare flickering
         console.log("Caricamento completato, stato aggiornato.");
       }
     };
@@ -34,6 +36,7 @@ function ReportAppToIndex({ setIsLoading }) {
 
   return null;
 }
+
 
 function ReportApp({isReport}) {
   const [isLoading, setIsLoading] = useState(false);

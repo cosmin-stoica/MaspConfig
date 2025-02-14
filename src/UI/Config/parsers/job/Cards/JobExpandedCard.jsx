@@ -23,25 +23,24 @@ export default function JobExpandedCard({
                     </button>
                 </div>
                 <div className="HalParserViewer_Params_Section">
-                    {[
-                        dummiesData[section]?.["SEZIONE GENERALE"],
-                        dummiesData[section]?.["JOB 1"],
-                    ]
-                        .filter(Boolean)
-                        .flatMap(data => Object.entries(data))
-                        .filter(([key]) => !key.startsWith("Tipo job") && !key.startsWith("separator_") && !key.startsWith("comment_"))
+                    {Object.entries(dummiesData[section] ?? {}) // Accediamo direttamente a `dummiesData[section]`
+                        .filter(
+                            ([key]) =>
+                                !key.startsWith("Tipo job") &&
+                                !key.startsWith("separator_") &&
+                                !key.startsWith("comment_")
+                        )
                         .map(([key, value]) => {
-                            const currentValue = filteredData.find(([filteredSection]) => filteredSection === section)?.[1]?.[key] ?? false;
+                            const currentValue =
+                                filteredData.find(([filteredSection]) => filteredSection === section)?.[1]?.[key] ?? false;
+    
                             const labelClass = currentValue
                                 ? "HalParserViewer_Label"
                                 : "HalParserViewer_Label--missing";
-
+    
                             return (
                                 <div key={key} className="HalParserViewer_Param">
-                                    <label
-                                        htmlFor={key}
-                                        className={`${labelClass}`}
-                                    >
+                                    <label htmlFor={key} className={labelClass}>
                                         {key}
                                     </label>
                                     <JobInputRenderer
@@ -63,5 +62,5 @@ export default function JobExpandedCard({
                 </div>
             </div>
         </div>
-    );
+    );    
 }

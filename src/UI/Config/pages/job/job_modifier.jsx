@@ -19,20 +19,48 @@ export default function JobModifier() {
 
     useEffect(() => {
         const loaderTimeout = setTimeout(() => setIsLoading(false), 500);
+    
         const parseIniFile = async () => {
+            if (!fileName) {
+                console.error("fileName non definito, impossibile caricare il file.");
+                setFileParsed({}); 
+                return;
+            }
+            if (!path) {
+                console.error("path non definito, impossibile caricare il file.");
+                setFileParsed({}); 
+                return;
+            }
+    
             const filePath = `${path}/Config/${fileName}`;
-            const fileParsed = await window.electron.parseIniFile(filePath);
-            const filteredData = Object.fromEntries(
-                Object.entries(fileParsed).filter(([section]) => section.startsWith("JOB") || section.startsWith("SEZIONE"))
-            );
-            setFileParsed(filteredData)
+            console.log("filePath",filePath)
+            try {
+                const fileParsed = await window.electron.parseIniFile(filePath);
+    
+                if (!fileParsed || typeof fileParsed !== "object") {
+                    console.error("Errore nel parsing del file, dati non validi.");
+                    setFileParsed({});
+                    return;
+                }
+    
+                const filteredData = Object.fromEntries(
+                    Object.entries(fileParsed ?? {}).filter(([section]) => section.startsWith("JOB") || section.startsWith("SEZIONE"))
+                );
+    
+                setFileParsed(filteredData);
+            } catch (error) {
+                console.error("Errore durante il parsing del file:", error);
+                setFileParsed({});
+            }
         };
-
+    
         parseIniFile();
+    
         return () => {
             clearTimeout(loaderTimeout);
         };
-    }, []);
+    }, [path]);
+    
 
     useEffect(() => {
         const loadDummyData = async () => {
@@ -41,7 +69,7 @@ export default function JobModifier() {
                 for (const section of Object.keys(fileParsed)) {
                     if (section === "SEZIONE GENERALE") {
                         if (!data[section]) {
-                            data[section] = await window.electron.parseIniFile(`${path}/Masp Tools/Dummies/Job Config/Sezione Generale.ini`);
+                            data[section] = await window.electron.parseIniFile(`${path}/Masp Tools/Dummies/Job Config/Sezione-Generale.ini`);
                         }
                     } else {
                         const tipoJob = fileParsed[section]?.["Tipo job"];
@@ -69,7 +97,7 @@ export default function JobModifier() {
                 <button className="Hal_Config_Back_Btn" onClick={handleBackClick}>
                     <TbArrowLeft />
                 </button>
-                {fileParsed && <JobParser dummiesData={dummiesParsed} jobData={Object.entries(fileParsed)} />
+                {fileParsed && <JobParser dummiesData={dummiesParsed} jobData={Object.entries(fileParsed)} fileName={fileName} />
 }
             </div>
         </>

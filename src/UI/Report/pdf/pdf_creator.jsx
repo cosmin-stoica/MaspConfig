@@ -1,6 +1,5 @@
 import StyledButton from "../../globals/components/styled_button";
 import GeneralModal from "../../globals/components/general_modal";
-import { generateStructuredPdf } from "../parsers/csvPdfMaker";
 import { useState } from "react";
 import LogoCheckboxes from "./elements/logo_checkboxes";
 import Coloration from "./elements/coloration";
@@ -9,9 +8,14 @@ import Alert from "../../globals/components/alert"
 import { usePath } from "../../../MAIN/Config/PathContext"
 import ConfirmModal from "../../globals/components/confirm_modal";
 
-export default function PdfCreator({ data, dataFile, OnExit }) {
+export default function PdfCreator({ data, dataFile, dataMerged, dataFileMultiple, OnExit, useLoader, setIsLoading }) {
 
     const ReturnContent = () => {
+
+        const pdfWorker = new Worker(new URL('../parsers/csvPdfMaker.js', import.meta.url));
+
+        console.log("dataMerged", dataMerged)
+        console.log("dataFileMultiple", dataFileMultiple)
 
         const { path } = usePath();
         const [predImage, setPredImage] = useState(false)
@@ -41,40 +45,123 @@ export default function PdfCreator({ data, dataFile, OnExit }) {
 
         const [selectedImage, setSelectedImage] = useState(null);
         const [selectedImage2, setSelectedImage2] = useState(null);
-
         const onConfirm = () => {
+            // Controlli per i loghi
+            if (pdfObject.logoInitial && !selectedImage) {
+                makeAlertReveal(
+                    "warning",
+                    "Attenzione",
+                    "Per poter inserire il logo iniziale nel pdf bisogna caricarlo \noppure selezionare un'immagine predefinita"
+                );
+                return;
+            }
+            if (pdfObject.logoTopLeft && !selectedImage2) {
+                makeAlertReveal(
+                    "warning",
+                    "Attenzione",
+                    "Per poter inserire il logo in alto a sinistra nel pdf bisogna caricarlo \noppure selezionare un'immagine predefinita"
+                );
+                return;
+            }
+            if (selectedImage && !pdfObject.logoInitial) {
+                makeAlertReveal(
+                    "warning",
+                    "Attenzione",
+                    "Per poter inserire il logo iniziale nel pdf bisogna selezionare la spunta"
+                );
+                return;
+            }
+            if (selectedImage2 && !pdfObject.logoTopLeft) {
+                makeAlertReveal(
+                    "warning",
+                    "Attenzione",
+                    "Per poter inserire il logo in alto a sinistra nel pdf bisogna selezionare la spunta"
+                );
+                return;
+            }
 
-            if (!selectedImage && pdfObject.logoInitial ) {
-                makeAlertReveal("warning", "Attenzione", "Per poter inserire il logo iniziale nel pdf bisogna caricarlo \n oppure selezionare un'immagine predefinita")
-                return;
-            }
-            if (!selectedImage2 && pdfObject.logoTopLeft ) {
-                makeAlertReveal("warning", "Attenzione", "Per poter inserire il logo in alto a sinistra nel pdf bisogna caricarlo \n oppure selezionare un'immagine predefinita")
-                return;
+            if (useLoader) {
+                setIsLoading(true);
             }
 
-            if (selectedImage && !pdfObject.logoInitial ) {
-                makeAlertReveal("warning", "Attenzione", "Per poter inserire il logo iniziale nel pdf bisogna selezionare la spunta")
-                return;
-            }
-            if (selectedImage2 && !pdfObject.logoTopLeft ) {
-                makeAlertReveal("warning", "Attenzione", "Per poter inserire il logo iniziale nel pdf bisogna selezionare la spunta")
-                return;
+            // Prepara i parametri da inviare al worker.
+            let params;
+            let title;
+            if (
+                dataMerged &&
+                Object.keys(dataMerged).length > 0 &&
+                dataFileMultiple &&
+                Object.keys(dataFileMultiple).length > 0
+            ) {
+                const mergedArray = Object.values(dataMerged);
+                const fileMultipleArray = Object.values(dataFileMultiple);
+                if (mergedArray[0] && mergedArray[0].length > 0) {
+                    const primaryKey = Object.keys(mergedArray[0][0])[0];
+                    title = `${primaryKey}`;
+                    params = [
+                        data, // placeholder, non usato in modalità append
+                        generatedSections,
+                        primaryKey,
+                        primaryKey,
+                        title,
+                        pdfObject.logoInitial,
+                        pdfObject.logoTopLeft,
+                        mainColor,
+                        selectedImage,
+                        selectedImage2,
+                        true, // Flag "append"
+                        mergedArray,
+                        fileMultipleArray
+                    ];
+                }
+            } else {
+                title = `${Object.keys(data[0])[0]} ${dataFile.csvDataCodice} ${dataFile.csvDataProgressivo} ${dataFile.csvDataOperatore}`;
+                params = [
+                    data,
+                    generatedSections,
+                    Object.keys(data[0])[0],
+                    Object.keys(data[0])[0],
+                    title,
+                    pdfObject.logoInitial,
+                    pdfObject.logoTopLeft,
+                    mainColor,
+                    selectedImage,
+                    selectedImage2
+                ];
             }
 
-            generateStructuredPdf(
-                data,
-                generatedSections,
-                Object.keys(data[0])[0],
-                Object.keys(data[0])[0],
-                `${Object.keys(data[0])[0]} ${dataFile.csvDataCodice} ${dataFile.csvDataProgressivo} ${dataFile.csvDataOperatore}`,
-                pdfObject.logoInitial,
-                pdfObject.logoTopLeft,
-                mainColor,
-                selectedImage,
-                selectedImage2
-            )
-        }
+            const downloadPDF = (dataUrl, fileName = `${title}.pdf`) => {
+                const link = document.createElement("a");
+                link.href = dataUrl;
+                link.download = fileName;
+                // Aggiunge il link al DOM per sicurezza (alcuni browser potrebbero richiederlo)
+                document.body.appendChild(link);
+                link.click();
+                // Rimuove il link
+                document.body.removeChild(link);
+              };
+              
+
+            // Invia i parametri al worker
+            pdfWorker.postMessage(params);
+
+            // Ascolta la risposta del worker
+            pdfWorker.onmessage = (event) => {
+                const { result, error } = event.data;
+                if (error) {
+                    console.error("Errore nel worker:", error);
+                } else {
+                    // result è il PDF come data URL
+                    downloadPDF(result);
+                }
+                setIsLoading(false);
+            };
+
+            pdfWorker.onerror = (error) => {
+                console.error("Errore nel worker:", error);
+                setIsLoading(false);
+            };
+        };
 
         const handleImageUpload = (event) => {
             const file = event.target.files[0];
@@ -92,7 +179,7 @@ export default function PdfCreator({ data, dataFile, OnExit }) {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = () => {
-                    setSelectedImage2(reader.result); 
+                    setSelectedImage2(reader.result);
                     setShowConfirmSavingImage2(true)
                 };
                 reader.readAsDataURL(file);
@@ -108,7 +195,7 @@ export default function PdfCreator({ data, dataFile, OnExit }) {
                 if (result) {
                     makeAlertReveal("success", "Successo", "L'immagine è stata caricata correttamente")
                     console.log("Immagine salvata con successo:", outputPath);
-                    type === 1 ?  setPredImage(true) :  setPredImage2(true);
+                    type === 1 ? setPredImage(true) : setPredImage2(true);
                 } else {
                     makeAlertReveal("error", "Errore", "L'immagine non è stata caricata correttamente")
                     console.error("Errore durante il salvataggio dell'immagine.");
@@ -144,7 +231,7 @@ export default function PdfCreator({ data, dataFile, OnExit }) {
                 console.error("Errore durante il caricamento dell'immagine predefinita:", error);
             }
         };
-        
+
         const handleUseDefaultImage2 = async () => {
             const basePath = `${path}/Masp Tools/Images/logo2`;
             const extensions = ['png', 'jpg', 'jpeg'];
@@ -219,16 +306,16 @@ export default function PdfCreator({ data, dataFile, OnExit }) {
                         Title="Conferma"
                         Description="Vuoi salvare questa immagine come predefinita per il logo iniziale?"
                         onCancel={() => setShowConfirmSavingImage(false)}
-                        onConfirm={() => handleSaveImage(1, selectedImage, `${path}/Masp Tools/Images/logo.jpg`, )}
+                        onConfirm={() => handleSaveImage(1, selectedImage, `${path}/Masp Tools/Images/logo.jpg`,)}
                         Image={selectedImage}
                     />
                 }
-                  {showConfirmSavingImage2 &&
+                {showConfirmSavingImage2 &&
                     <ConfirmModal
                         Title="Conferma"
                         Description="Vuoi salvare questa immagine come predefinita per il logo in alto a sinistra?"
                         onCancel={() => setShowConfirmSavingImage2(false)}
-                        onConfirm={() => handleSaveImage(2, selectedImage2, `${path}/Masp Tools/Images/logo2.jpg`, )}
+                        onConfirm={() => handleSaveImage(2, selectedImage2, `${path}/Masp Tools/Images/logo2.jpg`,)}
                         Image={selectedImage2}
                     />
                 }

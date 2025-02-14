@@ -74,6 +74,7 @@ export default function JobSectionViewer({
                                 filteredData={filteredData}
                                 closeSection={closeSection}
                                 setInputValues={setInputValues}
+                                inputValues={inputValues}
                                 modTablet={modTablet}
                             />
                         )}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback  } from "react";
 import { HiArrowCircleDown } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import ConfirmModal from "../../../globals/components/confirm_modal"
@@ -12,22 +12,27 @@ function Dashboard_Upper_Right() {
     const [showSuccess, setShowSuccess] = useState(false);
     const { path } = usePath();
 
+    const [firstOpen, setFirstOpen] = useState(() => {
+        return !sessionStorage.getItem('modalShown');
+    });
+
+
     const [lastBackup, setLastBackup] = useState("");
 
-    const getLastBackup = async () => {
+    const getLastBackup = useCallback(async () => {
         try {
-            const success = await window.electron.getFiles(`${path}/Masp Tools/Backup Config`);
-            const lastItem = success[success.length - 1];
-            console.log(lastItem)
-            setLastBackup(lastItem);
+          const success = await window.electron.getFiles(`${path}/Masp Tools/Backup Config`);
+          const lastItem = success[success.length - 1];
+          console.log('lastItem', lastItem);
+          setLastBackup(lastItem);
         } catch (error) {
-            console.error("Errore durante il backup:", error);
+          console.error("Errore durante il backup:", error);
         }
-    };
+      }, [path]);
 
     useEffect(() => {
         getLastBackup();
-    }, []);
+    }, [getLastBackup]);
 
     const handleBackup = async () => {
         if (!path) {
@@ -42,40 +47,50 @@ function Dashboard_Upper_Right() {
             setShowConfirm(false)
             setShowSuccess(true)
             getLastBackup();
+            setFirstOpen(false);
+            sessionStorage.setItem('modalShown', 'true');
         } catch (error) {
             console.error("Errore durante il backup:", error);
             setShowError(true)
+            setFirstOpen(false);
+            sessionStorage.setItem('modalShown', 'true');
         }
     };
 
     const formatDate = (isoString) => {
         if (!isoString) return "Nessun backup registrato";
-    
+
         // Correggi il formato sostituendo i `-` con `:`
         const correctedIsoString = isoString.replace(/T(\d+)-(\d+)-(\d+)/, "T$1:$2:$3");
-    
+
         // Crea un oggetto Date
         const date = new Date(correctedIsoString);
-    
+
         // Verifica se il costruttore `Date` ha creato una data valida
         if (isNaN(date)) return "Formato data non valido";
-    
+
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
         const hours = String(date.getHours()).padStart(2, "0");
         const minutes = String(date.getMinutes()).padStart(2, "0");
         const seconds = String(date.getSeconds()).padStart(2, "0");
-    
+
         return `${year} ${month} ${day} ${hours}:${minutes}:${seconds}`;
     };
-    
-    
-    
+
+
+
 
 
     return (
         <>
+            {firstOpen && <ConfirmModal
+                Title="Conferma"
+                Description="Questa applicazione è in fase Beta, cliccando su conferma farai un backup dei config"
+                onConfirm={handleBackup}
+                onCancel={() => { setFirstOpen(false); sessionStorage.setItem('modalShown', 'true'); }}
+            />}
             <div className="Dashboard_Upper_Right_MainDiv">
                 Backup
                 <div className="Dashboard_Upper_Right_Icon">

@@ -148,7 +148,7 @@ export default function ListaReport() {
         try {
             const parsedContent = await window.electron.parseCsvFile(filePath);
             setSelectedFileContent(parsedContent);
-            console.log(parsedContent)
+            console.log('parsedContent', parsedContent)
         } catch (error) {
             console.error("Errore durante il parsing del file:", error);
         }
@@ -192,6 +192,7 @@ export default function ListaReport() {
                         <ListaToolbox
                             path={currentPath}
                             pathIndex={path}
+                            searchResults={searchResults.length > 0 ? searchResults : files}
                             handleFileNameOnChange={handleFileNameOnChange}
                             handleSearchBtn={handleSearch}
                             handleStartDateChange={handleStartDateChange}

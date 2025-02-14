@@ -15,7 +15,6 @@ export default function Coloration({ setOpenColorPicker, openColorPicker, mainCo
     useEffect(() => {
 
         if (!isColorLoaded) {
-            console.log("qui")
             async function readColor() {
                 try {
                     const savedColor = await window.electron.readColorFromFile(pathToTxt);

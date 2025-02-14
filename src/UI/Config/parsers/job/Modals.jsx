@@ -8,9 +8,21 @@ export default function Modals({
     setShowConfirmReload,
     setShowDummyAlert,
     DummyAlertMsg,
+    showConfirmSave,
+    setShowConfirmSave,
+    handleSave
 }) {
     return (
         <>
+            {showConfirmSave && (
+                <ConfirmModal 
+                    Title="Conferma"
+                    Description="Vuoi salvare il job?"
+                    onCancel={() => setShowConfirmSave(false)}
+                    onConfirm={handleSave}
+                />
+            )}
+
             {showConfirmReload && (
                 <ConfirmModal
                     Title="Conferma"
@@ -28,6 +40,7 @@ export default function Modals({
                     onClose={() => setShowDummyAlert(false)}
                 />
             )}
+            
         </>
     );
 }

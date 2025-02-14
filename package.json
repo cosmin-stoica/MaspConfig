@@ -116,6 +116,7 @@
       "artifactName": "${productName}-Setup-${version}.${ext}"
     },
     "nsis": {
+      "runAfterFinish": false,
       "oneClick": false,
       "allowToChangeInstallationDirectory": false,
       "perMachine": true,

@@ -8,6 +8,9 @@ export default function CsvViewer({ data, dataFile }) {
     const [searchTerm, setSearchTerm] = useState("");
     const [viewPdfConfig, setViewPdfConfig] = useState(false);
 
+    console.log("data", data);
+    console.log("dataFile", dataFile);
+
     const handleOnWordChange = (e) => {
         setSearchTerm(e.target.value);
     };

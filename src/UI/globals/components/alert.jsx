@@ -1,7 +1,4 @@
-/**
- * @namespace Alert
- * @description Contiene componenti e utilità globali.
- */
+import React, { useEffect } from "react";
 import { IoIosCheckmarkCircle, IoIosCloseCircle, IoIosWarning } from "react-icons/io";
 
 /**
@@ -15,37 +12,52 @@ import { IoIosCheckmarkCircle, IoIosCloseCircle, IoIosWarning } from "react-icon
  * @param {boolean} Modal - Se `true`, visualizza l'allerta in un modal.
  * @param {string} Image - Base64 o URL dell'immagine da visualizzare nell'allerta.
  * @returns {React.Element} Il componente dell'allerta.
- * @memberof Alert
  */
 function Alert({ Type, Title, Description, onClose, Modal, Image }) {
+    // Aggiungiamo un listener per il tasto Esc
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === "Escape") {
+                onClose();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        // Pulizia: rimuoviamo il listener quando il componente viene smontato
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [onClose]);
+
     const alertContent = (
         <div
-            className={`Alert_MainDiv ${Type === 'error'
-                    ? 'Alert_Error'
-                    : Type === 'warning'
-                        ? 'Alert_Warning'
-                        : Type === 'success'
-                            ? 'Alert_Success'
-                            : ''
-                }`}
+            className={`Alert_MainDiv ${
+                Type === "error"
+                    ? "Alert_Error"
+                    : Type === "warning"
+                    ? "Alert_Warning"
+                    : Type === "success"
+                    ? "Alert_Success"
+                    : ""
+            }`}
         >
             <button onClick={onClose} className="Alert_MainDiv_Btn">
                 X
             </button>
             <div className="Alert_MainDiv_Icon">
-                {Type === 'error' ? (
+                {Type === "error" ? (
                     <IoIosCloseCircle />
-                ) : Type === 'warning' ? (
+                ) : Type === "warning" ? (
                     <IoIosWarning />
-                ) : Type === 'success' ? (
+                ) : Type === "success" ? (
                     <IoIosCheckmarkCircle />
                 ) : (
-                    ''
+                    ""
                 )}
             </div>
             <div className="Alert_MainDiv_Title">{Title}</div>
             <div className="Alert_MainDiv_Description">
-                {Description.split('\n').map((line, index) => (
+                {Description.split("\n").map((line, index) => (
                     <span key={index}>
                         {line}
                         <br />

@@ -1,0 +1,23 @@
+{
+    "SEZIONE REPORT": {
+        "bIsUsed": "b",
+        "bIsLogEnable": "b",
+        "Header": "str",
+        "Stabilimento": "str",
+        "Postazione": "str",
+        "Tipo postazione": "str",
+        "Cartella file report": "str",
+        "Cartella file report Aux": "str",
+        "Ignora creazione sottocartelle": "b",
+        "Estensione file report": "str",
+        "Avvitature NOK in report": "b",
+        "Risultati NOK in report": "b",
+        "Aggiungi GP in report": "b",
+        "Aggiungi job ID a nome report": "b",
+        "Salva report anche se esito globale NOK": "b",
+        "Aggiungi esito globale al nome file report": "b",
+        "Aggiungi esito globale in report": "b",
+        "Aggiungi riga vuota tra risultati job": "b",
+        "Aggiungi riga vuota dopo gruppi di risultati": "b"
+    }
+}

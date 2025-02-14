@@ -4,28 +4,33 @@ import ComingSoon from "../../../globals/coming_soon";
 import MainParser from "../../parsers/main/main_parser";
 import { useEffect } from "react";
 
-function ConfigOpener({ activeNavbar, onSetActive }) {
+function ConfigOpener({ activeNavbar, onSetActive, isReportApp }) {
     const navigate = useNavigate();
     const location = useLocation();
+
 
     const queryParams = new URLSearchParams(location.search);
     const configName = queryParams.get("config");
 
     useEffect(() => {
         if (configName === "Hardware Config") {
-            navigate(`/config-hal-parser?config=${encodeURIComponent("Hardware Config")}&config_icon=${encodeURIComponent("PiHeadCircuitFill")}&isHal=false`);
+            navigate(`/configopener?config=${encodeURIComponent("Hardware Config")}&config_icon=${encodeURIComponent("PiHeadCircuitFill")}&isHal=false`);
             return;
         }
         if (configName === "Report Config") {
-            navigate(`/config-hal-parser?config=${encodeURIComponent("Report Config")}&config_icon=${encodeURIComponent("PiDatabaseFill")}&isHal=false`);
+            if (isReportApp) {
+                navigate(`/configopener?config=${encodeURIComponent("Report Config")}&config_icon=${encodeURIComponent("PiDatabaseFill")}&isHal=false&isReportApp=true`);
+                return;
+            }
+            navigate(`/configopener?config=${encodeURIComponent("Report Config")}&config_icon=${encodeURIComponent("PiDatabaseFill")}&isHal=false`);
             return;
         }
         if (configName === "Rework Config") {
-            navigate(`/config-hal-parser?config=${encodeURIComponent("Rework Config")}&config_icon=${encodeURIComponent("PiGavelFill")}&isHal=false`);
+            navigate(`/configopener?config=${encodeURIComponent("Rework Config")}&config_icon=${encodeURIComponent("PiGavelFill")}&isHal=false`);
             return;
         }
         if (configName === "Programmi di avvitatura") {
-            navigate(`/config-hal-parser?config=${encodeURIComponent("Programmi di avvitatura")}&config_icon=${encodeURIComponent("PiScrewdriverFill")}&isHal=false&isAvv=true`);
+            navigate(`/configopener?config=${encodeURIComponent("Programmi di avvitatura")}&config_icon=${encodeURIComponent("PiScrewdriverFill")}&isHal=false&isAvv=true`);
             return;
         }
         if (configName === "Login") {

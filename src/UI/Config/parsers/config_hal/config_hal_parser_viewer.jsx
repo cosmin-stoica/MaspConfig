@@ -16,7 +16,8 @@ import {
 } from "./helpers";
 import Alert from "../../../globals/components/alert";
 
-export default function ConfigHalParserViewer({ activeNavbar, onSetActive, dummyFile, realFile, configName, groupName, configIcon, isHal, isAvv }) {
+export default function ConfigHalParserViewer({ isReportApp, activeNavbar, onSetActive, dummyFile, realFile, configName, groupName, configIcon, isHal, isAvv }) {
+
     const [showConfirmReload, setShowConfirmReload] = useState(null);
     const [showConfirmDelete, setShowConfirmDelete] = useState(null);
     const [showConfirmSave, setShowConfirmSave] = useState(null);
@@ -63,6 +64,12 @@ export default function ConfigHalParserViewer({ activeNavbar, onSetActive, dummy
     };
 
     const reload = () => {
+        if (isReportApp) {
+            onSetActive(true)
+            navigate(`/configopener?config=${encodeURIComponent(configName)}&group_name=${encodeURIComponent(groupName)}&config_icon=${encodeURIComponent("PiDatabaseFill")}&isHal=false&isReportApp=true`);
+            window.location.reload();
+            return;
+        }
         if (isHal) {
             onSetActive(true)
             navigate(`/config-hal-parser?config=${encodeURIComponent(configName)}&group_name=${encodeURIComponent(groupName)}&config_icon=${encodeURIComponent(configIcon)}&isHal=true`);
@@ -124,11 +131,12 @@ export default function ConfigHalParserViewer({ activeNavbar, onSetActive, dummy
 
     return (
         <div className="HardwareParserViewerMainDiv">
-            <button className="Hal_Config_Back_Btn" onClick={handleBackClick}>
+            {!isReportApp && <button className="Hal_Config_Back_Btn" onClick={handleBackClick}>
                 <TbArrowLeft />
-            </button>
+            </button>}
             <div className="HalParserViewer">
                 <ToolPanel
+                    isReportApp={isReportApp}
                     isAvv={isAvv}
                     setShowConfirmSave={setShowConfirmSave}
                     setShowConfirmReload={setShowConfirmReload}

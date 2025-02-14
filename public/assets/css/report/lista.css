@@ -140,6 +140,33 @@
     cursor: pointer;
 }
 
+.table_lista_report_toolboxBar_pdfBtn{
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    color: rgb(151, 151, 151);
+    transition: all 0.2s ease;
+    background-color: var(--toolbar_icon_color);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.table_lista_report_toolboxBar_pdfBtn:hover {
+    background-color: var(--toolbar_icon_color_hover);
+    transition: all 0.2s ease;
+}
+
+.table_lista_report_toolboxBar_pdfBtn span{
+    font-size: 25px;
+}
+
+
 .table_lista_report_row {
     width: 100%;
     display: flex;

@@ -2,7 +2,7 @@ import { PiFloppyDiskFill } from "react-icons/pi";
 import { TbReload } from "react-icons/tb";
 import { MdDelete, MdAddCircle } from "react-icons/md";
 
-export default function ToolPanel({ isAvv, setShowConfirmSave, setShowConfirmReload, setShowConfirmDelete, setShowAddProgramma }) {
+export default function ToolPanel({ isReportApp, isAvv, setShowConfirmSave, setShowConfirmReload, setShowConfirmDelete, setShowAddProgramma }) {
     return (
         <div className="HalParserViewer_Toolpanel">
             <div>
@@ -11,9 +11,9 @@ export default function ToolPanel({ isAvv, setShowConfirmSave, setShowConfirmRel
             <div>
                 <TbReload onClick={() => setShowConfirmReload(true)} />
             </div>
-            <div>
+            {!isReportApp && <div>
                 <MdDelete onClick={() => setShowConfirmDelete(true)} />
-            </div>
+            </div>}
             {isAvv && (
                 <div>
                     <MdAddCircle onClick={() => setShowAddProgramma(true)} />
