@@ -17,6 +17,7 @@
     "file-saver": "^2.0.5",
     "immutability-helper": "^3.1.1",
     "ini": "^5.0.0",
+    "jimp": "^0.16.1",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
     "papaparse": "^5.4.1",
@@ -71,6 +72,7 @@
     "docdash": "^2.0.2",
     "electron": "^33.2.0",
     "electron-builder": "^23.6.0",
+    "electron-rebuild": "^3.2.9",
     "minami": "^1.2.3",
     "taffydb": "^2.7.3",
     "wait-on": "^8.0.1"
@@ -78,6 +80,10 @@
   "build": {
     "appId": "com.masp.tools",
     "productName": "MaspTools",
+    "asar": true,
+    "asarUnpack": [
+      "src/UI/Report/parsers/csvPdfMaker.js"
+    ],
     "directories": {
       "output": "dist"
     },
@@ -88,6 +94,7 @@
       "electron/filehandler.js",
       "electron/reporthandler.js",
       "electron/preload.js",
+      "electron/csvPdfMaker.js",
       "server/**/*"
     ],
     "extraMetadata": {

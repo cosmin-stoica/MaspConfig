@@ -6,6 +6,9 @@ const { fork, exec } = require("child_process");
 //const TCPClient = require("../server/client.js");
 const os = require("os")
 const Updater = require("./updater");
+const { generateStructuredPdf } = require('./csvPdfMaker');
+
+const { Worker } = require('worker_threads');
 
 let mainWindow;
 let isReportGlobal = false;
@@ -242,4 +245,37 @@ ipcMain.handle('save-color-file', async (_, color, filePath) => {
 
 ipcMain.handle('read-color-file', async (_, filePath) => {
   return reportHandler.readColorFromFile(filePath);
+});
+
+function runPdfWorker(params) {
+  return new Promise((resolve, reject) => {
+    const workerPath = path.join(__dirname, 'csvPdfMaker.js'); // Assicurati del percorso corretto
+    const worker = new Worker(workerPath);
+    
+    worker.on('message', (message) => {
+      if (message.error) {
+        reject(new Error(message.error));
+      } else {
+        resolve(message.result);
+      }
+      worker.terminate();
+    });
+    
+    worker.on('error', (err) => {
+      reject(err);
+      worker.terminate();
+    });
+    
+    worker.postMessage(params);
+  });
+}
+
+// Definisci un listener IPC per la generazione del PDF
+ipcMain.handle('generate-pdf', async (event, params) => {
+  try {
+    const result = await runPdfWorker(params);
+    return { result };
+  } catch (error) {
+    return { error: error.message };
+  }
 });

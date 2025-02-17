@@ -1,7 +1,55 @@
-/* global globalThis */
+// csvPdfMaker.js
+const { parentPort } = require('worker_threads');
+const { jsPDF } = require("jspdf");
+require("jspdf-autotable");
 
-import { jsPDF } from "jspdf";
-import "jspdf-autotable";
+if (typeof Worker === 'undefined') {
+  global.Worker = require('worker_threads').Worker;
+}
+
+const Jimp = require('jimp');
+
+function shortError(error, maxChars = 100) {
+  const msg = typeof error === 'string' ? error : (error.message || String(error));
+  return msg.length > maxChars ? msg.slice(0, maxChars) + '...' : msg;
+}
+
+async function loadImage(src) {
+  try {
+    let image;
+    if (src.startsWith('data:')) {
+      // Correggi eventuali backslash nel mime type (ad es. "data:image\jpg" -> "data:image/jpeg")
+      src = src.replace(/^data:image\\/, 'data:image/');
+      
+      // Assicurati che l'header sia corretto; per JPEG ad esempio:
+      // Se il mime type è "data:image/jpg;base64," potrebbe essere meglio trasformarlo in "data:image/jpeg;base64,"
+      src = src.replace(/^data:image\/jpg(;base64,)/, 'data:image/jpeg$1');
+      
+      const commaIndex = src.indexOf(',');
+      if (commaIndex === -1) {
+        throw new Error("Data URL non valido");
+      }
+      const base64Data = src.slice(commaIndex + 1);
+      const buffer = Buffer.from(base64Data, 'base64');
+      image = await Jimp.read(buffer);
+    } else {
+      image = await Jimp.read(src);
+    }
+    
+    // Converti l'immagine in base64 in formato PNG
+    let base64Str = await image.getBase64Async(Jimp.MIME_PNG);
+    // Se per qualche motivo non contiene il prefisso, lo aggiungiamo
+    const prefix = 'data:image/png;base64,';
+    if (!base64Str.startsWith(prefix)) {
+      base64Str = prefix + base64Str;
+    }
+    return { dataURL: base64Str, width: image.bitmap.width, height: image.bitmap.height };
+  } catch (err) {
+    throw new Error(`Errore nel caricamento dell'immagine: ${shortError(err)}`);
+  }
+}
+
+
 
 // Array di sezioni per la ricerca
 const sectionsToSearch = [
@@ -25,23 +73,7 @@ function hexToRgb(hex) {
   return { r, g, b };
 }
 
-// Funzione asincrona per caricare un'immagine tramite fetch e FileReader,
-// restituisce un oggetto contenente il data URL e le dimensioni
-async function loadImage(src) {
-  const response = await fetch(src);
-  const blob = await response.blob();
-  const bitmap = await createImageBitmap(blob);
-  const dataURL = await new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
-  return { dataURL, width: bitmap.width, height: bitmap.height };
-}
-
 // Funzione principale per generare il PDF in modo strutturato
-// Nota: la funzione è asincrona per gestire il caricamento delle immagini
 async function generateStructuredPdf(
   data,
   sectionNames,
@@ -61,7 +93,6 @@ async function generateStructuredPdf(
   let scaledHeight = 0;
   const { r, g, b } = hexToRgb(mainColor);
 
-  // Funzione interna per generare il contenuto del report
   function generatePdfContent(doc, data, sectionNames, primaryColumn, pdfTitle, pdfNameFile) {
     // Imposta il titolo con il colore principale
     doc.setTextColor(r, g, b);
@@ -85,14 +116,11 @@ async function generateStructuredPdf(
       titleY + 20
     );
 
-    // Posiziona il contenuto sotto il titolo
     let currentY = titleY + 30;
 
-    // Funzione per estrarre intestazioni e righe per ciascuna sezione
     const parseDynamicHeadersAndRows = (sectionName) => {
       const sectionIndex = data.findIndex((row) => row[primaryColumn] === sectionName);
       if (sectionIndex < 0) return null;
-
       const headerRow = data[sectionIndex + 1];
       const detailRows = [];
       for (let i = sectionIndex + 2; i < data.length; i++) {
@@ -167,11 +195,8 @@ async function generateStructuredPdf(
     });
   }
 
-  // Modalità append (multipla)
   if (append && dataMerged.length && dataFileMultiple.length) {
     let tocEntries = [];
-
-    // Pre-carica le immagini se richieste usando loadImage
     let loadedInitialLogo = null;
     let loadedTopLeftLogo = null;
     try {
@@ -185,7 +210,6 @@ async function generateStructuredPdf(
       console.error("Errore nel caricamento delle immagini", err);
     }
 
-    // Funzione helper per processare un dataset
     const processSingleDataset = (currentData, currentDataFile, isFirstPage = false) => {
       if (!isFirstPage) {
         doc.addPage();
@@ -221,13 +245,11 @@ async function generateStructuredPdf(
       generatePdfContent(doc, currentData, sectionNames, primaryColumn, currentPdfTitle, pdfNameFile);
     };
 
-    // Processa tutti i dataset
     processSingleDataset(dataMerged[0], dataFileMultiple[0], true);
     for (let i = 1; i < dataMerged.length; i++) {
       processSingleDataset(dataMerged[i], dataFileMultiple[i]);
     }
 
-    // Calcolo del numero di pagine per il TOC
     const leftMargin = 14;
     const rightMargin = 14;
     const bottomMargin = 20;
@@ -238,7 +260,6 @@ async function generateStructuredPdf(
     const headerFontSize = 20;
     const headerHeight = headerFontSize;
     const pageHeight = doc.internal.pageSize.getHeight();
-
     const firstPageStartY = 5 + headerHeight + 10;
     const subsequentPageStartY = 20;
     let simulatedTocY = firstPageStartY;
@@ -255,20 +276,14 @@ async function generateStructuredPdf(
       simulatedTocY += simulatedBlockHeight;
     });
     const tocPageCount = simulatedTocPages;
-
-    // Inserisce le pagine TOC in testa al documento
     doc.insertPage(1);
     for (let i = 1; i < tocPageCount; i++) {
       doc.insertPage(1);
     }
-
-    // Aggiorna i numeri di pagina nelle voci del TOC
     tocEntries = tocEntries.map((entry) => ({
       title: entry.title,
       page: entry.page + tocPageCount,
     }));
-
-    // Disegna il TOC
     let tocCurrentPage = 1;
     doc.setPage(tocCurrentPage);
     let tocHeaderY = 5;
@@ -304,11 +319,9 @@ async function generateStructuredPdf(
     doc.rect(leftMargin, tocHeaderY, headerWidthCalc, headerHeight, "F");
     doc.setTextColor(255, 255, 255);
     doc.text(headerText, leftMargin + headerPadding, tocHeaderY + headerFontSize - 5);
-
     let tocY = tocHeaderY + headerHeight + 10;
     doc.setFontSize(12);
     doc.setTextColor(50, 50, 50);
-
     tocEntries.forEach((entry) => {
       const entryText = "- " + entry.title;
       const textLines = doc.splitTextToSize(entryText, availableWidth);
@@ -336,12 +349,9 @@ async function generateStructuredPdf(
       doc.setTextColor(50, 50, 50);
       tocY += blockHeight;
     });
-
-    // Restituisce il PDF come data URL
     return doc.output("dataurlstring");
   }
 
-  // Modalità singola (comportamento originale)
   if (!append) {
     if (insertTopLeftLogo && selectedImage2) {
       try {
@@ -395,12 +405,15 @@ async function generateStructuredPdf(
   }
 }
 
-// Ascoltatore per i messaggi nel Web Worker
-globalThis.addEventListener("message", async (event) => {
-  try {
-    const result = await generateStructuredPdf(...event.data);
-    globalThis.postMessage({ result });
-  } catch (error) {
-    globalThis.postMessage({ error: error.message });
-  }
-});
+if (parentPort) {
+  parentPort.on('message', async (params) => {
+    try {
+      const result = await generateStructuredPdf(...params);
+      parentPort.postMessage({ result });
+    } catch (error) {
+      parentPort.postMessage({ error: error.message });
+    }
+  });
+} else {
+  console.error('parentPort is null. This script is not running as a worker thread.');
+}

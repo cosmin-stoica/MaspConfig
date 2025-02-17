@@ -11,9 +11,6 @@ import ConfirmModal from "../../globals/components/confirm_modal";
 export default function PdfCreator({ data, dataFile, dataMerged, dataFileMultiple, OnExit, useLoader, setIsLoading }) {
 
     const ReturnContent = () => {
-
-        const pdfWorker = new Worker(new URL('../parsers/csvPdfMaker.js', import.meta.url));
-
         console.log("dataMerged", dataMerged)
         console.log("dataFileMultiple", dataFileMultiple)
 
@@ -45,124 +42,119 @@ export default function PdfCreator({ data, dataFile, dataMerged, dataFileMultipl
 
         const [selectedImage, setSelectedImage] = useState(null);
         const [selectedImage2, setSelectedImage2] = useState(null);
-        const onConfirm = () => {
+        const onConfirm = async () => {
             // Controlli per i loghi
             if (pdfObject.logoInitial && !selectedImage) {
-                makeAlertReveal(
-                    "warning",
-                    "Attenzione",
-                    "Per poter inserire il logo iniziale nel pdf bisogna caricarlo \noppure selezionare un'immagine predefinita"
-                );
-                return;
+              makeAlertReveal(
+                "warning",
+                "Attenzione",
+                "Per poter inserire il logo iniziale nel pdf bisogna caricarlo \noppure selezionare un'immagine predefinita"
+              );
+              return;
             }
             if (pdfObject.logoTopLeft && !selectedImage2) {
-                makeAlertReveal(
-                    "warning",
-                    "Attenzione",
-                    "Per poter inserire il logo in alto a sinistra nel pdf bisogna caricarlo \noppure selezionare un'immagine predefinita"
-                );
-                return;
+              makeAlertReveal(
+                "warning",
+                "Attenzione",
+                "Per poter inserire il logo in alto a sinistra nel pdf bisogna caricarlo \noppure selezionare un'immagine predefinita"
+              );
+              return;
             }
             if (selectedImage && !pdfObject.logoInitial) {
-                makeAlertReveal(
-                    "warning",
-                    "Attenzione",
-                    "Per poter inserire il logo iniziale nel pdf bisogna selezionare la spunta"
-                );
-                return;
+              makeAlertReveal(
+                "warning",
+                "Attenzione",
+                "Per poter inserire il logo iniziale nel pdf bisogna selezionare la spunta"
+              );
+              return;
             }
             if (selectedImage2 && !pdfObject.logoTopLeft) {
-                makeAlertReveal(
-                    "warning",
-                    "Attenzione",
-                    "Per poter inserire il logo in alto a sinistra nel pdf bisogna selezionare la spunta"
-                );
-                return;
+              makeAlertReveal(
+                "warning",
+                "Attenzione",
+                "Per poter inserire il logo in alto a sinistra nel pdf bisogna selezionare la spunta"
+              );
+              return;
             }
-
+          
             if (useLoader) {
-                setIsLoading(true);
+              setIsLoading(true);
             }
-
-            // Prepara i parametri da inviare al worker.
+          
             let params;
             let title;
             if (
-                dataMerged &&
-                Object.keys(dataMerged).length > 0 &&
-                dataFileMultiple &&
-                Object.keys(dataFileMultiple).length > 0
+              dataMerged &&
+              Object.keys(dataMerged).length > 0 &&
+              dataFileMultiple &&
+              Object.keys(dataFileMultiple).length > 0
             ) {
-                const mergedArray = Object.values(dataMerged);
-                const fileMultipleArray = Object.values(dataFileMultiple);
-                if (mergedArray[0] && mergedArray[0].length > 0) {
-                    const primaryKey = Object.keys(mergedArray[0][0])[0];
-                    title = `${primaryKey}`;
-                    params = [
-                        data, // placeholder, non usato in modalità append
-                        generatedSections,
-                        primaryKey,
-                        primaryKey,
-                        title,
-                        pdfObject.logoInitial,
-                        pdfObject.logoTopLeft,
-                        mainColor,
-                        selectedImage,
-                        selectedImage2,
-                        true, // Flag "append"
-                        mergedArray,
-                        fileMultipleArray
-                    ];
-                }
-            } else {
-                title = `${Object.keys(data[0])[0]} ${dataFile.csvDataCodice} ${dataFile.csvDataProgressivo} ${dataFile.csvDataOperatore}`;
+              // Modalità append
+              const mergedArray = Object.values(dataMerged);
+              const fileMultipleArray = Object.values(dataFileMultiple);
+              if (mergedArray[0] && mergedArray[0].length > 0) {
+                const primaryKey = Object.keys(mergedArray[0][0])[0];
+                title = `${primaryKey}`;
                 params = [
-                    data,
-                    generatedSections,
-                    Object.keys(data[0])[0],
-                    Object.keys(data[0])[0],
-                    title,
-                    pdfObject.logoInitial,
-                    pdfObject.logoTopLeft,
-                    mainColor,
-                    selectedImage,
-                    selectedImage2
+                  data, // placeholder, non usato in modalità append
+                  generatedSections,
+                  primaryKey,
+                  primaryKey,
+                  title,
+                  pdfObject.logoInitial,
+                  pdfObject.logoTopLeft,
+                  mainColor,
+                  selectedImage,
+                  selectedImage2,
+                  true, // Flag "append"
+                  mergedArray,
+                  fileMultipleArray,
                 ];
+              }
+            } else {
+              // Modalità singola
+              title = `${Object.keys(data[0])[0]} ${dataFile.csvDataCodice} ${dataFile.csvDataProgressivo} ${dataFile.csvDataOperatore}`;
+              params = [
+                data,
+                generatedSections,
+                Object.keys(data[0])[0],
+                Object.keys(data[0])[0],
+                title,
+                pdfObject.logoInitial,
+                pdfObject.logoTopLeft,
+                mainColor,
+                selectedImage,
+                selectedImage2,
+              ];
             }
-
+          
+            // Funzione per scaricare il PDF
             const downloadPDF = (dataUrl, fileName = `${title}.pdf`) => {
-                const link = document.createElement("a");
-                link.href = dataUrl;
-                link.download = fileName;
-                // Aggiunge il link al DOM per sicurezza (alcuni browser potrebbero richiederlo)
-                document.body.appendChild(link);
-                link.click();
-                // Rimuove il link
-                document.body.removeChild(link);
-              };
-              
-
-            // Invia i parametri al worker
-            pdfWorker.postMessage(params);
-
-            // Ascolta la risposta del worker
-            pdfWorker.onmessage = (event) => {
-                const { result, error } = event.data;
-                if (error) {
-                    console.error("Errore nel worker:", error);
-                } else {
-                    // result è il PDF come data URL
-                    downloadPDF(result);
-                }
-                setIsLoading(false);
+              const link = document.createElement("a");
+              link.href = dataUrl;
+              link.download = fileName;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
             };
-
-            pdfWorker.onerror = (error) => {
-                console.error("Errore nel worker:", error);
-                setIsLoading(false);
-            };
-        };
-
+          
+            try {
+              // Chiamata IPC tramite l'API esposta nel preload
+              const { result, error } = await window.electron.generatePdf(params);
+              if (error) {
+                console.error("Errore nella generazione del PDF:", error);
+              } else {
+                downloadPDF(result);
+              }
+            } catch (err) {
+              console.error("Errore IPC:", err);
+            }
+          
+            if (useLoader) {
+              setIsLoading(false);
+            }
+          };
+          
         const handleImageUpload = (event) => {
             const file = event.target.files[0];
             if (file) {

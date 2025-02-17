@@ -53,5 +53,7 @@ contextBridge.exposeInMainWorld("electron", {
   saveColorToFile: (color, filePath) =>
     ipcRenderer.invoke("save-color-file", color, filePath),
   readColorFromFile: (filePath) =>
-    ipcRenderer.invoke("read-color-file", filePath)
+    ipcRenderer.invoke("read-color-file", filePath),
+  generatePdf: (params) => 
+    ipcRenderer.invoke('generate-pdf', params)
 });
